@@ -20,5 +20,6 @@ if (isset($_POST["username"])) {
     include 'inc_login.php';
 }
 ?>
+
 <?php include 'inc_footer.php';?>
 <?php include 'inc_disconnect.php';?>
