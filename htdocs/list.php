@@ -5,6 +5,9 @@
 
 <?php
 
+$clearance = $_GET["clearance"];
+echo "You are logged in as " . $clearance;
+
 $sql = "SELECT * FROM tasks";
 $result = $conn->query($sql);
 
@@ -15,14 +18,20 @@ if ($result->num_rows > 0) {
   . "    <th>ID</th>"
   . "    <th>Subject</th>"
   . "    <th>Project</th>"
+  . "    <th>Assignee</th>"
+  . "    <th>Status</th>"
+  . "    <th>Priority</th>"
   . "  </tr>";
 
   while($row = $result->fetch_assoc()) {
 
     echo "<tr>
         <td>" . $row["id"] . "</td>
-        <td>" . $row["subject"] . "</td>
-        <td>" . $row["project"]. "</td>
+        <td><a href=\"detail.php?id=" . $row["id"] . "\" title=\"Detailed view\">" . $row["subject"] . "<a></td>
+        <td>" . $row["project"] . "</td>
+        <td>" . $row["assignee"] . "</td>
+        <td>" . $row["status"] . "</td>
+        <td>" . $row["priority"] . "</td>
       </tr>";
   }
   echo "</table>";

@@ -4,6 +4,7 @@
 <html>
 <head>
     <title><?php echo $title; ?></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 

@@ -10,15 +10,23 @@ $pass="123";
 
 <?php
 if (isset($_POST["username"])) {
-    if ($_POST["username"] == $user and $_POST["pwd"] == $pass) {
-      header('Location: list.php');
-        exit;
+    $sql = "SELECT * FROM users WHERE username = '" . $_POST["username"] . "'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $correct_pass = $row["password"];
+        if ($_POST["password"] == $correct_pass) {
+            $clearance = $row["clearance"];
+            header('Location: list.php?clearance=' . $clearance);
+        } else {
+            echo "Incorrect username or password";
+        }
     } else {
-      echo "Incorrect username or password.";
+        echo "Incorrect username or password";
     }
-} else {
-    include 'inc_login.php';
+
 }
+include 'inc_login.php';
 ?>
 
 <?php include 'inc_footer.php';?>
