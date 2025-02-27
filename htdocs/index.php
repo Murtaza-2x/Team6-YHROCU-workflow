@@ -16,8 +16,10 @@ if (isset($_POST["username"])) {
         $row = $result->fetch_assoc();
         $correct_pass = $row["password"];
         if ($_POST["password"] == $correct_pass) {
-            $clearance = $row["clearance"];
-            header('Location: list.php?clearance=' . $clearance);
+            $_SESSION["id"] = $row["id"];
+            $_SESSION["username"] = $row["username"];
+            $_SESSION["clearance"] = $row["clearance"];
+            header('Location: list.php?clearance=' . $clearance . '&id=' . $id);
         } else {
             echo "Incorrect username or password";
         }

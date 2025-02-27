@@ -62,7 +62,8 @@ if ($result->num_rows > 0) {
     </tr>";
 
   echo "</table>";
-  echo "<button onclick=\"document.location='edit.php?id=" . $row["id"] . "'\">Edit</button><br>";
+
+  if ($SESSION["clearance"] != 'user') {echo "<button onclick=\"document.location='edit.php?id=" . $row["id"] . "'\">Edit</button><br>";}
   echo "<button onclick=\"document.location='list.php'\">Back</button>";
 } else {
   echo "0 results";

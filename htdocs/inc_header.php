@@ -1,5 +1,9 @@
 <?php if (!isset($title)) $title = "ROCU"; ?>
 
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

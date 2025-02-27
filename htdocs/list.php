@@ -5,10 +5,17 @@
 
 <?php
 
-$clearance = $_GET["clearance"];
-echo "You are logged in as " . $clearance;
+$clearance = $_SESSION["clearance"];
+$id = $_SESSION["id"];
+$username = $_SESSION["username"];
+echo "Welcome, " . $clearance . " " . $username . ". Your id is" . $id . ".<br>";
 
-$sql = "SELECT * FROM tasks";
+if ($clearance == 'user') {
+  $sql = "SELECT * FROM tasks WHERE assignee = " . $id;
+} else {
+  $sql = "SELECT * FROM tasks";
+}
+
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
