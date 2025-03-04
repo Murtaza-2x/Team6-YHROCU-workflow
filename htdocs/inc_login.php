@@ -1,4 +1,3 @@
-
 <form action="index.php" method="post">
   <label for="username">Username:</label><br>
   <input type="text" id="username" name="username"><br>

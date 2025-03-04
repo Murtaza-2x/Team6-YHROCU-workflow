@@ -6,6 +6,7 @@ session_start();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title><?php echo $title; ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
@@ -14,4 +15,4 @@ session_start();
 
 <body>
 
-<h1><?php echo $title; ?></h1>
+    <h1><?php echo $title; ?></h1>
