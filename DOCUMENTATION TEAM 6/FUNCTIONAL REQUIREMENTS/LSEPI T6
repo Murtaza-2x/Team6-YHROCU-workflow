@@ -1,0 +1,79 @@
+
+
+Legal Issue #1 – Data Protection and Privacy Compliance
+
+This issue means that the system will handle personal and sensitive work-related data, which falls under the UK GDPR and the Data Protection Act 2018. Failure to comply could incur legal penalties and lead to breaches of confidentiality.
+
+Prevention of Legal Issue #1 – Access Controls
+To mitigate this issue, the system will ensure access is strictly controlled through role-based authentication, and only authorised personnel can view relevant tasks. OpenAuth authentication will be implemented to integrate with existing security infrastructure.
+
+
+Legal Issue #2 – Compliance with Electronic Communications Regulations
+
+This issue means that the system’s email notifications must comply with UK regulations to prevent spam-like behavior or unauthorised email handling.
+
+Prevention of Legal Issue #2 – Official Email Domains and Consent-Based Notifications
+To mitigate this issue, the system will use YHROCU’s official email domain to send notifications. Users will also have clear guidelines on the nature of email alerts to ensure compliance with legal standards.
+
+
+
+Social Issue #1 – Staff Privacy and Monitoring Concerns
+
+This issue means that staff may feel their work is excessively monitored due to the system logging all task updates and progress tracking.
+
+Prevention of Social Issue #1 – Transparency in System Usage
+To mitigate this issue, clear policies will be established to explain the purpose of logging, ensuring that it is for task management rather than personal surveillance. Staff will be informed that the system is designed to improve workflow efficiency rather than to track individual performance.
+
+
+
+Social Issue #2 – Accessibility and Ease of Use
+
+This issue means that not all users may have the same level of technical expertise, leading to difficulties in system adoption.
+
+Prevention of Social Issue #2 – User-Friendly Design and Accessibility Compliance
+To mitigate this issue, the system will be designed with an intuitive interface that follows accessibility standards such as WCAG 2.1. User training sessions and support documentation will also be provided to ensure all staff can effectively use the system.
+
+
+
+Ethical Issue #1 – Fair Task Distribution and Management
+
+This issue means that task assignments could be unfairly distributed, either through bias or mismanagement, potentially leading to overburdening of certain employees.
+
+Prevention of Ethical Issue #1 – Transparent Task Assignment and Manager Oversight
+To mitigate this issue, managers will have oversight of all tasks, and an auditing function will be included to ensure fair distribution.
+
+
+
+Ethical Issue #2 – Security vs. User Convenience
+
+This issue means that while strict security measures are necessary, they must not make the system overly complex or difficult to use.
+
+Prevention of Ethical Issue #2 – Role-Based Access Control with Minimal Friction
+To mitigate this issue, the system will balance security and usability by assigning role-based access that ensures users only have the permissions they need without unnecessary restrictions. Two-factor authentication (2FA) will be considered for the administrator and managers handling sensitive data.
+
+
+
+Ethical Issue #3 – Privacy in Task Searches
+
+This issue means that if search functionality is not properly controlled, staff may be able to view tasks they are not assigned to, exposing unauthorised data.
+
+Prevention of Ethical Issue #3 – Search Results Restricted by Role-Based Access
+To mitigate this issue, the search function will only return tasks that the user has explicit permission to view. Managers will have broader search capabilities but only within their authorised scope.
+
+
+
+Professional Issue #1 – System Reliability and Data Integrity
+
+This issue means that, as a critical tool for YHROCU, the system must be reliable and capable of securely storing all task data without loss or corruption.
+
+Prevention of Professional Issue #1 – Regular Backups and Local Data Storage
+To mitigate this issue, the system will implement scheduled backups using Windows Server Backup or a similar tool, ensuring that data is safely stored on a separate local device. Local storage will be prioritised to align with YHROCU’s existing IT policies.
+
+
+
+Professional Issue #2 – Training and User Adoption
+
+This issue means that if users are not properly trained, they may struggle to use the system effectively, leading to mistakes or resistance to adoption.
+
+Prevention of Professional Issue #2 – Comprehensive Training and Documentation
+To mitigate this issue, user training sessions will be conducted, and a detailed system manual will be provided. This will help ensure that all staff understand how to use the system efficiently.

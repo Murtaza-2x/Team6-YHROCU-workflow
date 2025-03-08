@@ -1,0 +1,46 @@
+The Yorkshire and Humber Regional Organised Crime Unit (YHROCU) require a workflow management system to manage non-crime-related projects. This risk assessment will outline potential risks associated with the deployment of the workflow system and then provide solutions to mitigate or remove those risks. This will lead to the efficient and secure operation of the system while also adhering to the YHROCU's requirements.
+
+
+Risk #1 – Unauthorised Access to the System
+This risk means a party that is not linked to any of the system actors gains unauthorised entry to the system.
+Prevention to Risk #1 – Implementation of OpenAuth Verification and Minimalistic User Privileges
+To mitigate this risk, OpenAuth will be used to verify user logins. Additionally, since actors are given privileges strictly related to their role—such as staff only being able to update task progression and input into a log. This ensures staff accounts do not have significant authority in the system. In a worst-case scenario where a staff's user account is compromised, the administrator can delete the affected account to restore security to the system.
+
+
+Risk #2 – Data Loss
+This risk means that tasks, logs, or other system data could become lost or inaccessible due to hardware failure, software corruption, or malicious attacks—especially critical given that all servers are maintained locally.
+Prevention to Risk #2 – Scheduled Backups and Local Recovery Measures
+To mitigate this risk, the client will be informed on how the system can incorporate regular automated backups using Windows Server Backup, storing the backup data on a separate local storage device. It is assumed that there are already backup protocols in place that the client uses and the above prevention method is a generic method that can be easily be implemented.
+
+
+Risk #3 – Email Notification Spoofing
+This risk means that malicious actors could spoof system-generated email notifications, misleading users by impersonating YHROCU communications.
+Prevention to Risk #3 – Official Email Affiliation and Verification Measures
+To mitigate this risk, notifications should ideally be sent from an email address affiliated with YHROCU, minimising the chance of spoofing. Due to the nature of the client, it is assumed that such email protocols are already in place.
+
+Risk #4 – SQL Injection
+This risk means that malicious actors could exploit vulnerabilities in input fields by injecting SQL commands, potentially allowing unauthorised access or manipulation of the system's database.
+Prevention to Risk #4 – Secure Coding Practices and Input Validation
+To mitigate this risk, secure coding practices will be followed and all user inputs will be strictly validated. This includes using prepared statements and sanitizing input data to ensure that no harmful code can be executed.
+
+Risk #5 – Search Privacy Risk
+This risk means that the search function might allow staff users to view tasks or projects that they are not assigned to, potentially exposing sensitive or unauthorized data.
+Prevention to Risk #5 – Enforce Role-Based Access Control in Search
+To mitigate this risk, the search functionality will be designed to return only those tasks or projects that are explicitly assigned to the querying user. This ensures that staff cannot see data beyond their permitted scope, while managers—with broader access—retain the ability to view all tasks as needed.
+
+Risk #6 – Exported CSV/PDF Data Privacy Risk
+This risk means that sensitive data contained in exported CSV or PDF files could be compromised if these files are intercepted or accessed by unauthorized parties.
+Prevention to Risk #6 – Encrypt Exported Files
+To mitigate this risk, all exported CSV/PDF files will be encrypted. This ensures that even if the files are accessed outside the system, their contents remain protected and unreadable by unauthorised users.
+
+
+Risk #7 – Malicious Staff/Manager
+This risk means that a staff or supervisor may deliberately misuse their privileges to compromise system integrity or disrupt operations.
+Prevention to Risk #7 – Administrative Oversight
+To mitigate this risk, the administrator can promptly delete or disable any staff or manager found to be acting maliciously, ensuring that harmful access is quickly removed from the system.
+
+
+Risk #8 – Inadequate User Training and Operational Misuse
+This risk means that staff may inadvertently misuse the system due to insufficient training, potentially leading to data errors or security vulnerabilities.
+Prevention to Risk #8 – Comprehensive Training and Documentation
+To mitigate this risk, provide thorough user training sessions and develop clear, accessible documentation. This ensures that all staff understand how to use the system properly and securely, reducing the likelihood of accidental misuse.
