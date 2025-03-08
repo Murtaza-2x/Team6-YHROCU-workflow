@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>List Tasks</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -9,17 +10,26 @@
 
 <h1>List Tasks</h1>
 
-<table>   <tr>    <th>ID</th>    <th>Subject</th>    <th>Project</th>  </tr><tr>
+<table>   <tr>    <th>ID</th>    <th>Subject</th>    <th>Project</th>    <th>Assignee</th>    <th>Status</th>    <th>Priority</th>  </tr><tr>
         <td>1</td>
-        <td>First Task</td>
-        <td>Project One</td>
+        <td><a href="detail.php?id=1" title="Detailed view">First<a></td>
+        <td>Project</td>
+        <td>0</td>
+        <td>New</td>
+        <td>Low</td>
       </tr><tr>
         <td>2</td>
-        <td>Second Task</td>
-        <td>Project One</td>
+        <td><a href="detail.php?id=2" title="Detailed view">Second<a></td>
+        <td>Project Two</td>
+        <td>0</td>
+        <td>Complete</td>
+        <td>High</td>
       </tr><tr>
         <td>3</td>
-        <td>Third Task</td>
+        <td><a href="detail.php?id=3" title="Detailed view">Third Task<a></td>
         <td>Project One</td>
+        <td>0</td>
+        <td>New</td>
+        <td>High</td>
       </tr></table></body>
 </html>
