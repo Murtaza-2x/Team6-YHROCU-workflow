@@ -1,7 +1,7 @@
 <?php $title = "ROCU: Login"; ?>
 <?php include 'inc_connect.php'; ?>
 <?php include 'inc_header.php'; ?>
-
+// This is the login page!
 <?php
 if (isset($_POST["username"])) {
     $sql = "SELECT * FROM users WHERE username = '" . $_POST["username"] . "'";
