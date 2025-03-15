@@ -5,14 +5,15 @@ body {
   font-family: "Helvetica Neue Light";
 }
 
-
 .TOP-SECTION,
 .BOTTOM-SECTION {
   position: fixed;
   width: 100%;
+  background-color: var(--dark-grey);
   z-index: 2;
 }
 
+/* TOP SECTION */
 .TOP-SECTION {
   top: 0;
   left: 0;
@@ -28,7 +29,9 @@ body {
   transform: translateX(-3%)translateY(-10%);
   z-index: 1;
 }
+/* TOP SECTION END */
 
+/* MIDDLE SECTION */
 .MIDDLE-SECTION {
   width: 100%;
   height: 100%;
@@ -54,6 +57,7 @@ body {
   filter: brightness(50%);
 }
 
+/* LOGIN BOX */
 .LOGIN-CONTAINER {
   display: flex;
   justify-content: center;
@@ -172,6 +176,10 @@ body {
   margin-top: 0.4rem;
 }
 
+/* LOGIN BOX END */
+/* MIDDLE SECTION END */
+
+/* BOTTOM SECTION */
 .BOTTOM-SECTION {
   bottom: 0;
   height: 30px;
@@ -190,3 +198,5 @@ body {
   cursor: default;
   user-select: none;
 }
+
+/* BOTTOM SECTION END*/

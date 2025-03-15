@@ -5,30 +5,7 @@ body {
   font-family: "Helvetica Neue Light";
 }
 
-
-.TOP-SECTION,
-.BOTTOM-SECTION {
-  position: fixed;
-  width: 100%;
-  background-color: var(--dark-grey);
-  z-index: 2;
-}
-
-.TOP-SECTION {
-  top: 0;
-  left: 0;
-  height: 75px;
-  overflow: hidden;
-}
-
-.TOP-HERO-IMAGE {
-  position: absolute;
-  width: 400px;
-  height: auto;
-  transform: translateX(-3%)translateY(-10%);
-  z-index: 1;
-}
-
+/* MIDDLE SECTION */
 .MIDDLE-SECTION {
   width: 100%;
   height: 100%;
@@ -45,11 +22,13 @@ body {
   background-color: var(white);
   z-index: 1;
 }
+/* MIDDLE SECTION END */
 
 .DASH-CONTENT, .TASK-CONTENT {
   width: 100%;
 }
 
+/* DASH SECTION */
 .DASH-CONTENT {
   height: 400px;
 }
@@ -85,7 +64,9 @@ body {
   padding-left: 7px;
   opacity: 0.6;
 }
+/* DASH SECTION END */
 
+/* TASK SECTION */
 .TASK-CONTENT {
   height: 487px;
 }
@@ -96,7 +77,6 @@ body {
   display: flex;
   justify-content: flex-end;
 }
-
 
 .TASK-FILTER input {
   padding: 8px;
@@ -177,22 +157,5 @@ body {
 .TASK-LIST button:hover {
   background-color: #2980b9;
 }
-
-.BOTTOM-SECTION {
-  bottom: 0;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.FOOTER-RIGHT {
-  position: absolute;
-  bottom: 0.5vw;
-  right: 1vw;
-  color: var(--off-white);
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 0.5vw;
-  cursor: default;
-  user-select: none;
-}
+/* TASK SECTION END */
+/* MIDDLE SECTION END */

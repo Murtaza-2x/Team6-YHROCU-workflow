@@ -1,7 +1,7 @@
 <?php
     $servername = "localhost";
-    $username = "pma";
-    $password = "pmapma9999";
+    $username = "root";
+    $password = "";
     $dbname = "rocu";
 
     // Create connection

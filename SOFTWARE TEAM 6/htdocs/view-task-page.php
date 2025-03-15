@@ -1,7 +1,7 @@
 <?php $title = "Detailed Task View"; ?>
 
-<?php include 'inc_connect.php'; ?>
-<?php include 'inc_header.php'; ?>
+<?php include 'INCLUDES/inc_connect.php'; ?>
+<?php include 'INCLUDES/inc_header.php'; ?>
 
 <?php
 
@@ -38,14 +38,14 @@ if ($result->num_rows > 0) {
   echo "</table>";
 
   if ($_SESSION["clearance"] != 'user') {
-    echo "<button onclick=\"document.location='edit.php?id=" . $row["id"] . "'\">Edit</button><br>";
+    echo "<button onclick=\"document.location='edit-task-page.php?id=" . $row["id"] . "'\">Edit</button><br>";
   }
-  echo "<button onclick=\"document.location='list.php'\">Back</button>";
+  echo "<button onclick=\"document.location='list-task-page.php'\">Back</button>";
 } else {
   echo "0 results";
 }
 
 ?>
 
-<?php include 'inc_footer.php'; ?>
-<?php include 'inc_disconnect.php'; ?>
+<?php include 'INCLUDES/inc_footer.php'; ?>
+<?php include 'INCLUDES/inc_disconnect.php'; ?>

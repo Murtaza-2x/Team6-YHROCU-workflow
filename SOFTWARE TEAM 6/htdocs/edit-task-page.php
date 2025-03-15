@@ -1,7 +1,7 @@
 <?php $title = 'Edit Task'; ?>
 
-<?php include 'inc_connect.php'; ?>
-<?php include 'inc_header.php'; ?>
+<?php include 'INCLUDES/inc_connect.php'; ?>
+<?php include 'INCLUDES/inc_header.php'; ?>
 
 <?php
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // echo $sql;
     if ($conn->query($sql) === TRUE) {
         echo "Record updated successfully";
-        header('Location: detail.php?id=' . $id);
+        header('Location: view-task-page.php?id=' . $id);
     } else {
         echo "Error updating record: " . $conn->error;
     }
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $conn->query($sql);
 
     $row = $result->fetch_assoc();
-    echo "<form action='edit.php' method='post'>"
+    echo "<form action='edit-task-page.php' method='post'>"
         . "  <input type='hidden' id='id' name='id' value=" . $row['id'] . "><br>"
         . "  <label for='subject'>Subject:</label><br>"
         . "  <input type='text' id='subject' name='subject' value=" . $row['subject'] . "><br>"
@@ -51,5 +51,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         . "</form>";
 }
 ?>
-<?php include 'inc_footer.php'; ?>
-<?php include 'inc_disconnect.php'; ?>
+<?php include 'INCLUDES/inc_footer.php'; ?>
+<?php include 'INCLUDES/inc_disconnect.php'; ?>
