@@ -1,4 +1,16 @@
-<?php $title = 'Edit Task'; ?>
+<?php
+/*
+This file allows the user to edit an existing task in the database. 
+1. It begins by including the required connection and header files for the page. 
+2. The script then checks the request method:
+   - If the request is POST, it reads the ID and updated task details from the form inputs,
+     constructs a SQL UPDATE statement, and updates the relevant row in the `tasks` table. If successful, it redirects to the page showing the updated task. 
+   - If the request is GET, it retrieves the task's ID from the query string, 
+     fetches that task’s details from the database, and pre-fills an HTML form so the user can edit the task. 
+*/
+
+$title = 'Edit Task';
+?>
 
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
@@ -51,5 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         . "</form>";
 }
 ?>
+
 <?php include 'INCLUDES/inc_footer.php'; ?>
 <?php include 'INCLUDES/inc_disconnect.php'; ?>

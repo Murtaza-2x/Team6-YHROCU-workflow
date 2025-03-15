@@ -1,10 +1,3 @@
-body {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  font-family: "Helvetica Neue Light";
-}
-
 /* MIDDLE SECTION */
 .MIDDLE-SECTION {
   width: 100%;
@@ -19,7 +12,7 @@ body {
 
 .MIDDLE-SECTION {
   position: absolute;
-  background-color: var(white);
+  background-color: white;
   z-index: 1;
 }
 /* MIDDLE SECTION END */
@@ -69,6 +62,7 @@ body {
 /* TASK SECTION */
 .TASK-CONTENT {
   height: 487px;
+  color: var(--dark-grey);
 }
 
 .TASK-FILTER {
@@ -103,18 +97,25 @@ body {
 .TASK-LIST table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
+  background-color: white;
 }
 
 .TASK-LIST th,
 .TASK-LIST td {
-  border: 1px solid #ddd;
+  border: 1px solid var(--off-white);
   padding: 8px;
   text-align: left;
+  text-decoration: none;
+}
+
+.TASK-LIST a {
+  color: var(--black);
+  text-align: left;
+  text-decoration: none;
 }
 
 .TASK-LIST th {
-  background-color: #f0f0f0;
+  background-color: var(--off-white);
 }
 
 .STATUS, .PRIORITY {
@@ -146,16 +147,29 @@ body {
 }
 
 .TASK-LIST button {
-  padding: 4px 8px;
+  padding: 8px 10px;
   border: none;
-  background-color: #3498db;
+  background-color: var(--blue);
   color: #fff;
   border-radius: 4px;
   cursor: pointer;
 }
 
 .TASK-LIST button:hover {
-  background-color: #2980b9;
+  background-color: var(--dark-grey);
 }
+
+.VIEW-TASK {
+  font-family: "Helvetica Neue Medium";
+}
+
+.CREATE-TASK-BUTTON {
+  display: block;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
 /* TASK SECTION END */
 /* MIDDLE SECTION END */

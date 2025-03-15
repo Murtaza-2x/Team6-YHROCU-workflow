@@ -1,11 +1,20 @@
-<?php $title = 'Create New Task'; ?>
+<?php 
+/*
+This file is responsible for creating a new task in the application’s database.
+
+For POST requests, the code gathers user inputs (subject, project, assignee, status, priority) from the form, 
+constructs an SQL INSERT statement, and attempts to insert the new task into the `tasks` table. 
+If successful, the user is redirected to a “view” page for the newly inserted task. 
+If it’s a GET request, the script displays an HTML form that allows users to enter the details necessary for creating a new task.
+*/
+
+$title = 'Create New Task'; 
+?>
 
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
 
 <?php
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject = $_POST['subject'];
     $project = $_POST['project'];
@@ -38,5 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         . "</form>";
 }
 ?>
+
 <?php include 'INCLUDES/inc_footer.php'; ?>
 <?php include 'INCLUDES/inc_disconnect.php'; ?>
