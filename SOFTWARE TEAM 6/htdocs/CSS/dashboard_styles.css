@@ -98,20 +98,24 @@
   width: 100%;
   border-collapse: collapse;
   background-color: white;
+  text-align: center;
 }
 
 .TASK-LIST th,
 .TASK-LIST td {
   border: 1px solid var(--off-white);
   padding: 8px;
-  text-align: left;
   text-decoration: none;
 }
 
 .TASK-LIST a {
-  color: var(--black);
-  text-align: left;
+  color: var(--dark-grey);
   text-decoration: none;
+  font-family: "Helvetica Neue Medium";
+}
+
+.TASK-LIST a:hover {
+  color: var(--blue);
 }
 
 .TASK-LIST th {
@@ -147,11 +151,11 @@
 }
 
 .TASK-LIST button {
-  padding: 8px 10px;
+  padding: 10px 45px;
   border: none;
   background-color: var(--blue);
   color: #fff;
-  border-radius: 4px;
+  border-radius: 20px;
   cursor: pointer;
 }
 
@@ -159,16 +163,12 @@
   background-color: var(--dark-grey);
 }
 
-.VIEW-TASK {
-  font-family: "Helvetica Neue Medium";
-}
-
 .CREATE-TASK-BUTTON {
   display: block;
   justify-content: center;
   margin: 0 auto;
   margin-top: 20px;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 /* TASK SECTION END */
