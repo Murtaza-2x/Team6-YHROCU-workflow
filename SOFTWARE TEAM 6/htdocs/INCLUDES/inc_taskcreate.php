@@ -68,9 +68,9 @@
                     <div class='INPUT-GROUP'>
                         <select class='DROPDOWN-GROUP' id="status" name="status" required>
                             <option value="">Select Status</option>
-                            <option value="Open">Open</option>
+                            <option value="New">New</option>
                             <option value="In Progress">In Progress</option>
-                            <option value="Completed">Completed</option>
+                            <option value="Complete">Complete</option>
                         </select>
                     </div>
 

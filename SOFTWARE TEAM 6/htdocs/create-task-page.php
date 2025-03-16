@@ -21,8 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $_POST['status'];
     $priority = $_POST['priority'];
 
-    $sql = "INSERT INTO tasks (`id`, `subject`, `project`, `status`, `priority`) 
-        VALUES (NULL, '" . $subject . "', '" . $project . "', '" . $status . "', '" . $priority . "')";
+    $creatorId = $_SESSION['id'];
+
+    $sql = "INSERT INTO tasks (`id`, `subject`, `project`, `status`, `priority`, `created_by` ) 
+        VALUES (NULL, '" . $subject . "', '" . $project . "', '" . $status . "', '" . $priority . "', '" . $creatorId . "')";
 
     echo $sql;
     if ($conn->query($sql) === true) {

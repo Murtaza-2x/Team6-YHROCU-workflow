@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 This file displays a list of tasks for the currently logged-in user or for all users, depending on the user's clearance level:
 1. It starts by including the connection, header, and dashboard files.
@@ -20,9 +20,29 @@ $title = "List Tasks";
 <?php
 
 if ($clearance == 'user') {
-  $sql = "SELECT * FROM tasks WHERE assignee = " . $id;
+  $sql = "
+  SELECT t.id,
+         t.subject,
+         t.project,
+         t.status,
+         t.priority,
+         u.username AS creator_name
+  FROM tasks AS t
+  LEFT JOIN users AS u
+    ON t.created_by = u.id
+  WHERE t.assignee = " . $id;
 } else {
-  $sql = "SELECT * FROM tasks";
+  $sql = "
+    SELECT t.id,
+           t.subject,
+           t.project,
+           t.status,
+           t.priority,
+           u.username AS creator_name
+    FROM tasks AS t
+    LEFT JOIN users AS u
+      ON t.created_by = u.id
+  ";
 }
 
 $result = $conn->query($sql);
@@ -32,7 +52,7 @@ $result = $conn->query($sql);
 <div class="TASK-CONTENT">
   <div class="TASK-HEADER">
     <p class="TASK-HEADER-1">Task List</p>
-    <p class="TASK-HEADER-2">(5)</p> <!-- ADD ECHO AMOUNT OF TASKS -->
+    <p class="TASK-HEADER-2">(5)</p>
   </div>
 
   <!-- TASK SECTION AREA -->
@@ -66,7 +86,7 @@ $result = $conn->query($sql);
         <td>" . $row["id"] . "</td>
         <td class='VIEW-TASK'><a href=\"view-task-page.php?id=" . $row["id"] . "\" title=\"Detailed view\">" . $row["subject"] . "<a></td>
         <td>" . $row["project"] . "</td>
-        <td>" . $row["assignee"] . "</td>
+        <td>" . (isset($row["creator_name"]) ? $row["creator_name"] : "") . "</td>
         <td>" . $row["status"] . "</td>
         <td>" . $row["priority"] . "</td>
       </tr>";
@@ -80,9 +100,9 @@ $result = $conn->query($sql);
         echo "0 results";
       }
 
-?>
+      ?>
 
-</div>
+    </div>
     <!-- TASK SECTION LIST END -->
 
   </div>
