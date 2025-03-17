@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2025 at 12:26 PM
+-- Generation Time: Mar 17, 2025 at 07:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,24 +31,36 @@ CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `subject` varchar(100) DEFAULT NULL,
   `project` varchar(35) DEFAULT NULL,
-  `assignee` int(11) DEFAULT NULL,
   `status` set('New','In Progress','Complete','') DEFAULT NULL,
-  `priority` set('Low','Moderate','High','Urgent') DEFAULT NULL
+  `priority` set('Low','Moderate','Urgent') DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tasks`
 --
 
-INSERT INTO `tasks` (`id`, `subject`, `project`, `assignee`, `status`, `priority`) VALUES
-(1, 'First', 'Project', 0, 'New', 'Low'),
-(2, 'Second', 'Project', 0, 'Complete', 'High'),
-(3, 'Review Changes', 'Developing Helpful Tool', 2, 'In Progress', 'Moderate'),
-(4, 'A', 'B', 1, '', 'High'),
-(5, 'New', 'Project', 3, 'Complete', 'High'),
-(6, 'Newer Task', 'Project Two', 5, 'In Progress', 'Low'),
-(8, 'Add Functionality', 'Project Three', 3, 'In Progress', 'Moderate'),
-(9, 'Example Task', 'Example Project', 12, 'New', 'High');
+INSERT INTO `tasks` (`id`, `subject`, `project`, `status`, `priority`, `created_by`) VALUES
+(1, 'First', 'Project', 'New', 'Urgent', 1),
+(19, 'Second', 'Project', 'New', 'Moderate', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `task_assigned_users`
+--
+
+CREATE TABLE `task_assigned_users` (
+  `task_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `task_assigned_users`
+--
+
+INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
+(19, 3);
 
 -- --------------------------------------------------------
 
@@ -80,7 +92,15 @@ INSERT INTO `users` (`id`, `username`, `password`, `clearance`) VALUES
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_created_by` (`created_by`);
+
+--
+-- Indexes for table `task_assigned_users`
+--
+ALTER TABLE `task_assigned_users`
+  ADD PRIMARY KEY (`task_id`,`user_id`),
+  ADD KEY `fk_user` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -96,13 +116,30 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD CONSTRAINT `fk_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `task_assigned_users`
+--
+ALTER TABLE `task_assigned_users`
+  ADD CONSTRAINT `fk_task` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
