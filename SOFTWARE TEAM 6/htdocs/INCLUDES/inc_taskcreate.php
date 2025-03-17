@@ -9,8 +9,7 @@
     <script src="JS/SELECT-MULTI-DROPDOWN.js"></script>
 
 </head>
-
-<body>
+    <!-- MIDDLE SECTION -->
     <div class='MIDDLE-SECTION'>
         <p class="MIDDLE-HERO-IMAGE"></p>
 
