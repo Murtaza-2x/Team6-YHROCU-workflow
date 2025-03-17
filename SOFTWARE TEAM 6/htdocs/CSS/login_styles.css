@@ -87,6 +87,21 @@
   opacity: 0.3;
 }
 
+.PASSWORD-TOGGLE {
+  position: absolute;
+  transform: translateX(900%)translateY(-90%);
+  background-color: transparent;
+  border: none;
+}
+
+.PASSWORD-TOGGLE img {
+  width: 20px;
+  height: 20px;
+  border: none;
+  opacity: 0.3;
+}
+
+
 .RESET-LINK {
   display: inline-block;
   text-align: left;
