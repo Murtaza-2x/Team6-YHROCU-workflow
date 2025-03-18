@@ -137,7 +137,6 @@
 .TASK-LIST button {
   padding: 10px 45px;
   border: none;
-  background-color: var(--blue);
   color: #fff;
   border-radius: 20px;
   cursor: pointer;
@@ -153,6 +152,7 @@
   margin: 0 auto;
   margin-top: 20px;
   font-size: 1.1rem;
+  background-color: var(--blue);
 }
 
 .USER-MESSAGE {

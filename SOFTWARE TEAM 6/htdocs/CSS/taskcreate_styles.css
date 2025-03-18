@@ -137,27 +137,40 @@
   width: 100%;
   padding: 15px;
   font-size: 14px;
-  border: 1px solid var(--light-gray);
+  border: 1px solid var(--light-grey);
   border-radius: 25px;
   color: var(--dark-grey);
   background-color: white;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-.CREATE-TASK-BUTTON {
-  background: var(--blue);
+.TASK-BUTTONS {
+  display: block;
+}
+
+.TASK-BUTTONS button {
   color: white;
-  padding: 0.8rem 1rem;
+  padding: 0.6rem 1rem;
+  margin: 0.3rem;
   margin-top: 1rem;
   font-size: 1rem;
   border: none;
   border-radius: 20px;
   cursor: pointer;
-  width: 85%;
+  width: 40%;
 }
 
-.CREATE-TASK-BUTTON:hover {
+.TASK-BUTTONS button:hover {
   background: var(--dark-grey);
 }
+
+.CREATE-BUTTON {
+  background-color: var(--blue);
+}
+
+.CANCEL-BUTTON {
+  background-color: var(--light-grey);
+}
+
 /* CREATE TASK BOX END */
 /* MIDDLE SECTION END */

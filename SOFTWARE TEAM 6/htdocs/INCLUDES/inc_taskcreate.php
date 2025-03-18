@@ -85,13 +85,20 @@
 
                 <!-- DESCRIPTION -->
                 <div class="DESC-GROUP">
-                    <label for="description" class="DESCRIPTION-LABEL" >Description:</label>
+                    <label for="description" class="DESCRIPTION-LABEL">Description:</label>
                     <textarea id="description" name="description" class="TASK-TEXT-AREA" rows="6" required></textarea>
                 </div>
 
-                <button class='CREATE-TASK-BUTTON' type='submit'>
-                    Create Task
-                </button>
+                <div class="TASK-BUTTONS">
+                    <button class='CREATE-BUTTON' type='submit'>
+                        Create Task
+                    </button>
+                    <button
+                        class="CANCEL-BUTTON"
+                        onclick="window.location.href='list-task-page.php'">
+                        Cancel
+                    </button>
+                </div>
             </form>
         </div>
     </div>
