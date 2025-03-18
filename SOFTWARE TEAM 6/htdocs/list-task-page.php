@@ -30,7 +30,7 @@ if ($clearance == 'user') {
   FROM tasks AS t
   LEFT JOIN users AS u
     ON t.created_by = u.id
-  WHERE t.assignee = " . $id;
+  WHERE t.created_by = " . $id;
 } else {
   $sql = "
     SELECT t.id,

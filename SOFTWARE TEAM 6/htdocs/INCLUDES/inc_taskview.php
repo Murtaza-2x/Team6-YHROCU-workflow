@@ -25,7 +25,8 @@ $clearance = $_SESSION["clearance"];
                             type='text'
                             id='task-title'
                             name='task-title'
-                            placeholder='Task Title Example' disabled />
+                            value="<?php echo htmlspecialchars($subject); ?>"
+                            placeholder='Task Title' disabled />
                     </div>
                 </div>
 
@@ -41,7 +42,8 @@ $clearance = $_SESSION["clearance"];
                             type='text'
                             id='task-title'
                             name='task-title'
-                            placeholder='Project Example' disabled />
+                            value="<?php echo htmlspecialchars($project); ?>"
+                            placeholder='Project' disabled />
                         <!-- <select class='DROPDOWN-GROUP' id="project-allocation" name="project-allocation" required>
                         <option value="">Project Example</option>
                     </select> -->
@@ -56,9 +58,9 @@ $clearance = $_SESSION["clearance"];
                     <div class="TASK-LABEL">Status</div>
                     <div class="TASK-PILL-CONTAINER">
                         <div class="PILL">
-                            <button class="PILL-STATUS1">Status 1</button>
-                            <button class="PILL-STATUS2">Status 2</button>
-                            <button class="PILL-STATUS3">Status 3</button>
+                            <button class="PILL-NEW <?php echo ($status === 'New')         ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">New</button>
+                            <button class="PILL-IN-PROGRESS <?php echo ($status === 'In Progress') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">In Progress</button>
+                            <button class="PILL-COMPLETE <?php echo ($status === 'Complete')    ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">Complete</button>
                         </div>
                     </div>
                 </div>
@@ -67,9 +69,9 @@ $clearance = $_SESSION["clearance"];
                     <div class="TASK-LABEL">Priority</div>
                     <div class="TASK-PILL-CONTAINER">
                         <div class="PILL">
-                            <button class="PILL-URGENT">Urgent</button>
-                            <button class="PILL-MODERATE">Moderate</button>
-                            <button class="PILL-LOW">Low</button>
+                            <button class="PILL-URGENT   <?php echo ($priority === 'Urgent')   ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">Urgent</button>
+                            <button class="PILL-MODERATE <?php echo ($priority === 'Moderate') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">Moderate</button>
+                            <button class="PILL-LOW      <?php echo ($priority === 'Low')       ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">Low</button>
                         </div>
                     </div>
                 </div>
@@ -100,8 +102,16 @@ $clearance = $_SESSION["clearance"];
 
             <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
-                <button class="UPDATE-BUTTON">Update Task</button>
-                <button class="CANCEL-BUTTON">Cancel</button>
+                <button
+                    class="UPDATE-BUTTON"
+                    onclick="window.location.href='edit-task-page.php?id=<?php echo $id; ?>'">
+                    Update Task
+                </button>
+                <button
+                    class="CANCEL-BUTTON"
+                    onclick="window.location.href='list-task-page.php'">
+                    Cancel
+                </button>
                 <button class="VIEW-LOGS-BUTTON">View Logs</button>
             </div>
             <!-- BUTTONS END -->

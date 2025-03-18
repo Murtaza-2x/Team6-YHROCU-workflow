@@ -184,14 +184,22 @@
   user-select: none;
 }
 
-.PILL-STATUS1 {
+.PILL-ACTIVE {
+  opacity: 1;
+}
+
+.PILL-INACTIVE {
+  opacity: 0.3;
+}
+
+.PILL-NEW {
   background-color: var(--blue);
 }
-.PILL-STATUS2 {
-  background-color: var(--green);
+.PILL-IN-PROGRESS {
+  background-color: orange;
 }
-.PILL-STATUS3 {
-  background-color: yellow;
+.PILL-COMPLETE {
+  background-color: var(--green);
 }
 
 .PILL-URGENT {
