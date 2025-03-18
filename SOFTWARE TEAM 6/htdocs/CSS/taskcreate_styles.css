@@ -96,7 +96,8 @@
 }
 
 .select2-search__field {
-  opacity: 0.2;
+  opacity: 0.3;
+  font-size: 2rem;
   padding: 0;
   transform: translateX(-5px);
 }
@@ -105,6 +106,42 @@
 
 .INPUT-GROUP:hover {
   opacity: 1;
+}
+
+.DESC-GROUP {
+  width: 93%;
+  padding: 0.3rem;
+}
+
+.DESCRIPTION-LABEL {
+  display: block;
+  justify-content: center;
+  margin-bottom: 0.6rem;
+  color: var(--dark-grey);
+  font-size: 1.2rem;
+  transform: translateX(10px);
+  border: none;
+  opacity: 0.3;
+  outline: none;
+}
+
+.INFO-ICON {
+  margin-left: 5px;
+  width: 15px;
+  height: 15px;
+  border: none;
+  opacity: 0.3;
+}
+
+.TASK-TEXT-AREA {
+  width: 100%;
+  padding: 15px;
+  font-size: 14px;
+  border: 1px solid var(--light-gray);
+  border-radius: 25px;
+  color: var(--dark-grey);
+  background-color: white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .CREATE-TASK-BUTTON {

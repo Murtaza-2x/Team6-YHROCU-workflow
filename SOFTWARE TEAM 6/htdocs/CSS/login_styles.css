@@ -89,7 +89,7 @@
 
 .PASSWORD-TOGGLE {
   position: absolute;
-  transform: translateX(900%)translateY(-90%);
+  transform: translateX(410%)translateY(-90%);
   background-color: transparent;
   border: none;
 }
@@ -155,5 +155,17 @@
   height: 50px;
   margin-top: 0.4rem;
 }
+
+.ERROR-MESSAGE {
+  background-color: var(--dark-grey);
+  color: white;
+  padding: 5px;
+  padding-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+
 /* LOGIN BOX END */
 /* MIDDLE SECTION END */

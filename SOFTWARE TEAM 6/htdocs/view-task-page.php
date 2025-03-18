@@ -22,26 +22,26 @@ if ($id <= 0) {
 }
 
 $sql = "
-    SELECT t.*,
-           u.username AS assigned_user
-    FROM tasks AS t
-    LEFT JOIN users u ON t.created_by = u.id
-    WHERE t.id = $id
+  SELECT t.*,
+         GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
+  FROM tasks t
+  LEFT JOIN task_assigned_users tau ON t.id = tau.task_id
+  LEFT JOIN users u ON tau.user_id = u.id
+  WHERE t.id = $id
+  GROUP BY t.id
 ";
+
 $result = $conn->query($sql);
 
-if (!$result || $result->num_rows < 1) {
-      echo "Task not found.";
-      exit;
+if ($result && $result->num_rows > 0) {
+    $row         = $result->fetch_assoc();
+    $subject     = $row['subject'];
+    $project     = $row['project'];
+    $status      = $row['status'];
+    $priority    = $row['priority'];
+    $description = $row['description'];
+    $assignees   = $row['assigned_users'];
 }
-
-$row = $result->fetch_assoc();
-
-$subject   = $row['subject'];
-$project     = $row['project'];
-$status      = $row['status'];
-$priority    = $row['priority'];
-$assignees   = $row['assigned_user'] ?? '';
 
 ?>
 

@@ -18,30 +18,46 @@ $title = "List Tasks";
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
 
 <?php
-
-if ($clearance == 'user') {
+if ($clearance === 'User') {
   $sql = "
-  SELECT t.id,
-         t.subject,
-         t.project,
-         t.status,
-         t.priority,
-         u.username AS creator_name
-  FROM tasks AS t
-  LEFT JOIN users AS u
-    ON t.created_by = u.id
-  WHERE t.created_by = " . $id;
+      SELECT
+          t.id,
+          t.subject,
+          t.project,
+          t.status,
+          t.priority,
+          c.username AS creator_name,
+          GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
+      FROM tasks AS t
+      -- For a user, we can use an INNER JOIN to ensure tasks actually have an assigned user row
+      JOIN task_assigned_users AS tau
+        ON t.id = tau.task_id
+      JOIN users AS u
+        ON tau.user_id = u.id
+      -- Task's creator (still LEFT JOIN is okay)
+      LEFT JOIN users AS c
+        ON t.created_by = c.id
+      WHERE tau.user_id = {$id}
+      GROUP BY t.id
+  ";
 } else {
   $sql = "
-    SELECT t.id,
-           t.subject,
-           t.project,
-           t.status,
-           t.priority,
-           u.username AS creator_name
-    FROM tasks AS t
-    LEFT JOIN users AS u
-      ON t.created_by = u.id
+      SELECT
+          t.id,
+          t.subject,
+          t.project,
+          t.status,
+          t.priority,
+          c.username AS creator_name,
+          GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
+      FROM tasks AS t
+      LEFT JOIN task_assigned_users AS tau
+        ON t.id = tau.task_id
+      LEFT JOIN users AS u
+        ON tau.user_id = u.id
+      LEFT JOIN users AS c
+        ON t.created_by = c.id
+      GROUP BY t.id
   ";
 }
 
@@ -93,11 +109,11 @@ $result = $conn->query($sql);
         }
         echo "</table>";
 
-        if ($_SESSION["clearance"] != 'user') {
+        if ($_SESSION["clearance"] != 'User') {
           echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
         }
       } else {
-        echo "0 results";
+        echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
       }
 
       ?>

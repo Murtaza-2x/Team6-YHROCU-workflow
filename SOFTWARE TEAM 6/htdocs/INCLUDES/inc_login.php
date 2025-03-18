@@ -20,6 +20,11 @@
         <p>Login to continue...</p>
 
         <form id="LOGIN-FORM" action="index.php" method="post">
+
+          <?php if (!empty($errorMsg)): ?>
+            <div class="ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
+          <?php endif; ?>
+
           <div class="INPUT-GROUP">
             <img class="INPUT-GROUP-IMG" src="ICONS/email.svg" /></img>
             <input type="text" id="username" name="username" placeholder="Username" required />
@@ -35,7 +40,7 @@
               required />
 
             <button type="button" id="togglePassword" class="PASSWORD-TOGGLE" onclick="togglePasswordVisibility()">
-              <img id="toggleIcon" src="ICONS/eye-crossed.png"/>
+              <img id="toggleIcon" src="ICONS/eye-crossed.png" />
             </button>
           </div>
 

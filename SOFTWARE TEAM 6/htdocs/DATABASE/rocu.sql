@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 17, 2025 at 07:56 PM
+-- Generation Time: Mar 18, 2025 at 12:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,16 +33,19 @@ CREATE TABLE `tasks` (
   `project` varchar(35) DEFAULT NULL,
   `status` set('New','In Progress','Complete','') DEFAULT NULL,
   `priority` set('Low','Moderate','Urgent') DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL
+  `created_by` int(11) DEFAULT NULL,
+  `description` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tasks`
 --
 
-INSERT INTO `tasks` (`id`, `subject`, `project`, `status`, `priority`, `created_by`) VALUES
-(1, 'First', 'Project', 'New', 'Urgent', 1),
-(19, 'Second', 'Project', 'New', 'Moderate', 1);
+INSERT INTO `tasks` (`id`, `subject`, `project`, `status`, `priority`, `created_by`, `description`) VALUES
+(1, 'First', 'Project', 'New', 'Urgent', 1, NULL),
+(19, 'Second', 'Project', 'New', 'Moderate', 1, NULL),
+(20, 'Third', 'Project', 'New', 'Urgent', 1, ''),
+(21, 'Fourth', 'Project', 'New', 'Moderate', 1, '123');
 
 -- --------------------------------------------------------
 
@@ -60,7 +63,9 @@ CREATE TABLE `task_assigned_users` (
 --
 
 INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
-(19, 3);
+(19, 3),
+(20, 2),
+(21, 3);
 
 -- --------------------------------------------------------
 
@@ -72,7 +77,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(25) DEFAULT NULL,
   `password` varchar(35) DEFAULT NULL,
-  `clearance` enum('user','manager','admin','') DEFAULT NULL
+  `clearance` enum('User','Manager','Adminn','') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -80,9 +85,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `clearance`) VALUES
-(1, 'johnAdmin', 'adminPass', 'admin'),
-(2, 'joeManager', 'managerPass', 'manager'),
-(3, 'jimUser', 'userPass', 'user');
+(1, 'johnAdmin', 'adminPass', ''),
+(2, 'joeManager', 'managerPass', 'Manager'),
+(3, 'jimUser', 'userPass', 'User');
 
 --
 -- Indexes for dumped tables
@@ -116,7 +121,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `users`

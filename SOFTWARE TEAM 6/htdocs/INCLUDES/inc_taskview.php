@@ -85,9 +85,11 @@ $clearance = $_SESSION["clearance"];
                     <img class="INFO-ICON" src="ICONS/info.png" /></img>
                 </label>
                 <textarea
-                    id="DESCRIPTION" class="TASK-TEXT-AREA" rows="6"
-                    readonly>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </textarea>
+                    id="description"
+                    name ="description"
+                    class="TASK-TEXT-AREA"
+                    rows="6"
+                    readonly><?php echo htmlspecialchars($description); ?></textarea>
             </div>
 
             <!-- ASSIGNED + LOGS -->

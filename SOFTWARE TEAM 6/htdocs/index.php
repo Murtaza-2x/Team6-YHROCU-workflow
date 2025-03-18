@@ -15,6 +15,8 @@ $title = "ROCU: Login";
 <?php include 'INCLUDES/inc_header.php'; ?>
 
 <?php
+$errorMsg = '';
+
 if (isset($_POST["username"])) {
     $sql = "SELECT * FROM users WHERE username = '" . $_POST["username"] . "'";
     $result = $conn->query($sql);
@@ -27,10 +29,10 @@ if (isset($_POST["username"])) {
             $_SESSION["clearance"] = $row["clearance"];
             header('Location: list-task-page.php?clearance=' . $clearance . '&id=' . $id);
         } else {
-            echo "Incorrect username or password";
+            $errorMsg = 'Incorrect username or password';
         }
     } else {
-        echo "Incorrect username or password";
+        $errorMsg = 'Incorrect username or password';
     }
 }
 include 'INCLUDES/inc_login.php';
