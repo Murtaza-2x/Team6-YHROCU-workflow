@@ -27,7 +27,7 @@
 
           <div class="INPUT-GROUP">
             <img class="INPUT-GROUP-IMG" src="ICONS/email.svg" /></img>
-            <input type="text" id="username" name="username" placeholder="Username" required />
+            <input type="text" id="email" name="email" placeholder="Email Address" required />
           </div>
 
           <div class="INPUT-GROUP">

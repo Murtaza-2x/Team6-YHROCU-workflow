@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2025 at 12:40 PM
+-- Generation Time: Mar 19, 2025 at 10:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,7 +45,8 @@ INSERT INTO `tasks` (`id`, `subject`, `project`, `status`, `priority`, `created_
 (1, 'First', 'Project', 'New', 'Urgent', 1, NULL),
 (19, 'Second', 'Project', 'New', 'Moderate', 1, NULL),
 (20, 'Third', 'Project', 'New', 'Urgent', 1, ''),
-(21, 'Fourth', 'Project', 'New', 'Moderate', 1, '123');
+(21, 'Fourth', 'Project', 'New', 'Moderate', 1, '123'),
+(22, 'Fifth', 'Project', 'In Progress', 'Moderate', 1, 'drzgoihzrsdgoieshgiosehjgf');
 
 -- --------------------------------------------------------
 
@@ -65,7 +66,9 @@ CREATE TABLE `task_assigned_users` (
 INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
 (19, 3),
 (20, 2),
-(21, 3);
+(21, 3),
+(22, 2),
+(22, 3);
 
 -- --------------------------------------------------------
 
@@ -76,6 +79,7 @@ INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(25) DEFAULT NULL,
+  `email` varchar(25) NOT NULL,
   `password` varchar(35) DEFAULT NULL,
   `clearance` enum('User','Manager','Adminn','') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -84,10 +88,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `clearance`) VALUES
-(1, 'johnAdmin', 'adminPass', ''),
-(2, 'joeManager', 'managerPass', 'Manager'),
-(3, 'jimUser', 'userPass', 'User');
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `clearance`) VALUES
+(1, 'johnAdmin', 'johnAdmin@gmail.com', 'adminPass', ''),
+(2, 'joeManager', 'joeManager@gmail.com', 'managerPass', 'Manager'),
+(3, 'jimUser', 'jimUser@gmail.com', 'userPass', 'User');
 
 --
 -- Indexes for dumped tables
@@ -121,7 +125,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `users`

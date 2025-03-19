@@ -17,22 +17,22 @@ $title = "ROCU: Login";
 <?php
 $errorMsg = '';
 
-if (isset($_POST["username"])) {
-    $sql = "SELECT * FROM users WHERE username = '" . $_POST["username"] . "'";
+if (isset($_POST["email"])) {
+    $sql = "SELECT * FROM users WHERE email = '" . $_POST["email"] . "'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $correct_pass = $row["password"];
         if ($_POST["password"] == $correct_pass) {
             $_SESSION["id"] = $row["id"];
-            $_SESSION["username"] = $row["username"];
+            $_SESSION["email"] = $row["email"];
             $_SESSION["clearance"] = $row["clearance"];
             header('Location: list-task-page.php?clearance=' . $clearance . '&id=' . $id);
         } else {
-            $errorMsg = 'Incorrect username or password';
+            $errorMsg = 'Incorrect Email Address or Password';
         }
     } else {
-        $errorMsg = 'Incorrect username or password';
+        $errorMsg = 'Incorrect Email Address or Password';
     }
 }
 include 'INCLUDES/inc_login.php';
