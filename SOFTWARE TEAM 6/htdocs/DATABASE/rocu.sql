@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2025 at 10:29 AM
+-- Generation Time: Mar 19, 2025 at 12:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,7 +46,8 @@ INSERT INTO `tasks` (`id`, `subject`, `project`, `status`, `priority`, `created_
 (19, 'Second', 'Project', 'New', 'Moderate', 1, NULL),
 (20, 'Third', 'Project', 'New', 'Urgent', 1, ''),
 (21, 'Fourth', 'Project', 'New', 'Moderate', 1, '123'),
-(22, 'Fifth', 'Project', 'In Progress', 'Moderate', 1, 'drzgoihzrsdgoieshgiosehjgf');
+(22, 'Fifth', 'Project', 'In Progress', 'Moderate', 1, 'drzgoihzrsdgoieshgiosehjgf'),
+(23, 'Sixth', 'Project', 'In Progress', 'Urgent', 1, 'some testing');
 
 -- --------------------------------------------------------
 
@@ -68,7 +69,8 @@ INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
 (20, 2),
 (21, 3),
 (22, 2),
-(22, 3);
+(22, 3),
+(23, 2);
 
 -- --------------------------------------------------------
 
@@ -79,7 +81,7 @@ INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(25) DEFAULT NULL,
-  `email` varchar(25) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `password` varchar(35) DEFAULT NULL,
   `clearance` enum('User','Manager','Adminn','') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -125,7 +127,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -7,7 +7,7 @@ $loggedInUserId = $_SESSION['id'];
 
 <!DOCTYPE html>
 <html>
-
+<link rel="shortcut icon" type="image/png" href="IMAGES/ROCU_FAVICON.png">
 <link href="CSS/default_styles.css" rel="stylesheet">
 <link href="CSS/root_colors.css" rel="stylesheet">
 <link href="CSS/header_footer_styles.css" rel="stylesheet">
