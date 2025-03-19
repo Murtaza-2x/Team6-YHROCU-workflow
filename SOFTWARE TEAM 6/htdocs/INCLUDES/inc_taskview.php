@@ -86,21 +86,22 @@ $clearance = $_SESSION["clearance"];
                 </label>
                 <textarea
                     id="description"
-                    name ="description"
+                    name="description"
                     class="TASK-TEXT-AREA"
                     rows="6"
                     readonly><?php echo htmlspecialchars($description); ?></textarea>
             </div>
 
-            <!-- ASSIGNED + LOGS -->
+            <!-- ASSIGNED -->
             <div class="TASK-ROW ASSIGNED-ROW">
                 <div class="ASSIGNED-INFO">
                     <span class="ASSIGNED-LABEL">Assigned:</span>
-                    <span class="ASSIGNED-LABEL-2">John Smith, Jane Smith...</span>
-                    <span class="ADD-MORE-STAFF">+ Add more Staff</span>
+                    <span class="ASSIGNED-LABEL-2">
+                        <?php echo htmlspecialchars($assignedUsers) ?: 'None'; ?>
+                    </span>
                 </div>
             </div>
-            <!-- ASSIGNED + LOGS END -->
+            <!-- ASSIGNED END -->
 
             <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
@@ -111,7 +112,7 @@ $clearance = $_SESSION["clearance"];
                 </button>
                 <button
                     class="CANCEL-BUTTON"
-                    onclick="window.location.href='list-task-page.php'">
+                    onclick="window.location.href='list-task-page.php?clearance=<?php echo $_SESSION["clearance"]; ?>&id=<?php echo $_SESSION["id"]; ?>'">
                     Cancel
                 </button>
                 <button class="VIEW-LOGS-BUTTON">View Logs</button>

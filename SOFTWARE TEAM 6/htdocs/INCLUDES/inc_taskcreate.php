@@ -95,7 +95,8 @@
                     </button>
                     <button
                         class="CANCEL-BUTTON"
-                        onclick="window.location.href='list-task-page.php'">
+                        type="button"
+                        onclick="window.location.href='list-task-page.php?clearance=<?php echo $_SESSION["clearance"]; ?>&id=<?php echo $_SESSION["id"]; ?>'">
                         Cancel
                     </button>
                 </div>

@@ -40,7 +40,7 @@ if ($result && $result->num_rows > 0) {
     $status      = $row['status'];
     $priority    = $row['priority'];
     $description = $row['description'];
-    $assignees   = $row['assigned_users'];
+    $assignedUsers = $row['assigned_users'] ?? 'No Users Assigned'; 
 }
 
 ?>
