@@ -1,3 +1,22 @@
+/* MIDDLE SECTION */
+.MIDDLE-SECTION {
+  width: 100%;
+  height: 100%;
+  top: 75px;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.MIDDLE-SECTION {
+  position: absolute;
+  background-color: white;
+  z-index: 1;
+}
+/* MIDDLE SECTION END */
+
 .TOP-SECTION,
 .BOTTOM-SECTION {
   position: fixed;
@@ -24,154 +43,6 @@
 }
 /* TOP SECTION END */
 
-/* MIDDLE SECTION */
-.MIDDLE-SECTION {
-  width: 100%;
-  height: 100%;
-  top: 75px;
-  bottom: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.MIDDLE-SECTION {
-  position: absolute;
-  background-color: var(white);
-  z-index: 1;
-}
-
-.MIDDLE-HERO-IMAGE {
-  position: absolute;
-  background-image: url(../IMAGES/BG.jpg);
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  filter: brightness(50%);
-}
-
-/* LOGIN BOX */
-.LOGIN-CONTAINER {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-.LOGIN-BOX {
-  background: #fff;
-  border-radius: 20px;
-  padding: 2rem;
-  width: 350px;
-  height: 430px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.LOGIN-BOX h1 {
-  margin: 0;
-  font-size: 2rem;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  color: var(--dark-grey);
-}
-
-.LOGIN-BOX p {
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-  font-size: 1.2rem;
-  color: var(--dark-grey);
-  opacity: 0.8;
-}
-
-.INPUT-GROUP {
-  text-align: left;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-}
-
-.INPUT-GROUP input {
-  width: 100%;
-  margin-left: 1.5rem;
-  font-size: 1rem;
-  border: none;
-  opacity: 0.2;
-  outline: none;
-}
-
-.INPUT-GROUP:hover {
-  opacity: 1;
-}
-
-.INPUT-GROUP-IMG {
-  position: absolute;
-  transform: translateX(-10%)translateY(10%);
-  width: 15px;
-  height: 15px;
-  border: none;
-  opacity: 0.3;
-}
-
-.RESET-LINK {
-  display: inline-block;
-  text-align: left;
-  margin: 0.5rem 0 1.5rem 0;
-  font-family: "Helvetica Neue Medium";
-  font-size: 0.8rem;
-  letter-spacing: 0.05rem;
-  color: var(--blue);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.RESET-LINK:hover {
-  color: var(--dark-grey);
-}
-
-.RESET-LINK-2 {
-  display: inline-block;
-  margin: 0.5rem 0 1.5rem 0;
-  font-family: "Helvetica Neue Light";
-  font-size: 0.5rem;
-  letter-spacing: 0.05rem;
-  color: var(--light-gray);
-  opacity: 0.4;
-}
-
-.LOGIN-BUTTON {
-  background: var(--blue);
-  color: white;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  width: 85%;
-}
-
-.LOGIN-BUTTON:hover {
-  background: var(--dark-grey);
-}
-
-.POWERED-BY {
-  margin-top: 1.5rem;
-  font-size: 0.7rem;
-  color: var(--light-gray);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.AUTH-0 {
-  height: 50px;
-  margin-top: 0.4rem;
-}
-
-/* LOGIN BOX END */
-/* MIDDLE SECTION END */
-
 /* BOTTOM SECTION */
 .BOTTOM-SECTION {
   bottom: 0;
@@ -191,5 +62,4 @@
   cursor: default;
   user-select: none;
 }
-
 /* BOTTOM SECTION END*/
