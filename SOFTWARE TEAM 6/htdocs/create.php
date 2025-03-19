@@ -12,8 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $assignee = $_POST['assignee'];
     $status = $_POST['status'];
     $priority = $_POST['priority'];
-    $sql = "INSERT INTO tasks (`id`, `subject`, `project`, `assignee`, `status`, `priority`) 
-        VALUES (NULL, '" . $subject . "', '" . $project . "', '" . $assignee . "', '" . $status . "', '" . $priority . "')";
+    $sql = "INSERT INTO tasks (`subject`, `project`, `assignee`, `status`, `priority`) 
+        VALUES ('" . $subject . "', '" . $project . "',
+        '" . $assignee . "', '" . $status . "', '" . $priority . "')";
     echo $sql;
     if ($conn->query($sql) === true) {
         $id = $conn->insert_id;

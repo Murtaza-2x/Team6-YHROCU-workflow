@@ -7,7 +7,7 @@
 
 // echo "We are getting.";
 $id = $_GET['id'];
-$sql = "SELECT * FROM tasks WHERE id = " . $id;
+$sql = "SELECT * FROM tasks WHERE id = " . $id . " AND valid_until IS NULL";
 // echo $id;
 // echo $sql;
 $result = $conn->query($sql);

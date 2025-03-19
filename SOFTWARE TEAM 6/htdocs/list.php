@@ -8,12 +8,12 @@
 $clearance = $_SESSION["clearance"];
 $id = $_SESSION["id"];
 $username = $_SESSION["username"];
-echo "Welcome, " . $clearance . " " . $username . ". Your id is" . $id . ".<br>";
+echo "Welcome, " . $clearance . " " . $username . ". Your id is " . $id . ".<br>";
 
 if ($clearance == 'user') {
-  $sql = "SELECT * FROM tasks WHERE assignee = " . $id;
+  $sql = "SELECT * FROM tasks WHERE assignee = " . $id . " AND valid_until IS NULL";
 } else {
-  $sql = "SELECT * FROM tasks";
+  $sql = "SELECT * FROM tasks WHERE valid_until IS NULL";
 }
 
 $result = $conn->query($sql);
