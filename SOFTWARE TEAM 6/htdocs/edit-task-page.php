@@ -9,7 +9,7 @@ This file allows the user to edit an existing task in the database.
      fetches that task’s details from the database, and pre-fills an HTML form so the user can edit the task. 
 */
 
-$title = 'Edit Task';
+$title = 'ROCU: Edit Task';
 ?>
 
 <?php include 'INCLUDES/inc_connect.php'; ?>

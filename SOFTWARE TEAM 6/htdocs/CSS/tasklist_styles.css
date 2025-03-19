@@ -84,6 +84,12 @@
   text-decoration: none;
 }
 
+.TASK-LIST th img {
+  width:10px;
+  height:10px;
+  opacity: 0.5;
+}
+
 .TASK-LIST a {
   color: var(--dark-grey);
   text-decoration: none;

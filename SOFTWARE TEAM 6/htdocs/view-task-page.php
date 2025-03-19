@@ -8,7 +8,7 @@ This file provides a detailed view of a single task by retrieving its details fr
 5. A “Back” button is available to return to the list of tasks.
 */
 
-$title = "Detailed Task View";
+$title = "ROCU: Task View";
 ?>
 
 <?php include 'INCLUDES/inc_connect.php'; ?>

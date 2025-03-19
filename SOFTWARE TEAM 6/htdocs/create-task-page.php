@@ -8,7 +8,7 @@ If successful, the user is redirected to a “view” page for the newly inserte
 If it’s a GET request, the script displays an HTML form that allows users to enter the details necessary for creating a new task.
 */
 
-$title = 'Create New Task';
+$title = 'ROCU: Create Task';
 ?>
 
 <?php include 'INCLUDES/inc_connect.php'; ?>

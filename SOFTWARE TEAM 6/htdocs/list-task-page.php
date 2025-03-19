@@ -10,12 +10,13 @@ This file displays a list of tasks for the currently logged-in user or for all u
 5. If the user is not a regular user (i.e., has higher clearance), they also see an “Add Task” button to create a new task.
 */
 
-$title = "List Tasks";
+$title = "ROCU: Dashboard";
 ?>
 
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
+
 
 <?php
 if ($clearance === 'User') {
@@ -29,12 +30,10 @@ if ($clearance === 'User') {
           c.username AS creator_name,
           GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
       FROM tasks AS t
-      -- For a user, we can use an INNER JOIN to ensure tasks actually have an assigned user row
       JOIN task_assigned_users AS tau
         ON t.id = tau.task_id
       JOIN users AS u
         ON tau.user_id = u.id
-      -- Task's creator (still LEFT JOIN is okay)
       LEFT JOIN users AS c
         ON t.created_by = c.id
       WHERE tau.user_id = {$id}
@@ -84,63 +83,80 @@ $result = $conn->query($sql);
     <!-- TASK SECTION LIST -->
     <div class="TASK-LIST">
 
-        <?php
-        if ($result->num_rows > 0) {
-          echo "<table>"
-            . "  <tr>"
-            . "    <th>ID</th>"
-            . "    <th>Subject</th>"
-            . "    <th>Project</th>"
-            . "    <th>Assignee</th>"
-            . "    <th>Status</th>"
-            . "    <th>Priority</th>"
-            . "  </tr>";
+      <?php
+      if ($result->num_rows > 0) {
+        echo "<table class='TASK-TABLE'>
+  <thead>
+  <tr>
+    <th>
+      ID
+        <img src='ICONS/filter-filled.png' class='filter'/>
+    </th>
+    <th>
+      Subject
+        <img src='ICONS/filter-filled.png' class='filter'/>
+    </th>
+    <th>
+      Project
+        <img src='ICONS/filter-filled.png' class='filter'/>
+    </th>
+    <th>
+      Assignee
+        <img src='ICONS/filter-filled.png' class='filter'/>
+    </th>
+    <th>
+      Status
+        <img src='ICONS/filter-filled.png' class='filter'/>
+    </th>
+    <th>
+      Priority
+        <img src='ICONS/filter-filled.png' class='filter'/>
+    </th>
+  </tr>
+  </thead>";
 
-          while ($row = $result->fetch_assoc()) {
-            $taskId   = $row["id"];
-            $subject  = $row["subject"];
-            $project  = $row["project"];
-            $creator  = isset($row["creator_name"]) ? $row["creator_name"] : "";
-            $status   = $row["status"];    // e.g. "New", "In Progress", "Complete"
-            $priority = $row["priority"];  // e.g. "Urgent", "Moderate", "Low"
+        while ($row = $result->fetch_assoc()) {
+          $taskId   = $row["id"];
+          $subject  = $row["subject"];
+          $project  = $row["project"];
+          $creator  = isset($row["creator_name"]) ? $row["creator_name"] : "";
+          $status   = $row["status"];
+          $priority = $row["priority"];
 
-            // Build a single pill for Status
-            $statusPill = '';
-            switch ($status) {
-              case 'New':
-                $statusPill = "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>";
-                break;
-              case 'In Progress':
-                $statusPill = "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>";
-                break;
-              case 'Complete':
-                $statusPill = "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>";
-                break;
-              default:
-                // fallback if status is something else
-                $statusPill = "<button class='PILL-INACTIVE'>$status</button>";
-                break;
-            }
+          // Build a single pill for Status
+          $statusPill = '';
+          switch ($status) {
+            case 'New':
+              $statusPill = "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>";
+              break;
+            case 'In Progress':
+              $statusPill = "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>";
+              break;
+            case 'Complete':
+              $statusPill = "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>";
+              break;
+            default:
+              $statusPill = "<button class='PILL-INACTIVE'>$status</button>";
+              break;
+          }
 
-            // Build a single pill for Priority
-            $priorityPill = '';
-            switch ($priority) {
-              case 'Urgent':
-                $priorityPill = "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>";
-                break;
-              case 'Moderate':
-                $priorityPill = "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>";
-                break;
-              case 'Low':
-                $priorityPill = "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>";
-                break;
-              default:
-                $priorityPill = "<button id='PILL-INACTIVE'>$priority</button>";
-                break;
-            }
+          $priorityPill = '';
+          switch ($priority) {
+            case 'Urgent':
+              $priorityPill = "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>";
+              break;
+            case 'Moderate':
+              $priorityPill = "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>";
+              break;
+            case 'Low':
+              $priorityPill = "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>";
+              break;
+            default:
+              $priorityPill = "<button id='PILL-INACTIVE'>$priority</button>";
+              break;
+          }
 
-            // Echo the table row
-            echo "
+          echo "<tbody>
               <tr>
                 <td>$taskId</td>
                 <td class='VIEW-TASK'>
@@ -151,21 +167,22 @@ $result = $conn->query($sql);
                 <td>$statusPill</td>
                 <td>$priorityPill</td>
               </tr>
+                </tbody>
             ";
-          }
-          echo "</table>";
-
-          if ($_SESSION["clearance"] != 'User') {
-            echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
-          }
-        } else {
-          echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
         }
+        echo "</table>";
 
-        ?>
+        if ($_SESSION["clearance"] != 'User') {
+          echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
+        }
+      } else {
+        echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
+      }
 
-      </div>
-      <!-- TASK SECTION LIST END -->
+      ?>
+
+    </div>
+    <!-- TASK SECTION LIST END -->
   </div>
   <!-- TASK SECTION AREA END -->
 
