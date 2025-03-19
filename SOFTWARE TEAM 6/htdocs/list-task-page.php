@@ -84,43 +84,88 @@ $result = $conn->query($sql);
     <!-- TASK SECTION LIST -->
     <div class="TASK-LIST">
 
-      <?php
-      if ($result->num_rows > 0) {
-        echo "<table>"
-          . "  <tr>"
-          . "    <th>ID</th>"
-          . "    <th>Subject</th>"
-          . "    <th>Project</th>"
-          . "    <th>Assignee</th>"
-          . "    <th>Status</th>"
-          . "    <th>Priority</th>"
-          . "  </tr>";
+        <?php
+        if ($result->num_rows > 0) {
+          echo "<table>"
+            . "  <tr>"
+            . "    <th>ID</th>"
+            . "    <th>Subject</th>"
+            . "    <th>Project</th>"
+            . "    <th>Assignee</th>"
+            . "    <th>Status</th>"
+            . "    <th>Priority</th>"
+            . "  </tr>";
 
-        while ($row = $result->fetch_assoc()) {
+          while ($row = $result->fetch_assoc()) {
+            $taskId   = $row["id"];
+            $subject  = $row["subject"];
+            $project  = $row["project"];
+            $creator  = isset($row["creator_name"]) ? $row["creator_name"] : "";
+            $status   = $row["status"];    // e.g. "New", "In Progress", "Complete"
+            $priority = $row["priority"];  // e.g. "Urgent", "Moderate", "Low"
 
-          echo "<tr>
-        <td>" . $row["id"] . "</td>
-        <td class='VIEW-TASK'><a href=\"view-task-page.php?id=" . $row["id"] . "\" title=\"Detailed view\">" . $row["subject"] . "<a></td>
-        <td>" . $row["project"] . "</td>
-        <td>" . (isset($row["creator_name"]) ? $row["creator_name"] : "") . "</td>
-        <td>" . $row["status"] . "</td>
-        <td>" . $row["priority"] . "</td>
-      </tr>";
+            // Build a single pill for Status
+            $statusPill = '';
+            switch ($status) {
+              case 'New':
+                $statusPill = "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>";
+                break;
+              case 'In Progress':
+                $statusPill = "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>";
+                break;
+              case 'Complete':
+                $statusPill = "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>";
+                break;
+              default:
+                // fallback if status is something else
+                $statusPill = "<button class='PILL-INACTIVE'>$status</button>";
+                break;
+            }
+
+            // Build a single pill for Priority
+            $priorityPill = '';
+            switch ($priority) {
+              case 'Urgent':
+                $priorityPill = "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>";
+                break;
+              case 'Moderate':
+                $priorityPill = "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>";
+                break;
+              case 'Low':
+                $priorityPill = "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>";
+                break;
+              default:
+                $priorityPill = "<button id='PILL-INACTIVE'>$priority</button>";
+                break;
+            }
+
+            // Echo the table row
+            echo "
+              <tr>
+                <td>$taskId</td>
+                <td class='VIEW-TASK'>
+                  <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
+                </td>
+                <td>$project</td>
+                <td>$creator</td>
+                <td>$statusPill</td>
+                <td>$priorityPill</td>
+              </tr>
+            ";
+          }
+          echo "</table>";
+
+          if ($_SESSION["clearance"] != 'User') {
+            echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
+          }
+        } else {
+          echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
         }
-        echo "</table>";
 
-        if ($_SESSION["clearance"] != 'User') {
-          echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
-        }
-      } else {
-        echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
-      }
+        ?>
 
-      ?>
-
-    </div>
-    <!-- TASK SECTION LIST END -->
-
+      </div>
+      <!-- TASK SECTION LIST END -->
   </div>
   <!-- TASK SECTION AREA END -->
 
