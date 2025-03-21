@@ -1,12 +1,12 @@
 <?php
 /*
 This file displays a list of tasks for the currently logged-in user or for all users, depending on the user's clearance level:
-1. It starts by including the connection, header, and dashboard files.
+1. It includes the connection, header, and dashboard files.
 2. Fetches session variables for clearance, user ID, and username, then outputs a welcome message.
 3. Based on the user’s clearance:
-   - If the user is “user” level, it shows only tasks assigned to them.
+   - If the user is “User” level, it shows only tasks assigned to them.
    - Otherwise, it shows all tasks in the system.
-4. The results are fetched from the `tasks` table and displayed in a table format.
+4. The results are fetched from the `tasks` table (with a join to the `projects` table) and displayed in a table format.
 5. If the user is not a regular user (i.e., has higher clearance), they also see an “Add Task” button to create a new task.
 */
 
@@ -17,45 +17,43 @@ $title = "ROCU: Dashboard";
 <?php include 'INCLUDES/inc_header.php'; ?>
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
 
-
 <?php
+// Modify the SQL query to join with the projects table to retrieve the project name.
 if ($clearance === 'User') {
-  $sql = "
+    $sql = "
       SELECT
           t.id,
           t.subject,
-          t.project,
+          t.project_id,
+          p.project_name,
           t.status,
           t.priority,
           c.username AS creator_name,
           GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
       FROM tasks AS t
-      JOIN task_assigned_users AS tau
-        ON t.id = tau.task_id
-      JOIN users AS u
-        ON tau.user_id = u.id
-      LEFT JOIN users AS c
-        ON t.created_by = c.id
+      LEFT JOIN projects p ON t.project_id = p.id
+      JOIN task_assigned_users AS tau ON t.id = tau.task_id
+      JOIN users AS u ON tau.user_id = u.id
+      LEFT JOIN users AS c ON t.created_by = c.id
       WHERE tau.user_id = {$id}
       GROUP BY t.id
   ";
 } else {
-  $sql = "
+    $sql = "
       SELECT
           t.id,
           t.subject,
-          t.project,
+          t.project_id,
+          p.project_name,
           t.status,
           t.priority,
           c.username AS creator_name,
           GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
       FROM tasks AS t
-      LEFT JOIN task_assigned_users AS tau
-        ON t.id = tau.task_id
-      LEFT JOIN users AS u
-        ON tau.user_id = u.id
-      LEFT JOIN users AS c
-        ON t.created_by = c.id
+      LEFT JOIN projects p ON t.project_id = p.id
+      LEFT JOIN task_assigned_users AS tau ON t.id = tau.task_id
+      LEFT JOIN users AS u ON tau.user_id = u.id
+      LEFT JOIN users AS c ON t.created_by = c.id
       GROUP BY t.id
   ";
 }
@@ -87,43 +85,46 @@ $result = $conn->query($sql);
       if ($result->num_rows > 0) {
         echo "<table class='TASK-TABLE'>
   <thead>
-  <tr>
-    <th>
-      ID
-        <img src='ICONS/filter-filled.png' class='filter'/>
-    </th>
-    <th>
-      Subject
-        <img src='ICONS/filter-filled.png' class='filter'/>
-    </th>
-    <th>
-      Project
-        <img src='ICONS/filter-filled.png' class='filter'/>
-    </th>
-    <th>
-      Assignee
-        <img src='ICONS/filter-filled.png' class='filter'/>
-    </th>
-    <th>
-      Status
-        <img src='ICONS/filter-filled.png' class='filter'/>
-    </th>
-    <th>
-      Priority
-        <img src='ICONS/filter-filled.png' class='filter'/>
-    </th>
-  </tr>
+    <tr>
+      <th>
+        ID
+          <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Subject
+          <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Project
+          <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Assignee
+          <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Status
+          <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Priority
+          <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+    </tr>
   </thead>";
-
+        
+        // It's better to have one <tbody> wrapping all rows.
+        echo "<tbody>";
         while ($row = $result->fetch_assoc()) {
-          $taskId   = $row["id"];
-          $subject  = $row["subject"];
-          $project  = $row["project"];
-          $creator  = isset($row["creator_name"]) ? $row["creator_name"] : "";
-          $status   = $row["status"];
-          $priority = $row["priority"];
+          $taskId      = $row["id"];
+          $subject     = $row["subject"];
+          // Instead of showing project_id, we now show project_name.
+          $projectName = $row["project_name"] ? htmlspecialchars($row["project_name"]) : 'N/A';
+          $creator     = isset($row["creator_name"]) ? $row["creator_name"] : "";
+          $status      = $row["status"];    // e.g., "New", "In Progress", "Complete"
+          $priority    = $row["priority"];  // e.g., "Urgent", "Moderate", "Low"
 
-          // Build a single pill for Status
+          // Build status pill.
           $statusPill = '';
           switch ($status) {
             case 'New':
@@ -140,6 +141,7 @@ $result = $conn->query($sql);
               break;
           }
 
+          // Build priority pill.
           $priorityPill = '';
           switch ($priority) {
             case 'Urgent':
@@ -156,21 +158,18 @@ $result = $conn->query($sql);
               break;
           }
 
-          echo "<tbody>
-              <tr>
+          echo "<tr>
                 <td>$taskId</td>
                 <td class='VIEW-TASK'>
                   <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
                 </td>
-                <td>$project</td>
+                <td>$projectName</td>
                 <td>$creator</td>
                 <td>$statusPill</td>
                 <td>$priorityPill</td>
-              </tr>
-                </tbody>
-            ";
+              </tr>";
         }
-        echo "</table>";
+        echo "</tbody></table>";
 
         if ($_SESSION["clearance"] != 'User') {
           echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
@@ -178,14 +177,12 @@ $result = $conn->query($sql);
       } else {
         echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
       }
-
       ?>
 
     </div>
     <!-- TASK SECTION LIST END -->
   </div>
   <!-- TASK SECTION AREA END -->
-
 </div>
 <!-- TASK SECTION END -->
 

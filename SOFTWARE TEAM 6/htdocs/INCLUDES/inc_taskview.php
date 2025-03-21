@@ -39,13 +39,11 @@ $clearance = $_SESSION["clearance"];
                 <div class='INPUT-GROUP'>
                     <input
                         type='text'
-                        id='task-title'
-                        name='task-title'
-                        value="<?php echo htmlspecialchars($project); ?>"
-                        placeholder='Project' disabled />
-                    <!-- <select class='DROPDOWN-GROUP' id="project-allocation" name="project-allocation" required>
-                        <option value="">Project Example</option>
-                    </select> -->
+                        id='project-title'
+                        name='project-title'
+                        value="<?php echo htmlspecialchars($projectName); ?>"
+                        placeholder='Project'
+                        disabled />
                 </div>
             </div>
         </div>

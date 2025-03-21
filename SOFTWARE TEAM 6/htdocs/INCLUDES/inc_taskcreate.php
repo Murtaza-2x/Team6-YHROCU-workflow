@@ -31,17 +31,30 @@
 
             <!-- PROJECT -->
             <div class='INPUT-GROUP'>
-                <input
-                    type='text'
-                    id='project'
-                    name='project'
-                    placeholder='Project'
-                    required />
+                <?php
+                // Query the projects table for all projects
+                $sql_projects = "SELECT id, project_name FROM projects ORDER BY project_name";
+                $result_projects = $conn->query($sql_projects);
+                ?>
+                <select class="DROPDOWN-GROUP" id="project-title" name="project_id" required>
+                    <option value="">Select Project</option>
+                    <?php
+                    if ($result_projects && $result_projects->num_rows > 0) {
+                        while ($projRow = $result_projects->fetch_assoc()) {
+                            $projId   = $projRow['id'];
+                            $projName = htmlspecialchars($projRow['project_name']);
+                            // If you want to echo the current assigned project, compare $projId to a variable $project_id (set when editing)
+                            $selected = (isset($project_id) && $projId == $project_id) ? "selected" : "";
+                            echo "<option value='{$projId}' {$selected}>{$projName}</option>";
+                        }
+                    }
+                    ?>
+                </select>
             </div>
+
 
             <!-- ASSIGN USERS -->
             <?php
-            // Query the DB for all users
             $sql_users = "SELECT id, username FROM users ORDER BY username";
             $result_users = $conn->query($sql_users);
             ?>

@@ -111,28 +111,57 @@
 
 /* DROPDOWN BOX */
 .DROPDOWN-GROUP {
-  display:block;
-  padding: 0.1rem;
-  padding-left: 0rem; 
-  transform: translateX(8rem);
+  text-align: left;
+  padding: 0rem;
+  padding-left: 0;
   border: none;
   opacity: 0.2;
   font-size: 1rem;
 }
 
-.select2-container--default .select2-selection--multiple,
-.select2-container--default .select2-selection--single {
+.DROPDOWN-GROUP-2 {
+  width: 200px;
+}
+
+
+.select2-container--default .select2-selection--multiple, .select2-selection--single {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
   background: none !important;
 }
 
+.select2-container--default .select2-selection--multiple {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background: none !important;
+  border: none !important;
+  color: var(--black) !important;
+  display: inline-block !important;
+  margin: 0 5px 0 0 !important;
+  padding-left: 25px !important;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+  margin-left: 4px !important;
+  color: #999 !important;
+  font-weight: bold;
+}
+
 .select2-search__field {
-  opacity: 0.2;
+  opacity: 0.3;
+  font-size: 2rem;
   padding: 0;
   transform: translateX(-5px);
 }
+
 /* DROPDOWN BOX END*/
 
 .TASK-LABEL {

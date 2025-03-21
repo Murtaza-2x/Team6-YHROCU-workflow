@@ -1,30 +1,29 @@
 <?php
 /*
 This file provides a detailed view of a single task by retrieving its details from the `tasks` table:
-1. It includes the database connection and header files for the page.
-2. The `id` of the task is retrieved from the query string and used to run a SELECT query against the `tasks` table.
-3. If a matching record is found, the task’s details (ID, subject, project, assignee, status, priority) are displayed in an HTML table.
-4. Users with a higher clearance (not ‘user’) can also see an “Edit” button that links to the edit page for that task.
-5. A “Back” button is available to return to the list of tasks.
+1. Includes the database connection and header.
+2. The `id` is retrieved from the query string and used to SELECT from `tasks`.
+3. If found, the task’s details (subject, project_name, assigned users, etc.) are displayed.
+4. Higher clearance can see an Edit button, plus a Cancel/Back button, etc.
 */
 
-$title = "ROCU: Task View";
-?>
+$title = "ROCU: View Task";
 
-<?php include 'INCLUDES/inc_connect.php'; ?>
-<?php include 'INCLUDES/inc_header.php'; ?>
+include 'INCLUDES/inc_connect.php';
+include 'INCLUDES/inc_header.php';
 
-<?php
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($id <= 0) {
-      echo "Invalid task ID.";
-      exit;
+    echo "Invalid task ID.";
+    exit;
 }
 
 $sql = "
   SELECT t.*,
+         p.project_name,
          GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
   FROM tasks t
+  LEFT JOIN projects p ON t.project_id = p.id
   LEFT JOIN task_assigned_users tau ON t.id = tau.task_id
   LEFT JOIN users u ON tau.user_id = u.id
   WHERE t.id = $id
@@ -32,20 +31,24 @@ $sql = "
 ";
 
 $result = $conn->query($sql);
-
 if ($result && $result->num_rows > 0) {
     $row         = $result->fetch_assoc();
     $subject     = $row['subject'];
-    $project     = $row['project'];
+    $projectName = $row['project_name'] ?? 'No Project Assigned';
     $status      = $row['status'];
     $priority    = $row['priority'];
     $description = $row['description'];
     $assignedUsers = $row['assigned_users'] ?? 'No Users Assigned'; 
+} else {
+    echo "Task not found.";
+    exit;
 }
 
 ?>
 
 <?php include 'INCLUDES/inc_taskview.php'; ?>
 
-<?php include 'INCLUDES/inc_footer.php'; ?>
-<?php include 'INCLUDES/inc_disconnect.php'; ?>
+<?php
+include 'INCLUDES/inc_footer.php';
+include 'INCLUDES/inc_disconnect.php';
+?>

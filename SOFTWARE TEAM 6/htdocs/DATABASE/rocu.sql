@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2025 at 12:42 PM
+-- Generation Time: Mar 21, 2025 at 03:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,30 +24,45 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `projects`
+--
+
+CREATE TABLE `projects` (
+  `id` int(11) NOT NULL,
+  `project_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `projects`
+--
+
+INSERT INTO `projects` (`id`, `project_name`) VALUES
+(1, 'Project One'),
+(2, 'Project Two');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tasks`
 --
 
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `subject` varchar(100) DEFAULT NULL,
-  `project` varchar(35) DEFAULT NULL,
   `status` set('New','In Progress','Complete','') DEFAULT NULL,
   `priority` set('Low','Moderate','Urgent') DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
-  `description` text DEFAULT NULL
+  `description` text DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tasks`
 --
 
-INSERT INTO `tasks` (`id`, `subject`, `project`, `status`, `priority`, `created_by`, `description`) VALUES
-(1, 'First', 'Project', 'New', 'Urgent', 1, NULL),
-(19, 'Second', 'Project', 'New', 'Moderate', 1, NULL),
-(20, 'Third', 'Project', 'New', 'Urgent', 1, ''),
-(21, 'Fourth', 'Project', 'New', 'Moderate', 1, '123'),
-(22, 'Fifth', 'Project', 'In Progress', 'Moderate', 1, 'drzgoihzrsdgoieshgiosehjgf'),
-(23, 'Sixth', 'Project', 'In Progress', 'Urgent', 1, 'some testing');
+INSERT INTO `tasks` (`id`, `subject`, `status`, `priority`, `created_by`, `description`, `project_id`) VALUES
+(1, 'First', 'Complete', 'Urgent', 1, 'First task description\r\n\r\nperiod perrrioddddd gag the tea clock the gag gagggy boots dowwwn', 2),
+(24, 'Second', 'New', 'Moderate', 1, 'Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan ', 2);
 
 -- --------------------------------------------------------
 
@@ -65,12 +80,9 @@ CREATE TABLE `task_assigned_users` (
 --
 
 INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
-(19, 3),
-(20, 2),
-(21, 3),
-(22, 2),
-(22, 3),
-(23, 2);
+(1, 3),
+(24, 2),
+(24, 3);
 
 -- --------------------------------------------------------
 
@@ -100,11 +112,19 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `clearance`) VALUES
 --
 
 --
+-- Indexes for table `projects`
+--
+ALTER TABLE `projects`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `project_name` (`project_name`);
+
+--
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_created_by` (`created_by`);
+  ADD KEY `fk_created_by` (`created_by`),
+  ADD KEY `project_id` (`project_id`);
 
 --
 -- Indexes for table `task_assigned_users`
@@ -124,10 +144,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -143,7 +169,8 @@ ALTER TABLE `users`
 -- Constraints for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD CONSTRAINT `fk_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `fk_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `task_assigned_users`

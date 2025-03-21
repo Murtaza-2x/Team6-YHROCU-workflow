@@ -1,68 +1,109 @@
 <?php
 /*
-This file allows the user to edit an existing task in the database. 
-1. It begins by including the required connection and header files for the page. 
-2. The script then checks the request method:
-   - If the request is POST, it reads the ID and updated task details from the form inputs,
-     constructs a SQL UPDATE statement, and updates the relevant row in the `tasks` table. If successful, it redirects to the page showing the updated task. 
-   - If the request is GET, it retrieves the task's ID from the query string, 
-     fetches that task’s details from the database, and pre-fills an HTML form so the user can edit the task. 
+This file allows the user to edit an existing task in the database.
+On GET, it retrieves the task details (including assigned users) and displays them in an editable form.
+On POST, it updates the task details and the task_assigned_users linking table, then redirects to the view page.
 */
 
 $title = 'ROCU: Edit Task';
-?>
+include 'INCLUDES/inc_connect.php';
+include 'INCLUDES/inc_header.php';
 
-<?php include 'INCLUDES/inc_connect.php'; ?>
-<?php include 'INCLUDES/inc_header.php'; ?>
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($id <= 0) {
+    echo "Invalid task ID.";
+    exit;
+}
 
-<?php
+$subject       = '';
+$project_id    = '';
+$status        = '';
+$priority      = '';
+$description   = '';
+$assignedUsers = '';
+$assignedUserIds = [];
+
+$sql_assigned = "SELECT user_id FROM task_assigned_users WHERE task_id = $id";
+$result_assigned = $conn->query($sql_assigned);
+if ($result_assigned && $result_assigned->num_rows > 0) {
+    while ($r = $result_assigned->fetch_assoc()) {
+        $assignedUserIds[] = $r['user_id'];
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
-    $subject = $_POST['subject'];
-    $project = $_POST['project'];
-    $assignee = $_POST['assignee'];
-    $status = $_POST['status'];
-    $priority = $_POST['priority'];
+    $subject     = $conn->real_escape_string($_POST['subject']);
+    $project_id  = $conn->real_escape_string($_POST['project_id']);
+    $status      = $conn->real_escape_string($_POST['status']);
+    $priority    = $conn->real_escape_string($_POST['priority']);
+    $description = $conn->real_escape_string($_POST['description']);
 
-    $sql = "UPDATE tasks SET
-    subject='" . $subject . "',
-    project='" . $project . "',
-    assignee=" . $assignee . ",
-    status='" . $status . "',
-    priority='" . $priority . "'
-    WHERE id = " . $id;
-    // echo $sql;
+    $sql = "UPDATE tasks 
+            SET subject     = '$subject',
+                project_id  = '$project_id',
+                status      = '$status',
+                priority    = '$priority',
+                description = '$description'
+            WHERE id = $id";
+
     if ($conn->query($sql) === TRUE) {
-        echo "Record updated successfully";
-        header('Location: view-task-page.php?id=' . $id);
+        $conn->query("DELETE FROM task_assigned_users WHERE task_id = $id");
+        if (isset($_POST['assign']) && is_array($_POST['assign'])) {
+            foreach ($_POST['assign'] as $user_id) {
+                $user_id = (int)$user_id;
+                $sql_link = "INSERT INTO task_assigned_users (task_id, user_id) VALUES ($id, $user_id)";
+                $conn->query($sql_link);
+            }
+        }
+        header("Location: view-task-page.php?id=$id");
+        exit;
     } else {
-        echo "Error updating record: " . $conn->error;
+        echo "Error updating task: " . $conn->error;
     }
-} else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-
-    $id = $_GET['id'];
-
-    $sql = "SELECT * FROM tasks WHERE id = " . $id;
-    $result = $conn->query($sql);
-
-    $row = $result->fetch_assoc();
-    echo "<form action='edit-task-page.php' method='post'>"
-        . "  <input type='hidden' id='id' name='id' value=" . $row['id'] . "><br>"
-        . "  <label for='subject'>Subject:</label><br>"
-        . "  <input type='text' id='subject' name='subject' value=" . $row['subject'] . "><br>"
-        . "  <label for='project'>Project:</label><br>"
-        . "  <input type='text' id='project' name='project' value=" . $row['project'] . "><br>"
-        . "  <label for='assignee'>Assignee:</label><br>"
-        . "  <input type='text' id='assignee' name='assignee' value=" . $row['assignee'] . "><br>"
-        . "  <label for='status'>Status:</label><br>"
-        . "  <input type='text' id='status' name='status' value=" . $row['status'] . "><br>"
-        . "  <label for='priority'>Priority:</label><br>"
-        . "  <input type='text' id='priority' name='priority' value=" . $row['priority'] . "><br>"
-        . "  <input type='submit' value='Save'>"
-        . "</form>";
 }
-?>
+else {
+    $sql = "SELECT t.*,
+                   GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
+            FROM tasks t
+            LEFT JOIN task_assigned_users tau ON t.id = tau.task_id
+            LEFT JOIN users u ON tau.user_id = u.id
+            WHERE t.id = $id
+            GROUP BY t.id";
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        $row         = $result->fetch_assoc();
+        $subject     = $row['subject'];
+        $project_id  = $row['project_id'];
+        $status      = $row['status'];
+        $priority    = $row['priority'];
+        $description = $row['description'];
+        $assignedUsers = $row['assigned_users'] ?? 'No Users Assigned';
+    } else {
+        echo "Task not found.";
+        exit;
+    }
+}
 
-<?php include 'INCLUDES/inc_footer.php'; ?>
-<?php include 'INCLUDES/inc_disconnect.php'; ?>
+$projects = [];
+$sql_projects = "SELECT id, project_name FROM projects ORDER BY project_name";
+$result_projects = $conn->query($sql_projects);
+if ($result_projects && $result_projects->num_rows > 0) {
+    while ($projRow = $result_projects->fetch_assoc()) {
+        $projects[] = $projRow;
+    }
+}
+
+$users = [];
+$sql_users = "SELECT id, username FROM users ORDER BY username";
+$result_users = $conn->query($sql_users);
+if ($result_users && $result_users->num_rows > 0) {
+    while ($userRow = $result_users->fetch_assoc()) {
+        $users[] = $userRow;
+    }
+}
+
+include 'INCLUDES/inc_taskedit.php';
+
+include 'INCLUDES/inc_footer.php';
+include 'INCLUDES/inc_disconnect.php';
+?>
