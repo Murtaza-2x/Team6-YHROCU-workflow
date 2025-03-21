@@ -4,6 +4,8 @@ $clearance = $_SESSION["clearance"];
 
 <head>
     <title><?php echo $title; ?></title>
+    <link href="CSS/pill_styles.css" rel="stylesheet">
+    <link href="CSS/dropdown_styles.css" rel="stylesheet">
     <link href="CSS/taskview_styles.css" rel="stylesheet">
 </head>
 
