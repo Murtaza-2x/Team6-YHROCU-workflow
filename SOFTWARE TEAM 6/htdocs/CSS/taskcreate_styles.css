@@ -97,10 +97,11 @@
 }
 
 .TASK-TEXT-AREA {
-  width: 100%;
+  width: calc(100% - 40px);
   font-size: 14px;
   border: 1px solid var(--light-grey);
   border-radius: 25px;
+  padding: 20px;
   color: var(--dark-grey);
   background-color: white;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
