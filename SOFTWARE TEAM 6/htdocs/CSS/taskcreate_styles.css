@@ -146,17 +146,8 @@
   outline: none;
 }
 
-.INFO-ICON {
-  margin-left: 5px;
-  width: 15px;
-  height: 15px;
-  border: none;
-  opacity: 0.3;
-}
-
 .TASK-TEXT-AREA {
   width: 100%;
-  padding: 15px;
   font-size: 14px;
   border: 1px solid var(--light-grey);
   border-radius: 25px;
