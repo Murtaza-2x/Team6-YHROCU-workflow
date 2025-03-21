@@ -104,55 +104,6 @@
   background-color: var(--off-white);
 }
 
-/* PILL */
-.TASK-PILL-CONTAINER {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-
-#PILL-ACTIVE, #PILL-INACTIVE {
-  display: inline-block;
-  padding: 5px 20px;
-  border: none;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  color: white;
-  cursor: default;
-  user-select: none;
-}
-
-#PILL-ACTIVE {
-  opacity: 1;
-}
-
-#PILL-INACTIVE {
-  opacity: 0.3;
-}
-
-.PILL-NEW {
-  background-color: var(--blue);
-}
-.PILL-IN-PROGRESS {
-  background-color: orange;
-}
-.PILL-COMPLETE {
-  background-color: var(--green);
-}
-
-.PILL-URGENT {
-  background-color: red;
-}
-.PILL-MODERATE {
-  background-color: orange;
-}
-.PILL-LOW {
-  background-color: var(--green);
-}
-
-/* PILL END */
-
 .TASK-LIST button {
   padding: 10px 45px;
   border: none;
