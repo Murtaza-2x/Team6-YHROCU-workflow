@@ -104,17 +104,26 @@ $clearance = $_SESSION["clearance"];
 
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
-            <button
-                class="UPDATE-BUTTON"
-                onclick="window.location.href='edit-task-page.php?id=<?php echo $id; ?>'">
-                Update Task
-            </button>
+
+            <?php if ($_SESSION["clearance"] != 'User'): ?>
+                <button class="UPDATE-BUTTON"
+                    onclick="window.location.href='edit-task-page.php?id=<?php echo $id; ?>'">
+                    Update Task
+                </button>
+            <?php endif; ?>
+
             <button
                 class="CANCEL-BUTTON"
                 onclick="window.location.href='list-task-page.php?clearance=<?php echo $_SESSION["clearance"]; ?>&id=<?php echo $_SESSION["id"]; ?>'">
                 Cancel
             </button>
-            <button class="VIEW-LOGS-BUTTON">View Logs</button>
+
+            <?php if ($_SESSION["clearance"] != 'User'): ?>
+                <button class="VIEW-LOGS-BUTTON"
+                    onclick="">
+                    View Logs
+                </button>
+            <?php endif; ?>
         </div>
         <!-- BUTTONS END -->
     </div>

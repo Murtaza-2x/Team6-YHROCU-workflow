@@ -5,6 +5,14 @@ On GET, it retrieves the task details (including assigned users) and displays th
 On POST, it updates the task details and the task_assigned_users linking table, then redirects to the view page.
 */
 
+/* 1) Initialize & check user clearance */
+session_start();
+$clearance = $_SESSION['clearance'] ?? '';
+if ($clearance === 'User') {
+    echo "You do not have permission to edit tasks.";
+    exit;
+}
+
 $title = 'ROCU: Edit Task';
 include 'INCLUDES/inc_connect.php';
 include 'INCLUDES/inc_header.php';
@@ -47,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE id = $id";
 
     if ($conn->query($sql) === TRUE) {
+        // Remove existing user assignments, then insert the new ones
         $conn->query("DELETE FROM task_assigned_users WHERE task_id = $id");
         if (isset($_POST['assign']) && is_array($_POST['assign'])) {
             foreach ($_POST['assign'] as $user_id) {
@@ -103,7 +112,6 @@ if ($result_users && $result_users->num_rows > 0) {
 }
 
 include 'INCLUDES/inc_taskedit.php';
-
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
 ?>
