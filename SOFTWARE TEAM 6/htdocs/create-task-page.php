@@ -13,7 +13,7 @@ $title = 'Create New Task';
 
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
-
+<?php include 'INCLUDES/inc_basicEmail.php'; ?>
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject = $_POST['subject'];
@@ -38,6 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sql_link = "INSERT INTO task_assigned_users (task_id, user_id)
                              VALUES ($task_id, $user_id)";
                 $conn->query($sql_link);
+
+                $userQuery = "SELECT email FROM users WHERE id = $user_id";
+                $userResult = $conn->query($userQuery);
+
+                if ($userResult && $userResult->num_rows>0) {
+                    $userRow = $userResult->fetch_assoc();
+                    sendTaskEmail($userRow['email']);
+                }
+
+
             }
         }
 
