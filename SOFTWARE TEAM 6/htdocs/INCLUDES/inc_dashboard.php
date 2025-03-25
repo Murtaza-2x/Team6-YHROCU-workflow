@@ -11,11 +11,19 @@
   <div class="DASH-HEADER">
     <p class="DASH-HEADER-1">Dashboard -</p>
     <?php
-    $clearance = $_SESSION["clearance"];
-    $id = $_SESSION["id"];
-    $username = $_SESSION["username"];
-    echo "<p class='DASH-HEADER-2'>Welcome " . $clearance . " " . $username . " - ID " . $id . "</p>";
-    ?>
+    // Ensure the session is started
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Check if session variables are set and not empty
+    // Check if session variables are set and not empty 
+    $email = isset($_SESSION["email"]) ? $_SESSION["email"] : 'Guest';  // Default to 'Guest' if not set
+    $clearance = isset($_SESSION["clearance"]) ? $_SESSION["clearance"] : 'Unknown';  // Default to 'Unknown' if not set
+
+
+    echo "<p class='DASH-HEADER-2'>Welcome " . $email . " (" . $clearance . ")</p>";
+?>
   </div>
   <div class="DASH-AREA">
   </div>
