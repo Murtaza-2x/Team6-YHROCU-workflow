@@ -1,13 +1,10 @@
 <?php
 /*
-This file displays a list of tasks for the currently logged-in user or for all users, depending on the user's clearance level:
-1. It includes the connection, header, and dashboard files.
-2. Fetches session variables for clearance, user ID, and username, then outputs a welcome message.
-3. Based on the user’s clearance:
-   - If the user is “User” level, it shows only tasks assigned to them.
-   - Otherwise, it shows all tasks in the system.
-4. The results are fetched from the `tasks` table (with a join to the `projects` table) and displayed in a table format.
-5. If the user is not a regular user (i.e., has higher clearance), they also see an “Add Task” button to create a new task.
+This file displays a list of tasks for the currently logged-in user or for all users,
+depending on the user's clearance level.
+It retrieves tasks along with their associated project names (from the projects table)
+and displays them in a table. The project column now shows the project name as a clickable link
+that takes you to view-project-page.php with the project id.
 */
 
 $title = "ROCU: Dashboard";
@@ -18,9 +15,9 @@ $title = "ROCU: Dashboard";
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
 
 <?php
-// Modify the SQL query to join with the projects table to retrieve the project name.
+// SQL query joins projects table to fetch the project name using project_id.
 if ($clearance === 'User') {
-    $sql = "
+  $sql = "
       SELECT
           t.id,
           t.subject,
@@ -39,7 +36,7 @@ if ($clearance === 'User') {
       GROUP BY t.id
   ";
 } else {
-    $sql = "
+  $sql = "
       SELECT
           t.id,
           t.subject,
@@ -70,7 +67,6 @@ $result = $conn->query($sql);
 
   <!-- TASK SECTION AREA -->
   <div class="TASK-AREA">
-
     <!-- TASK SECTION FILTER -->
     <div class="TASK-FILTER">
       <input type="text" placeholder="Search tasks...">
@@ -80,7 +76,6 @@ $result = $conn->query($sql);
 
     <!-- TASK SECTION LIST -->
     <div class="TASK-LIST">
-
       <?php
       if ($result->num_rows > 0) {
         echo "<table class='TASK-TABLE'>
@@ -88,41 +83,41 @@ $result = $conn->query($sql);
     <tr>
       <th>
         ID
-          <img src='ICONS/filter-filled.png' class='filter'/>
+        <img src='ICONS/filter-filled.png' class='filter'/>
       </th>
       <th>
         Subject
-          <img src='ICONS/filter-filled.png' class='filter'/>
+        <img src='ICONS/filter-filled.png' class='filter'/>
       </th>
       <th>
         Project
-          <img src='ICONS/filter-filled.png' class='filter'/>
+        <img src='ICONS/filter-filled.png' class='filter'/>
       </th>
       <th>
         Assignee
-          <img src='ICONS/filter-filled.png' class='filter'/>
+        <img src='ICONS/filter-filled.png' class='filter'/>
       </th>
       <th>
         Status
-          <img src='ICONS/filter-filled.png' class='filter'/>
+        <img src='ICONS/filter-filled.png' class='filter'/>
       </th>
       <th>
         Priority
-          <img src='ICONS/filter-filled.png' class='filter'/>
+        <img src='ICONS/filter-filled.png' class='filter'/>
       </th>
     </tr>
-  </thead>";
+  </thead>
+  <tbody>";
         
-        // It's better to have one <tbody> wrapping all rows.
-        echo "<tbody>";
         while ($row = $result->fetch_assoc()) {
           $taskId      = $row["id"];
           $subject     = $row["subject"];
-          // Instead of showing project_id, we now show project_name.
+          $project_id  = $row["project_id"];
+          // If project_name is available, use it; otherwise display "N/A"
           $projectName = $row["project_name"] ? htmlspecialchars($row["project_name"]) : 'N/A';
           $creator     = isset($row["creator_name"]) ? $row["creator_name"] : "";
-          $status      = $row["status"];    // e.g., "New", "In Progress", "Complete"
-          $priority    = $row["priority"];  // e.g., "Urgent", "Moderate", "Low"
+          $status      = $row["status"];
+          $priority    = $row["priority"];
 
           // Build status pill.
           $statusPill = '';
@@ -163,7 +158,9 @@ $result = $conn->query($sql);
                 <td class='VIEW-TASK'>
                   <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
                 </td>
-                <td>$projectName</td>
+                <td>
+                  <a href='view-project-page.php?id=$project_id' title='View Project'>$projectName</a>
+                </td>
                 <td>$creator</td>
                 <td>$statusPill</td>
                 <td>$priorityPill</td>
@@ -173,12 +170,12 @@ $result = $conn->query($sql);
 
         if ($_SESSION["clearance"] != 'User') {
           echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
+          echo "<button class='CREATE-PROJECT-BUTTON' onclick=\"document.location='create-project-page.php'\">Create Project</button>";
         }
       } else {
         echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
       }
       ?>
-
     </div>
     <!-- TASK SECTION LIST END -->
   </div>

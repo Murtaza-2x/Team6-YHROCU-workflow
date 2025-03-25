@@ -11,41 +11,23 @@ $clearance = $_SESSION["clearance"];
 
 <p class="MIDDLE-HERO-IMAGE"></p>
 
-<!-- TASK VIEW -->
+<!-- PROJECT VIEW -->
 <div class='VIEW-TASK-CONTAINER'>
     <div class='VIEW-TASK-BOX'>
-        <h1>View Task</h1>
-        <p>See Task Details below</p>
+        <h1>View Project</h1>
+        <p>See Project Details below</p>
 
         <!-- HEADER -->
         <div class="VIEW-ROW">
             <div class="VIEW-COLUMN">
-                <h1 class="TASK-LABEL">Task Title</h1>
-                <div class='INPUT-GROUP'>
-                    <input
-                        type='text'
-                        id='task-title'
-                        name='task-title'
-                        value="<?php echo htmlspecialchars($subject); ?>"
-                        placeholder='Task Title' disabled />
-                </div>
-            </div>
-
-            <div class="VIEW-COLUMN">
-                <h1 class="TASK-LABEL">
-                    Project Allocation
-                </h1>
-                <h2 class="TASK-LABEL">
-                    (where the task is assigned)
-                </h2>
+                <h1 class="TASK-LABEL">Project Title</h1>
                 <div class='INPUT-GROUP'>
                     <input
                         type='text'
                         id='project-title'
                         name='project-title'
                         value="<?php echo htmlspecialchars($projectName); ?>"
-                        placeholder='Project'
-                        disabled />
+                        placeholder='Project Title' disabled />
                 </div>
             </div>
         </div>
@@ -91,24 +73,13 @@ $clearance = $_SESSION["clearance"];
                 readonly><?php echo htmlspecialchars($description); ?></textarea>
         </div>
 
-        <!-- ASSIGNED -->
-        <div class="TASK-ROW ASSIGNED-ROW">
-            <div class="ASSIGNED-INFO">
-                <span class="ASSIGNED-LABEL">Assigned:</span>
-                <span class="ASSIGNED-LABEL-2">
-                    <?php echo htmlspecialchars($assignedUsers) ?: 'None'; ?>
-                </span>
-            </div>
-        </div>
-        <!-- ASSIGNED END -->
-
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
 
             <?php if ($_SESSION["clearance"] != 'User'): ?>
                 <button class="UPDATE-BUTTON"
-                    onclick="window.location.href='edit-task-page.php?id=<?php echo $id; ?>'">
-                    Update Task
+                    onclick="window.location.href='edit-project-page.php?id=<?php echo $id; ?>'">
+                    Update Project
                 </button>
             <?php endif; ?>
 
