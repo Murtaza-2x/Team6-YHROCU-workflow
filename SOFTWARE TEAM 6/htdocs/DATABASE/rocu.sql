@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2025 at 03:56 PM
+-- Generation Time: Mar 25, 2025 at 10:52 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,16 +29,20 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `projects` (
   `id` int(11) NOT NULL,
-  `project_name` varchar(255) NOT NULL
+  `project_name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `status` enum('New','In Progress','Complete') DEFAULT 'New',
+  `priority` enum('Low','Moderate','Urgent') DEFAULT 'Low'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `projects`
 --
 
-INSERT INTO `projects` (`id`, `project_name`) VALUES
-(1, 'Project One'),
-(2, 'Project Two');
+INSERT INTO `projects` (`id`, `project_name`, `description`, `status`, `priority`) VALUES
+(1, 'Project One', 'Test123', 'New', 'Low'),
+(2, 'Project Two', 'I DONT NEED YOUR DRUGS, I\'D RATHER GET, RATHER GET...HIGH FASHION', 'In Progress', 'Moderate'),
+(3, 'Project Three', 'I\'VE NOTHING ON BUT THE RADIO', 'New', 'Moderate');
 
 -- --------------------------------------------------------
 
@@ -61,8 +65,9 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `subject`, `status`, `priority`, `created_by`, `description`, `project_id`) VALUES
-(1, 'First', 'Complete', 'Urgent', 1, 'First task description\r\n\r\nperiod perrrioddddd gag the tea clock the gag gagggy boots dowwwn', 2),
-(24, 'Second', 'New', 'Moderate', 1, 'Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan ', 2);
+(1, 'First', 'Complete', 'Urgent', 1, 'First task description\r\n\r\nperiod perrrioddddd gag the tea clock the gag gagggy boots dowwwn yass', 1),
+(24, 'Second', 'New', 'Moderate', 1, 'Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan ', 2),
+(25, 'Third', 'New', 'Moderate', 1, 'Aquamarine Dive into Me', 3);
 
 -- --------------------------------------------------------
 
@@ -80,9 +85,11 @@ CREATE TABLE `task_assigned_users` (
 --
 
 INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
+(1, 2),
 (1, 3),
 (24, 2),
-(24, 3);
+(24, 3),
+(25, 3);
 
 -- --------------------------------------------------------
 
@@ -95,7 +102,7 @@ CREATE TABLE `users` (
   `username` varchar(25) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(35) DEFAULT NULL,
-  `clearance` enum('User','Manager','Adminn','') DEFAULT NULL
+  `clearance` enum('User','Manager','Admin','') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -147,13 +154,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `users`
