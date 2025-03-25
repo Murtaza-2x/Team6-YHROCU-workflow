@@ -1,7 +1,7 @@
 /* DASH SECTION */
 .DASH-CONTENT {
   width: 100%;
-  height: 400px;
+  height: 700px;
 }
 
 .DASH-AREA {
@@ -35,5 +35,36 @@
   padding-left: 7px;
   opacity: 0.6;
 }
+
+.DASH-SECTION-CONTAINER {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
+.DASH-SECTION-1, .DASH-SECTION-2, .DASH-SECTION-3 {
+  padding: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 1vw;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.DASH-SECTION-1 {
+  width: 60%;
+  height: 50vh;
+}
+
+.DASH-SECTION-2 {
+  width: 30%;
+  height: 50vh;
+}
+
+.DASH-SECTION-3 {
+  display: block;
+  width: 100%;
+  height: 50vh;
+}
+
 /* DASH SECTION END */
 /* MIDDLE SECTION END */

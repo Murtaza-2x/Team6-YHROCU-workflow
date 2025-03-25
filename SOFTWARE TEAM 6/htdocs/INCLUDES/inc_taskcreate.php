@@ -1,5 +1,7 @@
 <head>
     <title><?php echo $title; ?></title>
+    <link href="CSS/pill_styles.css" rel="stylesheet">
+    <link href="CSS/dropdown_styles.css" rel="stylesheet">
     <link href="CSS/taskcreate_styles.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -19,6 +21,7 @@
         <p>Enter task details below</p>
 
         <form id='CREATE-TASK-FORM' action='create-task-page.php' method='post'>
+
             <!-- SUBJECT -->
             <div class='INPUT-GROUP'>
                 <input
@@ -28,20 +31,34 @@
                     placeholder='Subject'
                     required />
             </div>
+            <!-- SUBJECT END -->
 
             <!-- PROJECT -->
             <div class='INPUT-GROUP'>
-                <input
-                    type='text'
-                    id='project'
-                    name='project'
-                    placeholder='Project'
-                    required />
+                <?php
+                $sql_projects = "SELECT id, project_name FROM projects ORDER BY id"; // Sorted by ID now
+                $result_projects = $conn->query($sql_projects);
+                ?>
+                <select class="DROPDOWN-GROUP" id="project_id" name="project_id" required>
+                    <option value="">Select Project</option>
+                    <?php
+                    if ($result_projects && $result_projects->num_rows > 0) {
+                        while ($projRow = $result_projects->fetch_assoc()) {
+                            $projId   = $projRow['id'];
+                            $projName = htmlspecialchars($projRow['project_name']);
+                            $selected = (isset($project_id) && $projId == $project_id) ? "selected" : "";
+                            echo "<option value='{$projId}' {$selected}>{$projName}</option>";
+                        }
+                    }
+                    ?>
+                </select>
             </div>
+            <!-- PROJECT END -->
+
+
 
             <!-- ASSIGN USERS -->
             <?php
-            // Query the DB for all users
             $sql_users = "SELECT id, username FROM users ORDER BY username";
             $result_users = $conn->query($sql_users);
             ?>
@@ -62,6 +79,7 @@
 
                 </select>
             </div>
+            <!-- ASSIGN USERS END -->
 
             <!-- STATUS -->
             <div class='INPUT-GROUP'>
@@ -72,6 +90,7 @@
                     <option value="Complete">Complete</option>
                 </select>
             </div>
+            <!-- STATUS END -->
 
             <!-- PRIORITY -->
             <div class='INPUT-GROUP'>
@@ -82,13 +101,16 @@
                     <option value="Urgent">Urgent</option>
                 </select>
             </div>
+            <!-- PRIORITY END -->
 
             <!-- DESCRIPTION -->
             <div class="DESC-GROUP">
                 <label for="description" class="DESCRIPTION-LABEL">Description:</label>
                 <textarea id="description" name="description" class="TASK-TEXT-AREA" rows="6" required></textarea>
             </div>
+            <!-- DESCRIPTION END -->
 
+            <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class='CREATE-BUTTON' type='submit'>
                     Create Task
@@ -100,6 +122,7 @@
                     Cancel
                 </button>
             </div>
+            <!-- BUTTONS END-->
         </form>
     </div>
 </div>

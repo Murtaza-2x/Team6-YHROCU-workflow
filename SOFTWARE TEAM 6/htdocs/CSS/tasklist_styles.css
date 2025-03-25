@@ -84,6 +84,12 @@
   text-decoration: none;
 }
 
+.TASK-LIST th img {
+  width:10px;
+  height:10px;
+  opacity: 0.5;
+}
+
 .TASK-LIST a {
   color: var(--dark-grey);
   text-decoration: none;
@@ -98,55 +104,6 @@
   background-color: var(--off-white);
 }
 
-/* PILL */
-.TASK-PILL-CONTAINER {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-
-#PILL-ACTIVE, #PILL-INACTIVE {
-  display: inline-block;
-  padding: 5px 20px;
-  border: none;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  color: white;
-  cursor: default;
-  user-select: none;
-}
-
-#PILL-ACTIVE {
-  opacity: 1;
-}
-
-#PILL-INACTIVE {
-  opacity: 0.3;
-}
-
-.PILL-NEW {
-  background-color: var(--blue);
-}
-.PILL-IN-PROGRESS {
-  background-color: orange;
-}
-.PILL-COMPLETE {
-  background-color: var(--green);
-}
-
-.PILL-URGENT {
-  background-color: red;
-}
-.PILL-MODERATE {
-  background-color: orange;
-}
-.PILL-LOW {
-  background-color: var(--green);
-}
-
-/* PILL END */
-
 .TASK-LIST button {
   padding: 10px 45px;
   border: none;
@@ -160,12 +117,21 @@
 }
 
 .CREATE-TASK-BUTTON {
-  display: block;
+  display: inline;
   justify-content: center;
-  margin: 0 auto;
+  margin: 0 10px;
   margin-top: 20px;
   font-size: 1.1rem;
   background-color: var(--blue);
+}
+
+.CREATE-PROJECT-BUTTON {
+  display: inline;
+  justify-content: center;
+  margin: 0 10px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  background-color: var(--green);
 }
 
 .USER-MESSAGE {
