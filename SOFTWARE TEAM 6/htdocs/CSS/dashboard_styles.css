@@ -38,39 +38,33 @@
 
 .DASH-SECTION-CONTAINER {
   display: flex;
-  padding: 20px;
-  gap: 20px;
-}
-
-.DASH-SECTION-CONTAINER-2 {
-  position: absolute;
-  display: flex;
-  padding: 20px;
-  gap: 20px;
-  top:220px;
+  padding: 1vw;
+  gap: 1.3vw;
 }
 
 .DASH-SECTION-1, .DASH-SECTION-2, .DASH-SECTION-3 {
-  padding: 20px;
+  padding: 1vw;
   background-color: white;
   border: none;
-  border-radius: 15px;
+  border-radius: 1vw;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .DASH-SECTION-1 {
-  width: 900px;
-  height: 100px;
+  width: 72vw;
+  height: 5vw;
 }
 
 .DASH-SECTION-2 {
-  width: 300px;
-  height: 400px;
+  width: 20vw;
+  height: 25vw;
 }
 
 .DASH-SECTION-3 {
-  width: 881px;
-  height: 239px;
+  position: absolute;
+  width: 72vw;
+  height: 16.9vw;
+  transform: translateY(8vw);
 }
 
 /* DASH SECTION END */

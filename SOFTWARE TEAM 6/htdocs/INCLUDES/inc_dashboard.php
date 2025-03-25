@@ -27,14 +27,11 @@
       <div class="DASH-SECTION-2">
       </div>
 
-    </div>
-
-    <div class="DASH-SECTION-CONTAINER-2">
-      
       <div class="DASH-SECTION-3">
       </div>
-      
+
     </div>
+
   </div>
 </div>
 <!-- DASHBOARD SECTION END -->
