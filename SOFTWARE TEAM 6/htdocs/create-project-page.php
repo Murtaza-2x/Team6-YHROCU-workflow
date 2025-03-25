@@ -7,7 +7,6 @@ On success, it redirects to the view-project-page for the new project.
 On GET requests, it displays the form.
 */
 $title = 'ROCU: Create Project';
-session_start();
 include 'INCLUDES/inc_connect.php';
 include 'INCLUDES/inc_header.php';
 

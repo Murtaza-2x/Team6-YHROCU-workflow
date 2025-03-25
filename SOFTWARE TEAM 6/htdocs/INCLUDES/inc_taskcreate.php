@@ -39,7 +39,7 @@
                 $sql_projects = "SELECT id, project_name FROM projects ORDER BY id"; // Sorted by ID now
                 $result_projects = $conn->query($sql_projects);
                 ?>
-                <select class="DROPDOWN-GROUP" id="project-title" name="project_id" required>
+                <select class="DROPDOWN-GROUP" id="project_id" name="project_id" required>
                     <option value="">Select Project</option>
                     <?php
                     if ($result_projects && $result_projects->num_rows > 0) {

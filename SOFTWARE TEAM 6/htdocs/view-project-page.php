@@ -1,7 +1,7 @@
 <?php
 /*
 This file displays a single project's details by retrieving data from the projects table.
-It shows projectName (subject), description, status, and priority.
+It shows project_name (subject), description, status, and priority.
 If the project is found, its details are displayed.
 An Edit button is available (for higher-clearance users) to go to the edit-project page.
 */
