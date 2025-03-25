@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 // Validate the user's credentials
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
