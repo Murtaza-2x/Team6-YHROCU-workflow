@@ -1,25 +1,12 @@
 <?php
-session_start();  // Start the session to access session variables
-
 /*
-This file displays a list of tasks for the currently logged-in user or for all users, depending on the user's clearance level:
-1. It includes the connection, header, and dashboard files.
-2. Fetches session variables for clearance, user ID, and username, then outputs a welcome message.
-3. Based on the user’s clearance:
-   - If the user is “User” level, it shows only tasks assigned to them.
-   - Otherwise, it shows all tasks in the system.
-4. The results are fetched from the `tasks` table (with a join to the `projects` table) and displayed in a table format.
-5. If the user is not a regular user (i.e., has higher clearance), they also see an “Add Task” button to create a new task.
+This file displays a list of tasks for the currently logged-in user or for all users,
+depending on the user's clearance level.
+It retrieves tasks along with their associated project names (from the projects table)
+and displays them in a table. The project column now shows the project name as a clickable link
+that takes you to view-project-page.php with the project id.
 */
 
-// Check if session variables are set
-if (!isset($_SESSION['id'])) {
-  // Redirect to login if not set
-  header("Location: login.php");
-  exit();
-}
-
-$id = $_SESSION['id'];  // Get the user ID from the session
 $title = "ROCU: Dashboard";
 ?>
 
@@ -27,50 +14,48 @@ $title = "ROCU: Dashboard";
 <?php include 'INCLUDES/inc_header.php'; ?>
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="JS/SEARCH-TABLE.js"></script>
+
 <?php
-// Get search input (sanitized)
-$search = isset($_GET['search']) ? trim($conn->real_escape_string($_GET['search'])) : '';
-
-// Initialize the WHERE clause for the query
-$whereClause = ($clearance === 'User') ? "WHERE tau.user_id = {$id}" : "";
-
-// Add search functionality for different fields
-if (!empty($search)) {
-    // Numeric search for task ID
-    if (is_numeric($search)) {
-        $whereClause .= " AND t.id = $search"; // Exact match for task ID
-    } else {
-        // String search for subject, project, assignee, status, priority
-        $whereClause .= " AND (
-            t.subject LIKE '%$search%' 
-            OR p.project_name LIKE '%$search%' 
-            OR c.username LIKE '%$search%' 
-            OR t.status LIKE '%$search%' 
-            OR t.priority LIKE '%$search%' 
-            OR u.username LIKE '%$search%'
-        )";
-    }
+if ($clearance === 'User') {
+  $sql = "
+      SELECT
+          t.id,
+          t.subject,
+          t.project_id,
+          p.project_name,
+          t.status,
+          t.priority,
+          c.username AS creator_name,
+          GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
+      FROM tasks AS t
+      LEFT JOIN projects p ON t.project_id = p.id
+      JOIN task_assigned_users AS tau ON t.id = tau.task_id
+      JOIN users AS u ON tau.user_id = u.id
+      LEFT JOIN users AS c ON t.created_by = c.id
+      WHERE tau.user_id = {$id}
+      GROUP BY t.id
+  ";
+} else {
+  $sql = "
+      SELECT
+          t.id,
+          t.subject,
+          t.project_id,
+          p.project_name,
+          t.status,
+          t.priority,
+          c.username AS creator_name,
+          GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
+      FROM tasks AS t
+      LEFT JOIN projects p ON t.project_id = p.id
+      LEFT JOIN task_assigned_users AS tau ON t.id = tau.task_id
+      LEFT JOIN users AS u ON tau.user_id = u.id
+      LEFT JOIN users AS c ON t.created_by = c.id
+      GROUP BY t.id
+  ";
 }
-
-// Construct the query with filtering
-$sql = "
-    SELECT
-        t.id,
-        t.subject,
-        t.project_id,
-        p.project_name,
-        t.status,
-        t.priority,
-        c.username AS creator_name,
-        u.username AS assigned_user
-    FROM tasks AS t
-    INNER JOIN projects p ON t.project_id = p.id
-    INNER JOIN users c ON t.created_by = c.id
-    INNER JOIN task_assigned_users tau ON t.id = tau.task_id
-    INNER JOIN users u ON tau.user_id = u.id
-    $whereClause
-    GROUP BY t.id
-";
 
 $result = $conn->query($sql);
 ?>
@@ -84,13 +69,10 @@ $result = $conn->query($sql);
 
   <!-- TASK SECTION AREA -->
   <div class="TASK-AREA">
-
     <!-- TASK SECTION FILTER -->
     <div class="TASK-FILTER">
-      <form method="GET" action="">
-        <input type="text" name="search" placeholder="Search tasks..." value="<?php echo htmlspecialchars($search); ?>">
-        <button type="submit">Filter</button>
-      </form>
+      <input type="text" id="searchInput" placeholder="Search tasks...">
+      <button type="button" id="filterButton">Filter</button>
     </div>
     <!-- TASK SECTION FILTER END -->
 
@@ -98,50 +80,82 @@ $result = $conn->query($sql);
     <div class="TASK-LIST">
       <?php
       if ($result->num_rows > 0) {
-        echo "<table class='TASK-TABLE'>
+        echo "<table class='TASK-TABLE' id='TASK-TABLE'>
   <thead>
     <tr>
-      <th>ID</th>
-      <th>Subject</th>
-      <th>Project</th>
-      <th>Assignee</th>
-      <th>Status</th>
-      <th>Priority</th>
+      <th>
+        Subject
+        <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Project
+        <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Assignee
+        <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Status
+        <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
+      <th>
+        Priority
+        <img src='ICONS/filter-filled.png' class='filter'/>
+      </th>
     </tr>
-  </thead>";
+  </thead>
+  <tbody>";
 
-        // It's better to have one <tbody> wrapping all rows.
-        echo "<tbody>";
         while ($row = $result->fetch_assoc()) {
           $taskId      = $row["id"];
-          $subject     = htmlspecialchars($row["subject"]);
+          $subject     = $row["subject"];
+          $project_id  = $row["project_id"];
           $projectName = $row["project_name"] ? htmlspecialchars($row["project_name"]) : 'N/A';
-          $creator     = isset($row["creator_name"]) ? htmlspecialchars($row["creator_name"]) : "";
+          $creator     = isset($row["creator_name"]) ? $row["creator_name"] : "";
           $status      = $row["status"];
           $priority    = $row["priority"];
-          $assignedUser = isset($row["assigned_user"]) ? htmlspecialchars($row["assigned_user"]) : "";
 
-          // Status Pill
-          $statusPill = match ($status) {
-            'New' => "<button class='PILL-NEW'>New</button>",
-            'In Progress' => "<button class='PILL-IN-PROGRESS'>In Progress</button>",
-            'Complete' => "<button class='PILL-COMPLETE'>Complete</button>",
-            default => "<button class='PILL-INACTIVE'>$status</button>",
-          };
+          $statusPill = '';
+          switch ($status) {
+            case 'New':
+              $statusPill = "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>";
+              break;
+            case 'In Progress':
+              $statusPill = "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>";
+              break;
+            case 'Complete':
+              $statusPill = "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>";
+              break;
+            default:
+              $statusPill = "<button class='PILL-INACTIVE'>$status</button>";
+              break;
+          }
 
-           // Build priority pill.
-          $priorityPill = match ($priority) {
-            'Urgent' => "<button class='PILL-URGENT'>Urgent</button>",
-            'Moderate' => "<button class='PILL-MODERATE'>Moderate</button>",
-            'Low' => "<button class='PILL-LOW'>Low</button>",
-            default => "<button class='PILL-INACTIVE'>$priority</button>",
-          };
+          $priorityPill = '';
+          switch ($priority) {
+            case 'Urgent':
+              $priorityPill = "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>";
+              break;
+            case 'Moderate':
+              $priorityPill = "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>";
+              break;
+            case 'Low':
+              $priorityPill = "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>";
+              break;
+            default:
+              $priorityPill = "<button id='PILL-INACTIVE'>$priority</button>";
+              break;
+          }
 
           echo "<tr>
-                <td>$taskId</td>
-                <td><a href='view-task-page.php?id=$taskId'>$subject</a></td>
-                <td>$projectName</td>
-                <td>$assignedUser</td>
+                <td class='VIEW-TASK'>
+                  <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
+                </td>
+                <td>
+                  <a href='view-project-page.php?id=$project_id' title='View Project'>$projectName</a>
+                </td>
+                <td>$creator</td>
                 <td>$statusPill</td>
                 <td>$priorityPill</td>
               </tr>";
@@ -150,9 +164,10 @@ $result = $conn->query($sql);
 
         if ($_SESSION["clearance"] != 'User') {
           echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
+          echo "<button class='CREATE-PROJECT-BUTTON' onclick=\"document.location='create-project-page.php'\">Create Project</button>";
         }
       } else {
-        echo "<h1 class='USER-MESSAGE'>No tasks found!</h1>";
+        echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
       }
       ?>
     </div>
