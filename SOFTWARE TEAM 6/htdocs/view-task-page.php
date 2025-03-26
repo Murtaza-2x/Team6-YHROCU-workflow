@@ -44,6 +44,19 @@ if ($result && $result->num_rows > 0) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
+    $comment = $conn->real_escape_string($_POST['comment']);
+    $user_id = $_SESSION['id'];
+    $sql_insert_comment = "INSERT INTO comments (task_id, user_id, comment) 
+                           VALUES ($id, $user_id, '$comment')";
+    if ($conn->query($sql_insert_comment) === TRUE) {
+        header("Location: view-task-page.php?id=$id");
+        exit;
+    } else {
+        echo "Error adding comment: " . $conn->error;
+    }
+}
+
 ?>
 
 <?php include 'INCLUDES/inc_taskview.php'; ?>
