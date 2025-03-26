@@ -12,7 +12,6 @@ if (!isset($_SESSION['clearance']) || $_SESSION['clearance'] !== 'Admin') {
 
 $title = "Admin Panel";
 include 'INCLUDES/inc_header.php';
-
 // Handle form submissions for creating, editing, toggling, and deleting users.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Create new user
