@@ -1,8 +1,8 @@
 <?php
 /*
 This file handles user login functionality. It includes the database connection and required headers before processing the login form:
-1. Checks if the `username` field is submitted.
-2. Looks up the user in the `users` table based on the submitted username.
+1. Checks if the `email` field is submitted.
+2. Looks up the user in the `users` table based on the submitted email.
 3. If a user is found, verifies the provided password against the stored password.
 4. On success, saves user details (ID, username, clearance) in the session and redirects to the task list page.
 5. If credentials are incorrect, an error message is shown.
