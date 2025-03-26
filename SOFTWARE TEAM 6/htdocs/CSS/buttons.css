@@ -1,0 +1,63 @@
+.logout-button-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 10px; 
+}
+
+.admin-button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  box-shadow: none;
+  transition: background-color 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+}
+
+.admin-button:hover {
+  background-color: #0056b3;
+}
+
+.logout-button {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  box-shadow: none;
+  transition: background-color 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+}
+
+.logout-button:hover {
+  background-color: #5a6268;
+}
+
+.home-button {
+  background-color: #17a2b8; /* teal-blue */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.home-button:hover {
+  background-color: #117a8b;
+}
