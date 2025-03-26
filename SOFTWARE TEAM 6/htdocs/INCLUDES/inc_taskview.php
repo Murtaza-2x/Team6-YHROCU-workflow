@@ -14,8 +14,10 @@ $clearance = $_SESSION["clearance"];
 <!-- TASK VIEW -->
 <div class='VIEW-TASK-CONTAINER'>
     <div class='VIEW-TASK-BOX'>
-        <h1>View Task</h1>
-        <p>See Task Details below</p>
+        <div class='VIEW-HEAD'>
+            <h1>View Task</h1>
+            <p>See Task Details below</p>
+        </div>
 
         <!-- HEADER -->
         <div class="VIEW-ROW">
@@ -126,6 +128,48 @@ $clearance = $_SESSION["clearance"];
             <?php endif; ?>
         </div>
         <!-- BUTTONS END -->
+
+        <!-- COMMENTS SECTION -->
+        <div class="COMMENTS-SECTION">
+            <div class="TOP-BAR"></div>
+            <h1>Comments</h1>
+            <div class="COMMENT-LIST">
+                <?php
+                // Retrieve comments for this task
+                $sql_comments = "SELECT c.*, u.username FROM comments c
+                       JOIN users u ON c.user_id = u.id
+                       WHERE c.task_id = $id
+                       ORDER BY c.created_at ASC";
+                $result_comments = $conn->query($sql_comments);
+                if ($result_comments && $result_comments->num_rows > 0) {
+                    while ($comment = $result_comments->fetch_assoc()) {
+                        $commenter = htmlspecialchars($comment['username']);
+                        $commentText = nl2br(htmlspecialchars($comment['comment']));
+                        $createdAt = $comment['created_at'];
+                        echo "<div class='COMMENT'>";
+                        echo "<p class='COMMENT-USER'>{$commenter} - <span class='COMMENT-DATE'>{$createdAt}</span></p>";
+                        echo "<p class='COMMENT-TEXT'>{$commentText}</p>";
+                        echo "</div>";
+                    }
+                } else {
+                    echo "<p>No comments yet.</p>";
+                }
+                ?>
+            </div>
+            <div class="ADD-COMMENT">
+                <div id="comment-form">
+                    <form action="view-task-page.php?id=<?php echo $id; ?>" method="post">
+                        <textarea
+                            name="comment"
+                            placeholder="Enter your comment here"
+                            required></textarea>
+                        <button type="submit" name="submit_comment">Submit Comment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- COMMENTS SECTION END -->
+
     </div>
 </div>
 <!-- TASK VIEW END -->

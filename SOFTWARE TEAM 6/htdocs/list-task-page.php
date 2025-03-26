@@ -82,7 +82,7 @@ $result = $conn->query($sql);
   <thead>
     <tr>
       <th>
-        ID
+        Check
         <img src='ICONS/filter-filled.png' class='filter'/>
       </th>
       <th>
@@ -154,7 +154,7 @@ $result = $conn->query($sql);
           }
 
           echo "<tr>
-                <td>$taskId</td>
+                <td></td>
                 <td class='VIEW-TASK'>
                   <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
                 </td>

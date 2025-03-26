@@ -16,7 +16,7 @@
 }
 
 .MIDDLE-HERO-IMAGE {
-  position: absolute;
+  position: fixed;
   background-image: url(../IMAGES/BG.jpg);
   width: 100%;
   height: 100%;

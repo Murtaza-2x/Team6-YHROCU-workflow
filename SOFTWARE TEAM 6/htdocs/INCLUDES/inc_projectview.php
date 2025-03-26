@@ -13,9 +13,11 @@ $clearance = $_SESSION["clearance"];
 
 <!-- PROJECT VIEW -->
 <div class='VIEW-TASK-CONTAINER'>
-    <div class='VIEW-TASK-BOX'>
-        <h1>View Project</h1>
-        <p>See Project Details below</p>
+    <div class='VIEW-PROJECT-BOX'>
+        <div class='VIEW-HEAD'>
+            <h1>View Project</h1>
+            <p>See Project Details below</p>
+        </div>
 
         <!-- HEADER -->
         <div class="VIEW-ROW">
@@ -72,6 +74,17 @@ $clearance = $_SESSION["clearance"];
                 rows="6"
                 readonly><?php echo htmlspecialchars($description); ?></textarea>
         </div>
+
+        <!-- ASSIGNED -->
+        <div class="TASK-ROW ASSIGNED-ROW">
+            <div class="ASSIGNED-INFO">
+                <span class="ASSIGNED-LABEL">Assigned:</span>
+                <span class="ASSIGNED-LABEL-2">
+                    <?php echo htmlspecialchars($assignedUsers) ?: 'None'; ?>
+                </span>
+            </div>
+        </div>
+        <!-- ASSIGNED END -->
 
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
