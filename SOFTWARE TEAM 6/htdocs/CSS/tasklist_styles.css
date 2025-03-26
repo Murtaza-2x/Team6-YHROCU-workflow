@@ -45,6 +45,7 @@
 }
 
 .TASK-FILTER input {
+  color: white;
   padding: 8px;
   margin-right: 5px;
   border-radius: 5px;
@@ -117,12 +118,21 @@
 }
 
 .CREATE-TASK-BUTTON {
-  display: block;
+  display: inline;
   justify-content: center;
-  margin: 0 auto;
+  margin: 0 10px;
   margin-top: 20px;
   font-size: 1.1rem;
   background-color: var(--blue);
+}
+
+.CREATE-PROJECT-BUTTON {
+  display: inline;
+  justify-content: center;
+  margin: 0 10px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  background-color: var(--green);
 }
 
 .USER-MESSAGE {

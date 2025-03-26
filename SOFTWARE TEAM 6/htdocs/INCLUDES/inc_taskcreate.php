@@ -21,6 +21,7 @@
         <p>Enter task details below</p>
 
         <form id='CREATE-TASK-FORM' action='create-task-page.php' method='post'>
+
             <!-- SUBJECT -->
             <div class='INPUT-GROUP'>
                 <input
@@ -30,22 +31,21 @@
                     placeholder='Subject'
                     required />
             </div>
+            <!-- SUBJECT END -->
 
             <!-- PROJECT -->
             <div class='INPUT-GROUP'>
                 <?php
-                // Query the projects table for all projects
-                $sql_projects = "SELECT id, project_name FROM projects ORDER BY project_name";
+                $sql_projects = "SELECT id, project_name FROM projects ORDER BY id"; // Sorted by ID now
                 $result_projects = $conn->query($sql_projects);
                 ?>
-                <select class="DROPDOWN-GROUP" id="project-title" name="project_id" required>
+                <select class="DROPDOWN-GROUP" id="project_id" name="project_id" required>
                     <option value="">Select Project</option>
                     <?php
                     if ($result_projects && $result_projects->num_rows > 0) {
                         while ($projRow = $result_projects->fetch_assoc()) {
                             $projId   = $projRow['id'];
                             $projName = htmlspecialchars($projRow['project_name']);
-                            // If you want to echo the current assigned project, compare $projId to a variable $project_id (set when editing)
                             $selected = (isset($project_id) && $projId == $project_id) ? "selected" : "";
                             echo "<option value='{$projId}' {$selected}>{$projName}</option>";
                         }
@@ -53,6 +53,8 @@
                     ?>
                 </select>
             </div>
+            <!-- PROJECT END -->
+
 
 
             <!-- ASSIGN USERS -->
@@ -77,6 +79,7 @@
 
                 </select>
             </div>
+            <!-- ASSIGN USERS END -->
 
             <!-- STATUS -->
             <div class='INPUT-GROUP'>
@@ -87,6 +90,7 @@
                     <option value="Complete">Complete</option>
                 </select>
             </div>
+            <!-- STATUS END -->
 
             <!-- PRIORITY -->
             <div class='INPUT-GROUP'>
@@ -97,13 +101,16 @@
                     <option value="Urgent">Urgent</option>
                 </select>
             </div>
+            <!-- PRIORITY END -->
 
             <!-- DESCRIPTION -->
             <div class="DESC-GROUP">
                 <label for="description" class="DESCRIPTION-LABEL">Description:</label>
                 <textarea id="description" name="description" class="TASK-TEXT-AREA" rows="6" required></textarea>
             </div>
+            <!-- DESCRIPTION END -->
 
+            <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class='CREATE-BUTTON' type='submit'>
                     Create Task
@@ -115,6 +122,7 @@
                     Cancel
                 </button>
             </div>
+            <!-- BUTTONS END-->
         </form>
     </div>
 </div>

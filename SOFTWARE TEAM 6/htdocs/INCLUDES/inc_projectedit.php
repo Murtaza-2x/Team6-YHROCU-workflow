@@ -19,45 +19,27 @@ $clearance = $_SESSION["clearance"];
 <p class="MIDDLE-HERO-IMAGE"></p>
 
 <!-- EDIT TASK FORM -->
-<form action="edit-task-page.php?id=<?php echo $id; ?>" method="post">
+<form action="edit-project-page.php?id=<?php echo $id; ?>" method="post">
     <div class='VIEW-TASK-CONTAINER'>
         <div class='VIEW-PROJECT-BOX'>
             <div class='VIEW-HEAD'>
-                <h1>Edit Task</h1>
-                <p>Edit Task Details below</p>
+                <h1>Edit Project</h1>
+                <p>Edit Project Details below</p>
             </div>
 
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
-                    <h1 class="TASK-LABEL">Task Title</h1>
+                    <h1 class="TASK-LABEL">Project Title</h1>
                     <div class='INPUT-GROUP'>
-                        <input type="text" id="task-title" name="subject"
-                            value="<?php echo htmlspecialchars($subject); ?>"
-                            placeholder="Task Title" required />
-                    </div>
-                </div>
-
-                <div class="VIEW-COLUMN">
-                    <h1 class="TASK-LABEL">Project Allocation</h1>
-                    <h2 class="TASK-LABEL">(where the task is assigned)</h2>
-                    <div class='INPUT-GROUP'>
-                        <select class="DROPDOWN-GROUP" id="project-title" name="project_id" required>
-                            <option value="">Select Project</option>
-                            <?php
-                            foreach ($projects as $proj) {
-                                $projId   = $proj['id'];
-                                $projName = htmlspecialchars($proj['project_name']);
-                                $selected = ($projId == $project_id) ? "selected" : "";
-                                echo "<option value='{$projId}' {$selected}>{$projName}</option>";
-                            }
-                            ?>
-                        </select>
+                        <input type="text" id="project-title" name="project_name"
+                            value="<?php echo htmlspecialchars($projectName); ?>"
+                            placeholder="Project Title" required />
                     </div>
                 </div>
             </div>
             <!-- HEADER END -->
 
-            <!-- PRIORITY & STATUS: Pill Buttons -->
+            <!-- PRIORITY & STATUS -->
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
                     <div class="TASK-LABEL">Status</div>
@@ -100,30 +82,10 @@ $clearance = $_SESSION["clearance"];
                 <textarea id="description" name="description" class="TASK-TEXT-AREA" rows="6" required><?php echo htmlspecialchars($description); ?></textarea>
             </div>
 
-            <!-- ASSIGN USERS -->
-            <div class="VIEW-ROW">
-                <div class="VIEW-COLUMN">
-                    <div class="TASK-LABEL">Assign Users</div>
-                    <div class="INPUT-GROUP">
-                        <select class="DROPDOWN-GROUP-2" id="assign" name="assign[]" multiple>
-                            <?php
-                            foreach ($users as $u) {
-                                $uid = $u['id'];
-                                $username = htmlspecialchars($u['username']);
-                                $selected = in_array($uid, $assignedUserIds) ? "selected" : "";
-                                echo "<option value='{$uid}' {$selected}>{$username}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <!-- ASSIGN USERS END -->
-
             <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
-            <button class="UPDATE-BUTTON" type="submit" name="update_task">Update Task</button>
-                <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-task-page.php?id=<?php echo $id; ?>'">Cancel</button>
+                <button class="UPDATE-BUTTON" type="submit">Update Project</button>
+                <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-project-page.php?id=<?php echo $id; ?>'">Cancel</button>
             </div>
             <!-- BUTTONS END -->
         </div>
