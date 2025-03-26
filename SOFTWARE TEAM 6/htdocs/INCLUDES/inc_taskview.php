@@ -122,7 +122,7 @@ $clearance = $_SESSION["clearance"];
 
             <?php if ($_SESSION["clearance"] != 'User'): ?>
                 <button class="VIEW-LOGS-BUTTON"
-                    onclick="">
+                onclick="window.location.href='view-logs-page.php?id=<?php echo $id; ?>'">
                     View Logs
                 </button>
             <?php endif; ?>
@@ -135,7 +135,6 @@ $clearance = $_SESSION["clearance"];
             <h1>Comments</h1>
             <div class="COMMENT-LIST">
                 <?php
-                // Retrieve comments for this task
                 $sql_comments = "SELECT c.*, u.username FROM comments c
                        JOIN users u ON c.user_id = u.id
                        WHERE c.task_id = $id

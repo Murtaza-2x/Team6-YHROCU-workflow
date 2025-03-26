@@ -102,12 +102,6 @@ $clearance = $_SESSION["clearance"];
                 Cancel
             </button>
 
-            <?php if ($_SESSION["clearance"] != 'User'): ?>
-                <button class="VIEW-LOGS-BUTTON"
-                    onclick="">
-                    View Logs
-                </button>
-            <?php endif; ?>
         </div>
         <!-- BUTTONS END -->
     </div>
