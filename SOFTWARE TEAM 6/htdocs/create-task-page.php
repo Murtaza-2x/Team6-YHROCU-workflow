@@ -15,10 +15,6 @@ include 'INCLUDES/inc_connect.php';
 include 'INCLUDES/inc_header.php';
 include 'INCLUDES/inc_basicemail.php';
 
-<?php include 'INCLUDES/inc_connect.php'; ?>
-<?php include 'INCLUDES/inc_header.php'; ?>
-<?php include 'INCLUDES/inc_basicEmail.php'; ?>
-<?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject      = $conn->real_escape_string($_POST['subject']);
     $project_id   = $conn->real_escape_string($_POST['project_id']);
