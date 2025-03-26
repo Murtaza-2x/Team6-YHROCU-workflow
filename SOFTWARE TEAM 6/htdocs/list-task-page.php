@@ -64,7 +64,7 @@ $result = $conn->query($sql);
 <div class="TASK-CONTENT">
   <div class="TASK-HEADER">
     <p class="TASK-HEADER-1">Task List</p>
-    <p class="TASK-HEADER-2">(5)</p>
+    <p class="TASK-HEADER-2">(<?php echo $result->num_rows; ?>)</p>
   </div>
 
   <!-- TASK SECTION AREA -->
@@ -83,10 +83,6 @@ $result = $conn->query($sql);
         echo "<table class='TASK-TABLE' id='TASK-TABLE'>
   <thead>
     <tr>
-      <th>
-        Check
-        <img src='ICONS/filter-filled.png' class='filter'/>
-      </th>
       <th>
         Subject
         <img src='ICONS/filter-filled.png' class='filter'/>
@@ -153,7 +149,6 @@ $result = $conn->query($sql);
           }
 
           echo "<tr>
-                <td></td>
                 <td class='VIEW-TASK'>
                   <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
                 </td>

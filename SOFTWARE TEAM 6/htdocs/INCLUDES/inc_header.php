@@ -2,7 +2,7 @@
 
 <?php
 session_start();
-$loggedInUserId = $_SESSION['id'];
+$id = $_SESSION['id'];
 ?>
 
 <!DOCTYPE html>
