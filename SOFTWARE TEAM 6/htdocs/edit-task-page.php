@@ -1,12 +1,15 @@
 <?php
 /*
-This file allows the user to edit an existing task in the database.
-On GET, it retrieves the task details (including assigned users) and displays them in an editable form.
-On POST, it updates the task details and the task_assigned_users linking table, then redirects to the view page.
+  edit-task-page.php
+
+  1) Only Admin or Manager can edit tasks.
+  2) On GET, retrieves the current task (plus assigned users) to display in the form.
+  3) On POST (update_task), it archives the current task in the `archive` table, then updates `tasks`.
+  4) The assigned users in `task_assigned_users` are deleted and reinserted.
+
+  The form is in inc_taskedit.php, which has a <button name="update_task">Update Task</button>.
 */
 
-/* 1) Initialize & check user clearance */
-session_start();
 $clearance = $_SESSION['clearance'] ?? '';
 if ($clearance === 'User') {
     echo "You do not have permission to edit tasks.";
@@ -28,7 +31,6 @@ $project_id    = '';
 $status        = '';
 $priority      = '';
 $description   = '';
-$assignedUsers = '';
 $assignedUserIds = [];
 
 $sql_assigned = "SELECT user_id FROM task_assigned_users WHERE task_id = $id";
@@ -39,23 +41,45 @@ if ($result_assigned && $result_assigned->num_rows > 0) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$sql_current = "SELECT * FROM tasks WHERE id = $id";
+$result_current = $conn->query($sql_current);
+if ($result_current && $result_current->num_rows > 0) {
+    $currentTask = $result_current->fetch_assoc();
+} else {
+    echo "Task not found.";
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
+    $edited_by = $_SESSION['id'];
+    $archiveSql = "INSERT INTO archive (task_id, subject, project_id, status, priority, description, created_at, edited_by)
+                   VALUES (
+                     {$currentTask['id']},
+                     '" . $conn->real_escape_string($currentTask['subject']) . "',
+                     '" . $conn->real_escape_string($currentTask['project_id']) . "',
+                     '" . $conn->real_escape_string($currentTask['status']) . "',
+                     '" . $conn->real_escape_string($currentTask['priority']) . "',
+                     '" . $conn->real_escape_string($currentTask['description']) . "',
+                     '" . $currentTask['created_at'] . "',
+                     $edited_by
+                   )";
+    $conn->query($archiveSql);
+
     $subject     = $conn->real_escape_string($_POST['subject']);
     $project_id  = $conn->real_escape_string($_POST['project_id']);
     $status      = $conn->real_escape_string($_POST['status']);
     $priority    = $conn->real_escape_string($_POST['priority']);
     $description = $conn->real_escape_string($_POST['description']);
 
-    $sql = "UPDATE tasks 
-            SET subject     = '$subject',
-                project_id  = '$project_id',
-                status      = '$status',
-                priority    = '$priority',
-                description = '$description'
-            WHERE id = $id";
+    $sql_update = "UPDATE tasks 
+                   SET subject     = '$subject',
+                       project_id  = '$project_id',
+                       status      = '$status',
+                       priority    = '$priority',
+                       description = '$description'
+                   WHERE id = $id";
 
-    if ($conn->query($sql) === TRUE) {
-        // Remove existing user assignments, then insert the new ones
+    if ($conn->query($sql_update) === TRUE) {
         $conn->query("DELETE FROM task_assigned_users WHERE task_id = $id");
         if (isset($_POST['assign']) && is_array($_POST['assign'])) {
             foreach ($_POST['assign'] as $user_id) {
@@ -71,26 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 else {
-    $sql = "SELECT t.*,
-                   GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
-            FROM tasks t
-            LEFT JOIN task_assigned_users tau ON t.id = tau.task_id
-            LEFT JOIN users u ON tau.user_id = u.id
-            WHERE t.id = $id
-            GROUP BY t.id";
-    $result = $conn->query($sql);
-    if ($result && $result->num_rows > 0) {
-        $row         = $result->fetch_assoc();
-        $subject     = $row['subject'];
-        $project_id  = $row['project_id'];
-        $status      = $row['status'];
-        $priority    = $row['priority'];
-        $description = $row['description'];
-        $assignedUsers = $row['assigned_users'] ?? 'No Users Assigned';
-    } else {
-        echo "Task not found.";
-        exit;
-    }
+    $subject     = $currentTask['subject'];
+    $project_id  = $currentTask['project_id'];
+    $status      = $currentTask['status'];
+    $priority    = $currentTask['priority'];
+    $description = $currentTask['description'];
 }
 
 $projects = [];

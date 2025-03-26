@@ -45,6 +45,7 @@
 }
 
 .TASK-FILTER input {
+  color: white;
   padding: 8px;
   margin-right: 5px;
   border-radius: 5px;

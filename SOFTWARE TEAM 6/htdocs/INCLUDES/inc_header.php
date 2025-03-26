@@ -2,7 +2,7 @@
 
 <?php
 session_start();
-$loggedInUserId = $_SESSION['id'];
+$id = $_SESSION['id'];
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +11,7 @@ $loggedInUserId = $_SESSION['id'];
 <link href="CSS/default_styles.css" rel="stylesheet">
 <link href="CSS/root_colors.css" rel="stylesheet">
 <link href="CSS/header_footer_styles.css" rel="stylesheet">
+<link href="CSS/logout-button.css" rel="stylesheet">
 
 <body>
 
@@ -18,6 +19,13 @@ $loggedInUserId = $_SESSION['id'];
   <div class="TOP-SECTION">
     <img src="IMAGES/ROCU.png" class="TOP-HERO-IMAGE"></img>
   </div>
+  
+  <?php if (isset($_SESSION['id'])): ?>
+  <div class="logout-button-container">
+    <a href="INCLUDES/inc_logout.php" class="logout-button">Logout</a>
+  </div>
+<?php endif; ?>
+
   <!-- TOP SECTION END -->
 
   <!-- MIDDLE SECTION -->

@@ -14,8 +14,10 @@ $title = "ROCU: Dashboard";
 <?php include 'INCLUDES/inc_header.php'; ?>
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="JS/SEARCH-TABLE.js"></script>
+
 <?php
-// SQL query joins projects table to fetch the project name using project_id.
 if ($clearance === 'User') {
   $sql = "
       SELECT
@@ -62,15 +64,15 @@ $result = $conn->query($sql);
 <div class="TASK-CONTENT">
   <div class="TASK-HEADER">
     <p class="TASK-HEADER-1">Task List</p>
-    <p class="TASK-HEADER-2">(5)</p>
+    <p class="TASK-HEADER-2">(<?php echo $result->num_rows; ?>)</p>
   </div>
 
   <!-- TASK SECTION AREA -->
   <div class="TASK-AREA">
     <!-- TASK SECTION FILTER -->
     <div class="TASK-FILTER">
-      <input type="text" placeholder="Search tasks...">
-      <button>Filter</button>
+      <input type="text" id="searchInput" placeholder="Search tasks...">
+      <button type="button" id="filterButton">Filter</button>
     </div>
     <!-- TASK SECTION FILTER END -->
 
@@ -78,13 +80,9 @@ $result = $conn->query($sql);
     <div class="TASK-LIST">
       <?php
       if ($result->num_rows > 0) {
-        echo "<table class='TASK-TABLE'>
+        echo "<table class='TASK-TABLE' id='TASK-TABLE'>
   <thead>
     <tr>
-      <th>
-        ID
-        <img src='ICONS/filter-filled.png' class='filter'/>
-      </th>
       <th>
         Subject
         <img src='ICONS/filter-filled.png' class='filter'/>
@@ -108,18 +106,16 @@ $result = $conn->query($sql);
     </tr>
   </thead>
   <tbody>";
-        
+
         while ($row = $result->fetch_assoc()) {
           $taskId      = $row["id"];
           $subject     = $row["subject"];
           $project_id  = $row["project_id"];
-          // If project_name is available, use it; otherwise display "N/A"
           $projectName = $row["project_name"] ? htmlspecialchars($row["project_name"]) : 'N/A';
           $creator     = isset($row["creator_name"]) ? $row["creator_name"] : "";
           $status      = $row["status"];
           $priority    = $row["priority"];
 
-          // Build status pill.
           $statusPill = '';
           switch ($status) {
             case 'New':
@@ -136,7 +132,6 @@ $result = $conn->query($sql);
               break;
           }
 
-          // Build priority pill.
           $priorityPill = '';
           switch ($priority) {
             case 'Urgent':
@@ -154,7 +149,6 @@ $result = $conn->query($sql);
           }
 
           echo "<tr>
-                <td>$taskId</td>
                 <td class='VIEW-TASK'>
                   <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
                 </td>

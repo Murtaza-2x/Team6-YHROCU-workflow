@@ -21,9 +21,11 @@ $clearance = $_SESSION["clearance"];
 <!-- EDIT TASK FORM -->
 <form action="edit-task-page.php?id=<?php echo $id; ?>" method="post">
     <div class='VIEW-TASK-CONTAINER'>
-        <div class='VIEW-TASK-BOX'>
-            <h1>Edit Task</h1>
-            <p>Edit task details below</p>
+        <div class='VIEW-PROJECT-BOX'>
+            <div class='VIEW-HEAD'>
+                <h1>Edit Task</h1>
+                <p>Edit Task Details below</p>
+            </div>
 
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
@@ -120,7 +122,7 @@ $clearance = $_SESSION["clearance"];
 
             <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
-                <button class="UPDATE-BUTTON" type="submit">Update Task</button>
+            <button class="UPDATE-BUTTON" type="submit" name="update_task">Update Task</button>
                 <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-task-page.php?id=<?php echo $id; ?>'">Cancel</button>
             </div>
             <!-- BUTTONS END -->

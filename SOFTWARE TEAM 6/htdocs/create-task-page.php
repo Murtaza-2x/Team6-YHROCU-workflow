@@ -6,21 +6,25 @@ For POST requests, the code gathers user inputs (subject, project, assignee, sta
 constructs an SQL INSERT statement, and attempts to insert the new task into the `tasks` table. 
 If successful, the user is redirected to a “view” page for the newly inserted task. 
 If it’s a GET request, the script displays an HTML form that allows users to enter the details necessary for creating a new task.
+An email notification is sent to a fake server when a task is created to simulate task creation notifications.
 */
 
-$title = 'Create New Task';
-?>
+$title = 'ROCU: Create Task';
+
+include 'INCLUDES/inc_connect.php';
+include 'INCLUDES/inc_header.php';
+include 'INCLUDES/inc_basicemail.php';
 
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
 <?php include 'INCLUDES/inc_basicEmail.php'; ?>
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $subject = $_POST['subject'];
-    $project = $_POST['project'];
-    $status = $_POST['status'];
-    $priority = $_POST['priority'];
-    $description = $_POST['description'];
+    $subject      = $conn->real_escape_string($_POST['subject']);
+    $project_id   = $conn->real_escape_string($_POST['project_id']);
+    $status       = $conn->real_escape_string($_POST['status']);
+    $priority     = $conn->real_escape_string($_POST['priority']);
+    $description  = $conn->real_escape_string($_POST['description']);
 
     $creatorId = $_SESSION['id'];
 
@@ -41,13 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $userQuery = "SELECT email FROM users WHERE id = $user_id";
                 $userResult = $conn->query($userQuery);
-
-                if ($userResult && $userResult->num_rows>0) {
+                if ($userResult && $userResult->num_rows > 0) {
                     $userRow = $userResult->fetch_assoc();
                     sendTaskEmail($userRow['email']);
                 }
-
-
             }
         }
 
