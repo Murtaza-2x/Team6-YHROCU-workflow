@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2025 at 10:52 AM
+-- Generation Time: Mar 26, 2025 at 01:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `rocu`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `comment_id` int(11) NOT NULL,
+  `task_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `comment` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`comment_id`, `task_id`, `user_id`, `comment`, `created_at`) VALUES
+(1, 1, 1, 'First comment ever...', '2025-03-26 12:07:25'),
+(2, 1, 1, 'i can cure your DISEASE', '2025-03-26 12:10:00'),
+(3, 1, 1, 'yass', '2025-03-26 12:16:07');
 
 -- --------------------------------------------------------
 
@@ -42,7 +65,7 @@ CREATE TABLE `projects` (
 INSERT INTO `projects` (`id`, `project_name`, `description`, `status`, `priority`) VALUES
 (1, 'Project One', 'Test123', 'New', 'Low'),
 (2, 'Project Two', 'I DONT NEED YOUR DRUGS, I\'D RATHER GET, RATHER GET...HIGH FASHION', 'In Progress', 'Moderate'),
-(3, 'Project Three', 'I\'VE NOTHING ON BUT THE RADIO', 'New', 'Moderate');
+(3, 'Project Three', 'I\'VE GOT NOTHING ON BUT THE RADIO', 'New', 'Moderate');
 
 -- --------------------------------------------------------
 
@@ -110,13 +133,21 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `clearance`) VALUES
-(1, 'johnAdmin', 'johnAdmin@gmail.com', 'adminPass', ''),
+(1, 'johnAdmin', 'johnAdmin@gmail.com', 'adminPass', 'Admin'),
 (2, 'joeManager', 'joeManager@gmail.com', 'managerPass', 'Manager'),
 (3, 'jimUser', 'jimUser@gmail.com', 'userPass', 'User');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`comment_id`),
+  ADD KEY `task_id` (`task_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `projects`
@@ -151,6 +182,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
@@ -171,6 +208,13 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tasks`
