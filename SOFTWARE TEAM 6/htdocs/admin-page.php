@@ -134,7 +134,7 @@ $result = $conn->query("SELECT id, username, email, clearance, status FROM users
                         <option value="Admin" <?= $user['clearance'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
                     </select>
                 </td>
-                <td><?= $user['status'] ?></td>
+                <td class="status <?= strtolower(trim($user['status'])) ?>"><?= $user['status'] ?></td>
                 <td>
                     <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                     <input type="password" name="password" placeholder="Password" readonly>

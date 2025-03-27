@@ -185,3 +185,27 @@ table form.inline-form {
   background: linear-gradient(135deg, #5a6268, #343a40);
   transform: translateY(-2px);
 }
+
+/* Status font */ 
+
+.status.active,
+.status.Active {
+  color: green;
+  font-weight: bold;
+}
+
+.status.disabled,
+.status.Disabled {
+  color: red;
+  font-weight: bold;
+}
+
+.status.active,
+.status.Active,
+.status.disabled,
+.status.Disabled {
+  font-size: 14px;
+  line-height: 1.4;
+  text-transform: none;
+  letter-spacing: 0;
+}
