@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $userResult = $conn->query($userQuery);
                 if ($userResult && $userResult->num_rows > 0) {
                     $userRow = $userResult->fetch_assoc();
-                    sendTaskEmail($userRow['email']);
+                    sendTaskCreateEmail($userRow['email']);
                 }
             }
         }
