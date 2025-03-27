@@ -136,7 +136,7 @@ $result = $conn->query("SELECT id, username, email, clearance, status FROM users
                 <td><?= $user['status'] ?></td>
                 <td>
                     <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                    <input type="password" name="password" placeholder="New password (optional)">
+                    <input type="password" name="password" placeholder="New password">
                     <button type="submit" name="edit_user" class="btn-primary">Save</button>
 
                     <?php if ($user['id'] != $_SESSION['id']): ?>
