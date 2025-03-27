@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html>
+<link href="CSS/admin-page.css" rel="stylesheet">
+<body>
+
 <?php
 // ** This is an admin page - which allows an admin when logged in to change user details and see existing user details/stauses and update them **
 
@@ -57,6 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $result = $conn->query("SELECT id, username, email, clearance, status FROM users");
 ?>
 
+<p class="MIDDLE-HERO-IMAGE"></p>
+
 <div class="TASK-CONTENT">
     <h2>User Management</h2>
 
@@ -70,11 +77,16 @@ $result = $conn->query("SELECT id, username, email, clearance, status FROM users
             <option value="Manager">Manager</option>
             <option value="Admin">Admin</option>
         </select>
-        <button type="submit" name="create_user">Create User</button>
+        <button type="submit" name="create_user" class="btn-primary">Create User</button>
     </form>
 
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search">
+    </div>
+
     <!-- Table displaying all users with edit and management actions -->
-    <table>
+    <table id="USER-TABLE">
         <thead>
             <tr>
                 <th>Username</th>
@@ -86,43 +98,45 @@ $result = $conn->query("SELECT id, username, email, clearance, status FROM users
         </thead>
         <tbody>
         <?php while ($user = $result->fetch_assoc()): ?>
-            <tr>
-                <!-- Form for editing each user's information -->
-                <form method="post">
-                    <td>
-                        <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
-                    </td>
-                    <td>
-                        <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
-                    </td>
-                    <td>
-                        <!-- Hidden fields to pass user ID and current status -->
-                        <select name="clearance">
-                            <option value="User" <?= $user['clearance'] === 'User' ? 'selected' : '' ?>>User</option>
-                            <option value="Manager" <?= $user['clearance'] === 'Manager' ? 'selected' : '' ?>>Manager</option>
-                            <option value="Admin" <?= $user['clearance'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
-                        </select>
-                    </td>
-                    <td><?= $user['status'] ?></td>
-                    <td>
-                        <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                        <input type="password" name="password" placeholder="New password (optional)">
-                        <button type="submit" name="edit_user">Save</button>
+        <tr>
+            <td>
+                <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
+            </td>
+            <td>
+                <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+            </td>
+            <td>
+                <select name="clearance">
+                    <option value="User" <?= $user['clearance'] === 'User' ? 'selected' : '' ?>>User</option>
+                    <option value="Manager" <?= $user['clearance'] === 'Manager' ? 'selected' : '' ?>>Manager</option>
+                    <option value="Admin" <?= $user['clearance'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
+                </select>
+            </td>
+            <td><?= $user['status'] ?></td>
+            <td>
+                <!-- Form for editing user actions -->
+                <form method="post" class="inline-form">
+                    <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+                    <input type="password" name="password" placeholder="New password (optional)">
+                    <button type="submit" name="edit_user" class="btn-primary">Save</button>
 
-                        <?php if ($user['id'] != $_SESSION['id']): ?>
-                            <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
-                            <button type="submit" name="toggle_user">
-                                <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
-                            </button>
-                            <button type="submit" name="delete_user" onclick="return confirm('Delete this user?');">Delete</button>
-                        <?php endif; ?>
-                    </td>
+                    <?php if ($user['id'] != $_SESSION['id']): ?>
+                        <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
+                        <button type="submit" name="toggle_user" class="btn-warning">
+                            <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
+                        </button>
+                        <button type="submit" name="delete_user" class="btn-danger" onclick="return confirm('Delete this user?');">Delete</button>
+                    <?php endif; ?>
                 </form>
-            </tr>
+            </td>
+        </tr>
         <?php endwhile; ?>
         </tbody>
     </table>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="JS/SEARCH-users.js"></script>
 
 <?php include 'INCLUDES/inc_footer.php'; ?>
 <?php include 'INCLUDES/inc_disconnect.php'; ?>
