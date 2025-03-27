@@ -162,3 +162,26 @@ table form.inline-form {
     color: #721c24;
     border: 1px solid #f5c6cb;
   }
+
+/* Secondary Button (Edit) */
+.btn-secondary {
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+  color: white;
+  box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #6c757d, #5a6268) !important;
+  color: white !important;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #5a6268, #343a40);
+  transform: translateY(-2px);
+}

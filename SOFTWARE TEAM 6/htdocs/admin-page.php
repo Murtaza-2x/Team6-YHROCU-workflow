@@ -18,6 +18,7 @@ if (!isset($_SESSION['clearance']) || $_SESSION['clearance'] !== 'Admin') {
 
 $title = "Admin Panel";
 include 'INCLUDES/inc_header.php';
+
 // Handle form submissions for creating, editing, toggling, and deleting users.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Create new user
@@ -26,13 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_POST['email'];
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $clearance = $_POST['clearance'];
-    
+
         // Check for duplicate username or email
         $checkQuery = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
         $checkQuery->bind_param("ss", $username, $email);
         $checkQuery->execute();
         $checkQuery->store_result();
-    
+
         if ($checkQuery->num_rows > 0) {
             $feedback = "<div class='feedback error'>Username or Email already exists. Please choose another.</div>";
         } else {
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $insertQuery->execute();
             $feedback = "<div class='feedback success'>User created successfully!</div>";
         }
-    
+
         $checkQuery->close();
     }
 
@@ -118,16 +119,16 @@ $result = $conn->query("SELECT id, username, email, clearance, status FROM users
         </thead>
         <tbody>
         <?php while ($user = $result->fetch_assoc()): ?>
-        <form method="post" class="inline-form">
+        <form method="post" class="inline-form user-row-form">
             <tr>
                 <td>
-                    <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
+                    <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required readonly>
                 </td>
                 <td>
-                    <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+                    <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required readonly>
                 </td>
                 <td>
-                    <select name="clearance">
+                    <select name="clearance" disabled>
                         <option value="User" <?= $user['clearance'] === 'User' ? 'selected' : '' ?>>User</option>
                         <option value="Manager" <?= $user['clearance'] === 'Manager' ? 'selected' : '' ?>>Manager</option>
                         <option value="Admin" <?= $user['clearance'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
@@ -136,15 +137,16 @@ $result = $conn->query("SELECT id, username, email, clearance, status FROM users
                 <td><?= $user['status'] ?></td>
                 <td>
                     <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                    <input type="password" name="password" placeholder="New password">
-                    <button type="submit" name="edit_user" class="btn-primary">Save</button>
+                    <input type="password" name="password" placeholder="New password" readonly>
+                    <button type="button" class="btn-secondary edit-btn">Edit</button>
+                    <button type="submit" name="edit_user" class="btn-primary action-btn" style="display:none;">Save</button>
 
                     <?php if ($user['id'] != $_SESSION['id']): ?>
                         <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
-                        <button type="submit" name="toggle_user" class="btn-warning">
+                        <button type="submit" name="toggle_user" class="btn-warning action-btn" style="display:none;">
                             <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
                         </button>
-                        <button type="submit" name="delete_user" class="btn-danger" onclick="return confirm('Delete this user?');">Delete</button>
+                        <button type="submit" name="delete_user" class="btn-danger action-btn" style="display:none;" onclick="return confirm('Delete this user?');">Delete</button>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -156,6 +158,7 @@ $result = $conn->query("SELECT id, username, email, clearance, status FROM users
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="JS/SEARCH-users.js"></script>
+<script src="JS/admin-actions.js"></script>
 
 <?php include 'INCLUDES/inc_footer.php'; ?>
 <?php include 'INCLUDES/inc_disconnect.php'; ?>
