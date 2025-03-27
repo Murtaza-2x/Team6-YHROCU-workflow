@@ -14,8 +14,6 @@ $title = "ROCU: Dashboard";
 <?php include 'INCLUDES/inc_header.php'; ?>
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="JS/SEARCH-TABLE.js"></script>
 
 <?php
 if ($clearance === 'User') {
@@ -71,9 +69,9 @@ $result = $conn->query($sql);
   <div class="TASK-AREA">
     <!-- TASK SECTION FILTER -->
     <div class="TASK-FILTER">
-      <input type="text" id="searchInput" placeholder="Search tasks...">
-      <button type="button" id="filterButton">Filter</button>
-    </div>
+  <input type="text" id="searchInput" placeholder="Search tasks...">
+  <button type="button" id="filterButton">Filter</button>
+</div>
     <!-- TASK SECTION FILTER END -->
 
     <!-- TASK SECTION LIST -->
@@ -182,3 +180,6 @@ $result = $conn->query($sql);
 
 <?php include 'INCLUDES/inc_footer.php'; ?>
 <?php include 'INCLUDES/inc_disconnect.php'; ?>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="JS/SEARCH-TABLE.js"></script>
