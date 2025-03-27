@@ -24,7 +24,7 @@ if (isset($_POST["email"])) {
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if (password_verify($_POST["password"], $row["password"])) {
-            if (strtolower(trim($row["Status"])) === "active") {
+            if (strtolower(trim($row["status"])) === "active") {
                 $_SESSION["id"] = $row["id"];
                 $_SESSION["email"] = $row["email"];
                 $_SESSION["clearance"] = $row["clearance"];

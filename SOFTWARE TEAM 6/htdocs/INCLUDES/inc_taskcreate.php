@@ -20,6 +20,13 @@
         <h1>Create a New Task</h1>
         <p>Enter task details below</p>
 
+
+        <?php if (!empty($errorMsg)): ?>
+            <div class="ERROR-MESSAGE">
+                <?php echo $errorMsg; ?>
+            </div>
+        <?php endif; ?>
+
         <form id='CREATE-TASK-FORM' action='create-task-page.php' method='post'>
 
             <!-- SUBJECT -->
