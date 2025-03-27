@@ -13,7 +13,7 @@ $title = 'ROCU: Create Task';
 
 include 'INCLUDES/inc_connect.php';
 include 'INCLUDES/inc_header.php';
-include 'INCLUDES/inc_basicemail.php';
+include 'INCLUDES/inc_email-task-create.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject      = $conn->real_escape_string($_POST['subject']);
