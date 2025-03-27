@@ -137,7 +137,7 @@ $result = $conn->query("SELECT id, username, email, clearance, status FROM users
                 <td><?= $user['status'] ?></td>
                 <td>
                     <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                    <input type="password" name="password" placeholder="New password" readonly>
+                    <input type="password" name="password" placeholder="Password" readonly>
                     <button type="button" class="btn-secondary edit-btn">Edit</button>
                     <button type="submit" name="edit_user" class="btn-primary action-btn" style="display:none;">Save</button>
 
