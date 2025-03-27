@@ -24,11 +24,15 @@ if (isset($_POST["email"])) {
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if (password_verify($_POST["password"], $row["password"])) {
-            $_SESSION["id"] = $row["id"];
-            $_SESSION["email"] = $row["email"];
-            $_SESSION["clearance"] = $row["clearance"];
-            header('Location: list-task-page.php?clearance=' . $_SESSION["clearance"] . '&id=' . $_SESSION["id"]);
-            exit();
+            if (strtolower(trim($row["Status"])) === "active") {
+                $_SESSION["id"] = $row["id"];
+                $_SESSION["email"] = $row["email"];
+                $_SESSION["clearance"] = $row["clearance"];
+                header('Location: list-task-page.php?clearance=' . $_SESSION["clearance"] . '&id=' . $_SESSION["id"]);
+                exit();
+            } else {
+                $errorMsg = 'Your account has been disabled. Please contact an administrator.';
+            }
         } else {
             $errorMsg = 'Incorrect Email Address or Password';
         }
