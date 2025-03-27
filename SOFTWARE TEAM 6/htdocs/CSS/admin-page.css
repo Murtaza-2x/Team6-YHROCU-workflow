@@ -58,7 +58,7 @@ button {
     transform: translateY(-2px);
   }
   
-  /* Danger Button (Delete) */
+  /*(Delete) */
   .btn-danger {
     background: linear-gradient(135deg, #ff5f6d, #ffc371);
     color: white;
@@ -69,31 +69,47 @@ button {
     transform: translateY(-2px);
   }
   
-  /* Table styling */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 2rem;
-  }
-  
-  thead th {
-    background-color: #f8f9fa;
-    padding: 12px;
-    border-bottom: 2px solid #dee2e6;
-    text-align: left;
-  }
-  
-  tbody td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  table form.inline-form {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-  }
+ /* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+}
+
+thead th {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-bottom: 2px solid #dee2e6;
+  text-align: left;
+}
+
+tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+tbody td input[type="text"],
+tbody td input[type="email"],
+tbody td input[type="password"],
+tbody td select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+table td:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+table form.inline-form {
+  display: contents; 
+}
   
   /* Search Bar */
 .search-bar {
