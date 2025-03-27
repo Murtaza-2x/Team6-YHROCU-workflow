@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 27, 2025 at 01:22 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Mar 27, 2025 at 07:30 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -168,9 +168,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `clearance`, `Status`) VALUES
-(1, 'johnAdmin', 'johnAdmin@gmail.com', '$2y$10$KQmD34SaCfljg4I2tMo.F.lp8R4zygDaAHKiWsnALQyYq0LXop86S', 'Admin', 'Active'),
-(2, 'joeManager', 'joeManager@gmail.com', '$2y$10$SVr/8MjS73HhyzoNKSImWeVofySdGwxBK4P10Skk3ATMqELaPqo5e', 'Manager', 'Active'),
-(3, 'jimUser', 'jimUser@gmail.com', '$2y$10$e.7FdoNpAgrytnLq2kduwOdlXx8RmcqldFa6HZXjH9/k7GhSVfe26', 'User', 'Active');
+(1, 'johnAdmin', 'johnAdmin@yhrocu.police.uk', '$2y$10$KQmD34SaCfljg4I2tMo.F.lp8R4zygDaAHKiWsnALQyYq0LXop86S', 'Admin', 'Active'),
+(2, 'joeManager', 'joeManager@yhrocu.police.uk', '$2y$10$SVr/8MjS73HhyzoNKSImWeVofySdGwxBK4P10Skk3ATMqELaPqo5e', 'Manager', 'Active'),
+(3, 'jimUser', 'jimUser@yhrocu.police.uk', '$2y$10$e.7FdoNpAgrytnLq2kduwOdlXx8RmcqldFa6HZXjH9/k7GhSVfe26', 'User', 'Active');
 
 --
 -- Indexes for dumped tables

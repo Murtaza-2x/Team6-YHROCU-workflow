@@ -88,6 +88,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
                 $conn->query($sql_link);
             }
         }
+        $userQuery = "SELECT email FROM users WHERE id = $user_id";
+                $userResult = $conn->query($userQuery);
+                if ($userResult && $userResult->num_rows > 0) {
+                    $userRow = $userResult->fetch_assoc();
+                    sendTaskUpdateEmail($userRow['email']);
+                }
         header("Location: view-task-page.php?id=$id");
         exit;
     } else {
