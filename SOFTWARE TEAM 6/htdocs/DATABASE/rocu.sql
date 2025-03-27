@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2025 at 04:22 PM
+-- Generation Time: Mar 27, 2025 at 01:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -73,7 +73,9 @@ CREATE TABLE `comments` (
 INSERT INTO `comments` (`comment_id`, `task_id`, `user_id`, `comment`, `created_at`) VALUES
 (1, 1, 1, 'First comment ever...', '2025-03-26 12:07:25'),
 (2, 1, 1, 'i can cure your DISEASE', '2025-03-26 12:10:00'),
-(3, 1, 1, 'yass', '2025-03-26 12:16:07');
+(3, 1, 1, 'yass', '2025-03-26 12:16:07'),
+(4, 1, 1, 'Heyy :) ', '2025-03-26 21:12:15'),
+(5, 1, 3, 'Yooo :D', '2025-03-26 23:05:59');
 
 -- --------------------------------------------------------
 
@@ -157,17 +159,18 @@ CREATE TABLE `users` (
   `username` varchar(25) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `clearance` enum('User','Manager','Admin','') DEFAULT NULL
+  `clearance` enum('User','Manager','Admin','') DEFAULT NULL,
+  `Status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `clearance`) VALUES
-(1, 'johnAdmin', 'johnAdmin@gmail.com', '$2y$10$KQmD34SaCfljg4I2tMo.F.lp8R4zygDaAHKiWsnALQyYq0LXop86S', 'Admin'),
-(2, 'joeManager', 'joeManager@gmail.com', '$2y$10$SVr/8MjS73HhyzoNKSImWeVofySdGwxBK4P10Skk3ATMqELaPqo5e', 'Manager'),
-(3, 'jimUser', 'jimUser@gmail.com', '$2y$10$e.7FdoNpAgrytnLq2kduwOdlXx8RmcqldFa6HZXjH9/k7GhSVfe26', 'User');
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `clearance`, `Status`) VALUES
+(1, 'johnAdmin', 'johnAdmin@gmail.com', '$2y$10$KQmD34SaCfljg4I2tMo.F.lp8R4zygDaAHKiWsnALQyYq0LXop86S', 'Admin', 'Active'),
+(2, 'joeManager', 'joeManager@gmail.com', '$2y$10$SVr/8MjS73HhyzoNKSImWeVofySdGwxBK4P10Skk3ATMqELaPqo5e', 'Manager', 'Active'),
+(3, 'jimUser', 'jimUser@gmail.com', '$2y$10$e.7FdoNpAgrytnLq2kduwOdlXx8RmcqldFa6HZXjH9/k7GhSVfe26', 'User', 'Active');
 
 --
 -- Indexes for dumped tables
@@ -230,7 +233,7 @@ ALTER TABLE `archive`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -248,7 +251,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
