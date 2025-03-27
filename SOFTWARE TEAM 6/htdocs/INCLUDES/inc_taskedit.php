@@ -129,3 +129,4 @@ $clearance = $_SESSION["clearance"];
         </div>
     </div>
 </form>
+<!-- EDIT TASK FORM END -->

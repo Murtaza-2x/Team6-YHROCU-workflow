@@ -1,0 +1,157 @@
+/* MIDDLE SECTION */
+.MIDDLE-SECTION {
+  justify-content: center;
+}
+
+.MIDDLE-HERO-IMAGE {
+  position: fixed;
+  background-image: url(../IMAGES/BG.jpg);
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: brightness(50%);
+}
+
+/* ADMIN BOX */
+.ADMIN-CONTAINER {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.ADMIN-CONTENT {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.ADMIN-BOX {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 800px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ADMIN-BOX h1 {
+  margin: 0;
+  font-size: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--dark-grey);
+}
+
+.ADMIN-BOX p {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+  color: var(--dark-grey);
+  opacity: 0.8;
+}
+
+.ADMIN-LABEL {
+  flex: 0 0 150px;
+  text-align: right;
+  margin-right: 10px;
+  color: var(--dark-grey);
+}
+
+.ADMIN-ROW {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  transform: translateX(-5rem);
+}
+
+.ADMIN-COLUMN {
+  flex: 1;
+  min-width: 200px;
+}
+
+.ADMIN-COLUMN h1 {
+  display: inline-block;
+  font-size: 1rem;
+  color: var(--dark-grey);
+}
+
+.ADMIN-COLUMN h2 {
+  font-family: "Helvetica Neue Light";
+  font-size: 0.6rem;
+  color: var(--dark-grey);
+  opacity: 0.3;
+}
+
+.INPUT-GROUP {
+  width:50%;
+  padding: 0.3rem;
+  border: 1px solid var(--off-white);
+  border-radius: 20px;
+}
+
+.INPUT-GROUP input {
+  text-align: center;
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: none;
+  opacity: 0.3;
+  outline: none;
+}
+
+.INPUT-GROUP:hover {
+  opacity: 1;
+}
+
+.ADMIN-FILTER {
+  margin-right: 8px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ADMIN-FILTER input {
+  color: white;
+  padding: 8px;
+  margin-right: 5px;
+  border-radius: 5px;
+  border: white;
+  outline: none;
+  background-color: var(--dark-grey);
+}
+
+.ADMIN-FILTER button {
+  padding: 8px 12px;
+  border: none;
+  background-color: var(--blue);
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ADMIN-FILTER button:hover {
+  background-color: var(--dark-grey);
+}
+
+.TASK-BUTTONS button {
+  color: white;
+  padding: 0.6rem 1rem;
+  margin: 0.3rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 40%;
+}
+
+.TASK-BUTTONS button:hover {
+  background: var(--dark-grey);
+}
+
+.CREATE-BUTTON {
+  background-color: var(--blue);
+}

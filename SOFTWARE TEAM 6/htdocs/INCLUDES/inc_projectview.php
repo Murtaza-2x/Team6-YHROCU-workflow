@@ -106,4 +106,4 @@ $clearance = $_SESSION["clearance"];
         <!-- BUTTONS END -->
     </div>
 </div>
-<!-- TASK VIEW END -->
+<!-- PROJECT VIEW END -->

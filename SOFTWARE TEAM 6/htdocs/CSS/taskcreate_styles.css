@@ -1,18 +1,6 @@
 /* MIDDLE SECTION */
 .MIDDLE-SECTION {
-  width: 100%;
-  height: 100%;
-  top: 75px;
-  bottom: 30px;
-  display: flex;
   justify-content: center;
-  align-items: center;
-}
-
-.MIDDLE-SECTION {
-  position: absolute;
-  background-color: white;
-  z-index: 1;
 }
 
 .MIDDLE-HERO-IMAGE {
@@ -136,4 +124,15 @@
 }
 
 /* CREATE TASK BOX END */
+
+.ERROR-MESSAGE {
+  background-color: var(--dark-grey);
+  color: white;
+  padding: 5px;
+  padding-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  text-align: center;
+}
+
 /* MIDDLE SECTION END */
