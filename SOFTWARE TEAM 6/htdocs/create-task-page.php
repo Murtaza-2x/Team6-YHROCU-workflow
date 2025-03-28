@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
             }
-            header('Location: view-task-page.php?id=' . $task_id);
+            header("Location: view-task-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($_SESSION['id']));
             exit;
         } else {
             $errorMsg = "Error: " . $sql . "<br>" . $conn->error;

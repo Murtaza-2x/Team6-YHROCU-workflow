@@ -98,7 +98,7 @@ $clearance = $_SESSION["clearance"];
 
             <button
                 class="CANCEL-BUTTON"
-                onclick="window.location.href='list-task-page.php?clearance=<?php echo $_SESSION['clearance']; ?>&id=<?php echo $_SESSION['id']; ?>'">
+                onclick="window.location.href='list-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">
                 Cancel
             </button>
 

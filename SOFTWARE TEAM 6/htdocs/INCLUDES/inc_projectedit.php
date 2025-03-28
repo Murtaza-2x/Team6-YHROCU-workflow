@@ -85,7 +85,7 @@ $clearance = $_SESSION["clearance"];
             <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class="UPDATE-BUTTON" type="submit">Update Project</button>
-                <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-project-page.php?id=<?php echo $id; ?>'">Cancel</button>
+                <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-project-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">Cancel</button>
             </div>
             <!-- BUTTONS END -->
         </div>

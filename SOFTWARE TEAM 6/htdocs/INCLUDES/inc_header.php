@@ -21,7 +21,7 @@ $id = $_SESSION['id'];
 
   <?php if (isset($_SESSION['id'])): ?>
     <div class="BUTTON-CONTAINER">
-      <button onclick="window.location.href='list-task-page.php'" class="HOME-BUTTON">Home</button>
+      <button onclick="window.location.href='list-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'" class="HOME-BUTTON">Home</button>
       <?php if (isset($_SESSION['clearance']) && $_SESSION['clearance'] === 'Admin'): ?>
         <button class="ADMIN-BUTTON" onclick="window.location.href='admin-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">
           Admin Panel

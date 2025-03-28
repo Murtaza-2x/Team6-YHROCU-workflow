@@ -125,7 +125,7 @@
                 <button
                     class="CANCEL-BUTTON"
                     type="button"
-                    onclick="window.location.href='list-task-page.php?clearance=<?php echo $_SESSION["clearance"]; ?>&id=<?php echo $_SESSION["id"]; ?>'">
+                    onclick="window.location.href='list-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">
                     Cancel
                 </button>
             </div>

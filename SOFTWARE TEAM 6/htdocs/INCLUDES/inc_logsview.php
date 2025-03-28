@@ -77,7 +77,7 @@ $clearance = $_SESSION["clearance"];
             <?php endif; ?>
 
             <!-- BUTTONS -->
-            <button class="BACK-BUTTON" onclick="window.location.href='view-task-page.php?id=<?php echo $id; ?>'">Back to Task</button>
+            <button class="BACK-BUTTON" onclick="window.location.href='view-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">Back to Task</button>
             <!-- LOG SECTION LIST END -->
         </div>
         <!-- LOG SECTION AREA END -->

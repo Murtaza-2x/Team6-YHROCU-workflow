@@ -116,13 +116,13 @@ $clearance = $_SESSION["clearance"];
 
             <button
                 class="CANCEL-BUTTON"
-                onclick="window.location.href='list-task-page.php?clearance=<?php echo $_SESSION['clearance']; ?>&id=<?php echo $_SESSION['id']; ?>'">
+                onclick="window.location.href='list-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">
                 Cancel
             </button>
 
             <?php if ($_SESSION["clearance"] != 'User'): ?>
                 <button class="VIEW-LOGS-BUTTON"
-                onclick="window.location.href='view-logs-page.php?id=<?php echo $id; ?>'">
+                onclick="window.location.href='view-logs-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">
                     View Logs
                 </button>
             <?php endif; ?>

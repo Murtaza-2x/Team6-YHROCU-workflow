@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
                 $conn->query($sql_link);
             }
         }
-        header("Location: view-task-page.php?id=$id");
+        header("Location: view-task-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($_SESSION['id']));
         exit;
     } else {
         echo "Error updating task: " . $conn->error;

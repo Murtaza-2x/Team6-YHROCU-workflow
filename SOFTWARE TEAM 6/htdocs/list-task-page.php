@@ -161,8 +161,10 @@ $result = $conn->query($sql);
         echo "</tbody></table>";
 
         if ($_SESSION["clearance"] != 'User') {
-          echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
-          echo "<button class='CREATE-PROJECT-BUTTON' onclick=\"document.location='create-project-page.php'\">Create Project</button>";
+          $createTaskUrl = "create-task-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($_SESSION['id']);
+          $createProjectUrl = "create-project-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($_SESSION['id']);
+          echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='$createTaskUrl'\">Create Task</button>";
+          echo "<button class='CREATE-PROJECT-BUTTON' onclick=\"document.location='$createProjectUrl'\">Create Project</button>";
         }
       } else {
         echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
