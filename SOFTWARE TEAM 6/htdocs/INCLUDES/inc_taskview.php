@@ -1,7 +1,3 @@
-<?php
-$clearance = $_SESSION["clearance"];
-?>
-
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/pill_styles.css" rel="stylesheet">
@@ -109,7 +105,7 @@ $clearance = $_SESSION["clearance"];
 
             <?php if ($_SESSION["clearance"] != 'User'): ?>
                 <button class="UPDATE-BUTTON"
-                    onclick="window.location.href='edit-task-page.php?id=<?php echo $id; ?>'">
+                    onclick="window.location.href='edit-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($taskId); ?>'">
                     Update Task
                 </button>
             <?php endif; ?>
@@ -122,7 +118,7 @@ $clearance = $_SESSION["clearance"];
 
             <?php if ($_SESSION["clearance"] != 'User'): ?>
                 <button class="VIEW-LOGS-BUTTON"
-                onclick="window.location.href='view-logs-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">
+                    onclick="window.location.href='view-task-logs-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($taskId); ?>'">
                     View Logs
                 </button>
             <?php endif; ?>
@@ -157,7 +153,7 @@ $clearance = $_SESSION["clearance"];
             </div>
             <div class="ADD-COMMENT">
                 <div id="comment-form">
-                    <form action="view-task-page.php?id=<?php echo $id; ?>" method="post">
+                    <form action='view-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>' method="post">
                         <textarea
                             name="comment"
                             placeholder="Enter your comment here"

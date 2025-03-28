@@ -119,13 +119,20 @@
   background-color: var(--dark-grey);
 }
 
-.BACK-BUTTON {
+.BACK-BUTTON, .EXPORT-BUTTON {
   display: inline;
   justify-content: center;
   margin: 0 10px;
   margin-top: 20px;
   font-size: 1.1rem;
+}
+
+.BACK-BUTTON {
   background-color: var(--light-grey);
+}
+
+.EXPORT-BUTTON {
+  background-color: var(--green);
 }
 
 .USER-MESSAGE {

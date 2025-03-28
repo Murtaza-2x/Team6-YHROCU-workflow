@@ -1,7 +1,3 @@
-<?php
-$clearance = $_SESSION["clearance"];
-?>
-
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/pill_styles.css" rel="stylesheet">
@@ -91,7 +87,7 @@ $clearance = $_SESSION["clearance"];
 
             <?php if ($_SESSION["clearance"] != 'User'): ?>
                 <button class="UPDATE-BUTTON"
-                    onclick="window.location.href='edit-project-page.php?id=<?php echo $id; ?>'">
+                    onclick="window.location.href='edit-project-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($id); ?>'">
                     Update Project
                 </button>
             <?php endif; ?>
@@ -101,6 +97,13 @@ $clearance = $_SESSION["clearance"];
                 onclick="window.location.href='list-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">
                 Cancel
             </button>
+
+            <?php if ($_SESSION["clearance"] != 'User'): ?>
+                <button class="VIEW-LOGS-BUTTON"
+                    onclick="window.location.href='view-project-logs-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($project_id); ?>'">
+                    View Logs
+                </button>
+            <?php endif; ?>
 
         </div>
         <!-- BUTTONS END -->

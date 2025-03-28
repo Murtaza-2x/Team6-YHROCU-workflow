@@ -95,6 +95,7 @@
   color: var(--dark-grey);
   text-decoration: none;
   font-family: "Helvetica Neue Medium";
+  cursor: pointer;
 }
 
 .TASK-LIST a:hover {

@@ -69,9 +69,9 @@ $result = $conn->query($sql);
   <div class="TASK-AREA">
     <!-- TASK SECTION FILTER -->
     <div class="TASK-FILTER">
-  <input type="text" id="searchInput" placeholder="Search tasks...">
-  <button type="button" id="filterButton">Filter</button>
-</div>
+      <input type="text" id="searchInput" placeholder="Search tasks...">
+      <button type="button" id="filterButton">Filter</button>
+    </div>
     <!-- TASK SECTION FILTER END -->
 
     <!-- TASK SECTION LIST -->
@@ -148,10 +148,10 @@ $result = $conn->query($sql);
 
           echo "<tr>
                 <td class='VIEW-TASK'>
-                  <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
+                  <a onclick=\"location.href='view-task-page.php?clearance=" .urlencode($_SESSION['clearance']) ."&id={$taskId}'\">$subject</a>
                 </td>
                 <td>
-                  <a href='view-project-page.php?id=$project_id' title='View Project'>$projectName</a>
+                  <a onclick=\"location.href='view-project-page.php?clearance=" .urlencode($_SESSION['clearance']) ."&id={$project_id}'\">$projectName</a>
                 </td>
                 <td>$creator</td>
                 <td>$statusPill</td>
