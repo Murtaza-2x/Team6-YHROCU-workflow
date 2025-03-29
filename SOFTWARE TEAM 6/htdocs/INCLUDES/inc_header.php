@@ -2,8 +2,6 @@
 
 <?php
 session_start();
-$id = $_SESSION['id'];
-$clearance = $_SESSION["clearance"];
 ?>
 
 <!DOCTYPE html>
