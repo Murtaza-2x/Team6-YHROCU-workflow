@@ -38,16 +38,12 @@ $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows == 0) {
+if ($result->num_rows === 0) {
+    $stmt = $conn->prepare("INSERT INTO users (username, email, clearance, status, auth_source) VALUES (?, ?, ?, ?, ?)");
     $status = "active";
-    $random_pass = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password, clearance, status, auth_source) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $okta_name, $okta_email, $random_password, $assigned_clearance, $active, $source);
-
+    $stmt->bind_param("sssss", $okta_name, $okta_email, $assigned_clearance, $status, $source);
     $source = 'auth0';
-    
     $stmt->execute();
-    $user_id = $stmt->insert_id;
 } else {
     $user = $result->fetch_assoc();
     $user_id = $user['id'];

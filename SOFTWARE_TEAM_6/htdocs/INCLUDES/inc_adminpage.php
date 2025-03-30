@@ -21,54 +21,6 @@
             <p>Manage Users below</p>
         </div>
 
-        <!-- FORM -->
-        <form method="post">
-            <div class="ADMIN-ROW">
-                <div class="ADMIN-LABEL">
-                    <label for="username">Username:</label>
-                </div>
-                <div class="INPUT-GROUP">
-                    <input type="text" id="username" name="username" placeholder="New Username" required>
-                </div>
-            </div>
-
-            <div class="ADMIN-ROW">
-                <div class="ADMIN-LABEL">
-                    <label for="email">Email:</label>
-                </div>
-                <div class="INPUT-GROUP">
-                    <input type="email" id="email" name="email" placeholder="New Email" required>
-                </div>
-            </div>
-
-            <div class="ADMIN-ROW">
-                <div class="ADMIN-LABEL">
-                    <label for="password">Password:</label>
-                </div>
-                <div class="INPUT-GROUP">
-                    <input type="text" id="password" name="password" placeholder="New Password" required>
-                </div>
-            </div>
-
-            <div class="ADMIN-ROW">
-                <div class="ADMIN-LABEL">
-                    <label for="clearance">Role:</label>
-                </div>
-                <div class="INPUT-GROUP">
-                    <select id="clearance" class="DROPDOWN-GROUP" name="clearance" required>
-                        <option value="">Select Role</option>
-                        <option value="User">User</option>
-                        <option value="Manager">Manager</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                </div>
-            </div>
-            <div class="TASK-BUTTONS">
-                <button type="submit" name="create_user" class="CREATE-BUTTON">Create User</button>
-            </div>
-        </form>
-        <!-- FORM END -->
-
         <!-- SEARCH BAR -->
         <div class="ADMIN-FILTER">
             <input type="text" id="searchInput" placeholder="Search...">
@@ -98,13 +50,6 @@
                                         <td>
                                             <div class="INPUT-GROUP-2">
                                                 <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required readonly>
-                                                <?php
-                                                if ($user['auth_source'] === 'auth0') {
-                                                    echo "<span class='AUTH-BADGE'>Auth0</span>";
-                                                } else {
-                                                    echo "<span class='LOCAL-BADGE'>Local</span>";
-                                                }
-                                                ?>
                                             </div>
                                         </td>
                                         <td>
@@ -140,31 +85,19 @@
                                         <td>
                                             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                             <div class="INPUT-INLINE">
-                                                <div class="INPUT-GROUP-3">
-                                                    <?php if ($user['auth_source'] === 'auth0'): ?>
-                                                        <input type="text" name="password" placeholder="Managed by Auth0" readonly class="LOCKED-INPUT" title="Password is managed by Auth0" disabled>
-                                                    <?php else: ?>
-                                                        <input type="text" name="password" placeholder="Password">
-                                                    <?php endif; ?>
-                                                </div>
+                                            <p class="PASSWORD-BADGE">Password managed by Auth0</p>
                                                 <div class="ACTION-DROPDOWN">
                                                     <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
-                                                    
-                                                    <div class="ACTION-DROPDOWN-MENU">
 
-                                                        <?php if ($user['auth_source'] !== 'auth0'): ?>
-                                                            <button type="submit" name="edit_user" class="ACTION-DROPDOWN-ITEM">Save</button>
-                                                        <?php endif; ?>
+                                                    <div class="ACTION-DROPDOWN-MENU">
+                                                            <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
 
                                                         <?php if ($user['id'] != $_SESSION['id']): ?>
                                                             <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
                                                             <button type="submit" name="toggle_user" class="ACTION-DROPDOWN-ITEM">
                                                                 <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
                                                             </button>
-
-                                                            <?php if ($user['auth_source'] !== 'auth0'): ?>
                                                                 <button type="submit" name="delete_user" class="ACTION-DROPDOWN-ITEM" onclick="return confirm('Delete this user?');">Delete</button>
-                                                            <?php endif; ?>
                                                         <?php endif; ?>
 
                                                     </div>

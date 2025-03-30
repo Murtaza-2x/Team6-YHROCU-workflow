@@ -238,35 +238,11 @@
   background-color: var(--blue);
 }
 
-.AUTH-BADGE, .LOCAL-BADGE {
-  display: inline-block;
-  padding: 2px 6px;
-  font-size: 0.6rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.AUTH-BADGE:hover , .LOCAL-BADGE:hover {
-  background: var(--dark-grey);
-}
-
-.AUTH-BADGE {
-  background-color: var(--blue);
-  color: white;
-}
-
-.LOCAL-BADGE {
-  background-color: var(--light-grey);
-  color: white;
-}
-
-.LOCKED-INPUT {
-  background-color: white;
-  color: var(--light-grey);
-  cursor: not-allowed;
-}
-.LOCKED-INPUT::placeholder {
-  color: var(--dark-grey);
+.PASSWORD-BADGE {
+  width: 100%;
+  height: 20px;
+  padding: 0.1rem;
+  border: none;
 }
 
 /* ADMIN BOX END */

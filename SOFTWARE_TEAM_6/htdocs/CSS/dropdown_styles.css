@@ -76,7 +76,7 @@
   right: 0;
   top: 25px;
   min-width: 150px;
-  background: var(--dark-grey);
+  background: var(--light-grey);
   border: none;
   border-radius: 10px;
   z-index: 10;
