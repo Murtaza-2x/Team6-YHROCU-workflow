@@ -34,24 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($checkQuery->num_rows > 0) {
             $feedback = "<div class='feedback error'>Username or Email already exists. Please choose another.</div>";
         } else {
-            $insertQuery = $conn->prepare("INSERT INTO users (username, email, password, clearance, status) VALUES (?, ?, ?, ?, 'Active')");
+            $insertQuery = $conn->prepare("INSERT INTO users (username, email, password, clearance, status, auth_source) VALUES (?, ?, ?, ?, 'Active', 'local')");
             $insertQuery->bind_param("ssss", $username, $email, $password, $clearance);
             $insertQuery->execute();
             $feedback = "<div class='feedback success'>User created successfully!</div>";
         }
         $checkQuery->close();
-    }
-    elseif (isset($_POST['delete_user'])) {
+    } 
+    else
+    if (isset($_POST['delete_user'])) {
         $userId = $_POST['user_id'];
         $conn->query("DELETE FROM users WHERE id = $userId");
-    }
-    elseif (isset($_POST['toggle_user'])) {
+    } elseif (isset($_POST['toggle_user'])) {
         $userId        = $_POST['user_id'];
         $currentStatus = $_POST['current_status'];
         $newStatus     = ($currentStatus === 'Active') ? 'Disabled' : 'Active';
         $conn->query("UPDATE users SET status = '$newStatus' WHERE id = $userId");
-    }
-    elseif (isset($_POST['edit_user'])) {
+    } elseif (isset($_POST['edit_user'])) {
         $userId    = $_POST['user_id'];
         $username  = $_POST['username'];
         $email     = $_POST['email'];
@@ -66,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$result = $conn->query("SELECT id, username, email, clearance, status FROM users");
+$result = $conn->query("SELECT id, username, email, clearance, status, auth_source FROM users");
 
 include 'INCLUDES/inc_adminpage.php';
 include 'INCLUDES/inc_footer.php';

@@ -1,0 +1,12 @@
+{
+    "require": {
+        "okta/jwt-verifier": "^1.4",
+        "guzzlehttp/guzzle": "^7.9",
+        "auth0/auth0-php": "^8.13"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}

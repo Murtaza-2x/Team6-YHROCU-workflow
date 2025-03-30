@@ -7,6 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="JS/SEARCH-USERS.js"></script>
     <script src="JS/ADMIN-ACTIONS.js"></script>
+    <script src="JS/TOGGLE-DROPDOWN.js"></script>
 
 </head>
 
@@ -97,6 +98,13 @@
                                         <td>
                                             <div class="INPUT-GROUP-2">
                                                 <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required readonly>
+                                                <?php
+                                                if ($user['auth_source'] === 'auth0') {
+                                                    echo "<span class='AUTH-BADGE'>Auth0</span>";
+                                                } else {
+                                                    echo "<span class='LOCAL-BADGE'>Local</span>";
+                                                }
+                                                ?>
                                             </div>
                                         </td>
                                         <td>
@@ -133,17 +141,34 @@
                                             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                             <div class="INPUT-INLINE">
                                                 <div class="INPUT-GROUP-3">
-                                                    <input type="text" name="password" placeholder="Password" readonly>
+                                                    <?php if ($user['auth_source'] === 'auth0'): ?>
+                                                        <input type="text" name="password" placeholder="Managed by Auth0" readonly class="LOCKED-INPUT" title="Password is managed by Auth0" disabled>
+                                                    <?php else: ?>
+                                                        <input type="text" name="password" placeholder="Password">
+                                                    <?php endif; ?>
                                                 </div>
-                                                <button type="button" class="btn-secondary edit-btn">Edit</button>
-                                                <button type="submit" name="edit_user" class="btn-primary action-btn" style="display:none;">Save</button>
-                                                <?php if ($user['id'] != $_SESSION['id']): ?>
-                                                    <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
-                                                    <button type="submit" name="toggle_user" class="btn-warning action-btn" style="display:none;">
-                                                        <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
-                                                    </button>
-                                                    <button type="submit" name="delete_user" class="btn-danger action-btn" style="display:none;" onclick="return confirm('Delete this user?');">Delete</button>
-                                                <?php endif; ?>
+                                                <div class="ACTION-DROPDOWN">
+                                                    <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
+                                                    
+                                                    <div class="ACTION-DROPDOWN-MENU">
+
+                                                        <?php if ($user['auth_source'] !== 'auth0'): ?>
+                                                            <button type="submit" name="edit_user" class="ACTION-DROPDOWN-ITEM">Save</button>
+                                                        <?php endif; ?>
+
+                                                        <?php if ($user['id'] != $_SESSION['id']): ?>
+                                                            <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
+                                                            <button type="submit" name="toggle_user" class="ACTION-DROPDOWN-ITEM">
+                                                                <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
+                                                            </button>
+
+                                                            <?php if ($user['auth_source'] !== 'auth0'): ?>
+                                                                <button type="submit" name="delete_user" class="ACTION-DROPDOWN-ITEM" onclick="return confirm('Delete this user?');">Delete</button>
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

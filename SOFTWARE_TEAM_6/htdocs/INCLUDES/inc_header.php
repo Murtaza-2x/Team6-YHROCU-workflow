@@ -2,6 +2,7 @@
 
 <?php
 session_start();
+$id = $_SESSION['id'];
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +27,7 @@ session_start();
           Admin Panel
         </button>
       <?php endif; ?>
-      <button onclick="window.location.href='INCLUDES/inc_logout.php'" class="LOGOUT-BUTTON">Logout</button>
+      <button onclick="window.location.href='auth0_logout.php'" class="LOGOUT-BUTTON">Logout</button>
     </div>
   <?php endif; ?>
 

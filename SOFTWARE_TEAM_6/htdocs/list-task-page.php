@@ -16,6 +16,15 @@ $title = "ROCU: Dashboard";
 
 
 <?php
+
+// You MUST restore these values from the session
+$clearance = isset($_SESSION['clearance']) ? $_SESSION['clearance'] : null;
+$id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+
+if (!$clearance || !$id) {
+    die("Unauthorized access or missing session.");
+}
+
 if ($clearance === 'User') {
   $sql = "
       SELECT

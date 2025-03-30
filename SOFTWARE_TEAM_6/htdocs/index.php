@@ -14,6 +14,11 @@ $title = "ROCU: Login";
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
 
+<!-- Check if already logged in -->
+<?php if (isset($_SESSION["id"])): ?>
+    <?php header('Location: list-task-page.php?clearance=' . $_SESSION["clearance"] . '&id=' . $_SESSION["id"]); exit(); ?>
+<?php endif; ?>
+
 <?php
 $errorMsg = '';
 
@@ -40,6 +45,7 @@ if (isset($_POST["email"])) {
         $errorMsg = 'Incorrect Email Address or Password';
     }
 }
+
 include 'INCLUDES/inc_login.php';
 ?>
 
