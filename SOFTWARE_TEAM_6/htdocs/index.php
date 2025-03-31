@@ -12,11 +12,9 @@ $title = "ROCU: Login";
 ?>
 
 <?php
+require_once __DIR__ . '/INCLUDES/role_helper.php';
 
-if (isset($_SESSION["id"])) {
-    header('Location: list-task-page.php?clearance=' . urlencode($_SESSION["role"]) . '&id=' . urlencode($_SESSION["id"]));
-    exit();
-}
+$clearance = get_role();
 ?>
 
 <?php include 'INCLUDES/inc_connect.php'; ?>

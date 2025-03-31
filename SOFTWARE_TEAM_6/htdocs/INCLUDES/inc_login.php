@@ -15,11 +15,21 @@
     <h1>Welcome</h1>
     <p>Login to continue...</p>
 
-    <?php if (isset($_GET['error'])): ?>
-    <div class="ERROR-MESSAGE">
-        <strong>Error:</strong> <?php echo htmlspecialchars($_GET['msg']); ?>
-    </div>
-<?php endif; ?>
+    <?php if (isset($_GET['error'])) {
+      switch ($_GET['error']) {
+        case 'login_required':
+          echo '<div class="ERROR-MESSAGE">You must be logged in.</div>';
+          break;
+        case 'clearance_required':
+          echo '<div class="ERROR-MESSAGE">You do not have permission to access this page.</div>';
+          break;
+        case 'invalid_role':
+          echo '<div class="ERROR-MESSAGE">Invalid role detected.</div>';
+          break;
+        default:
+          echo '<div class="ERROR-MESSAGE">Unknown error occurred.</div>';
+      }
+    } ?>
 
     <div class="INPUT-GROUP">
       <img class="INPUT-GROUP-IMG" src="ICONS/email.svg" />

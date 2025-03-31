@@ -11,40 +11,34 @@ Functionality includes:
 $title = "Admin Panel";
 include 'INCLUDES/inc_connect.php';
 include 'INCLUDES/inc_header.php';
-require_once 'INCLUDES/Auth0Manager.php';
 
-if (!isset($_SESSION['clearance']) || $_SESSION['clearance'] !== 'Admin') {
-    header("Location: index.php");
-    exit();
-}
+require_once __DIR__ . '/INCLUDES/env_loader.php';
+require_once __DIR__ . '/INCLUDES/role_helper.php';
 
-$feedback = "";
+require_role('Admin');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['delete_user'])) {
-        $userId = $_POST['user_id'];
-        $conn->query("DELETE FROM users WHERE id = $userId");
-    } elseif (isset($_POST['toggle_user'])) {
-        $userId        = $_POST['user_id'];
-        $currentStatus = $_POST['current_status'];
-        $newStatus     = ($currentStatus === 'Active') ? 'Disabled' : 'Active';
-        $conn->query("UPDATE users SET status = '$newStatus' WHERE id = $userId");
-    } elseif (isset($_POST['edit_user'])) {
-        $userId    = $_POST['user_id'];
-        $username  = $_POST['username'];
-        $email     = $_POST['email'];
-        $clearance = $_POST['clearance'];
-        $updateQuery = "UPDATE users SET username = '$username', email = '$email', clearance = '$clearance'";
-        if (!empty($_POST['password'])) {
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $updateQuery .= ", password = '$password'";
+require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id']) && isset($_POST['role'])) {
+    $userId = $_POST['user_id'];
+    $newRole = $_POST['role'];
+    $allowed_roles = ['Admin', 'User'];
+
+    if (!in_array($newRole, $allowed_roles)) {
+        echo "<p>Invalid role selected.</p>";
+    } elseif ($userId === ($_SESSION['user']['sub'] ?? $_SESSION['user']['user_id']) && $newRole !== 'Admin') {
+        echo "<p>You cannot remove your own Admin role.</p>";
+    } else {
+        $result = Auth0UserManager::updateUserRole($userId, $newRole);
+        if (isset($result['user_id'])) {
+            echo "<p>User role updated successfully.</p>";
+        } else {
+            echo "<p>Failed to update user role.</p>";
         }
-        $updateQuery .= " WHERE id = $userId";
-        $conn->query($updateQuery);
     }
 }
 
-$result = $conn->query("SELECT id, username, email, clearance, status FROM users");
+$users = Auth0UserManager::getUsers();
 
 include 'INCLUDES/inc_adminpage.php';
 include 'INCLUDES/inc_footer.php';

@@ -22,30 +22,6 @@
             <p>Manage Users below</p>
         </div>
 
-        <?php
-if (isset($_POST['create_auth0_user'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $clearance = $_POST['clearance'];
-
-    try {
-        $auth0 = new Auth0Manager();
-        $api_result = $auth0->createUser($email, $password, ['clearance' => $clearance]);
-
-        if ($api_result === true) {
-            echo "<div class='SUCCESS-MESSAGE'>✅ User successfully created in Auth0!</div>";
-        } elseif (is_array($api_result) && isset($api_result['status'])) {
-            // cleaner error formatting
-            echo "<div class='ERROR-MESSAGE'> Error {$api_result['code']}: {$api_result['message']}</div>";
-        } else {
-            echo "<div class='ERROR-MESSAGE'>An unexpected error occurred.</div>";
-        }
-    } catch (Exception $e) {
-        echo "<div class='ERROR-MESSAGE'> Exception: " . htmlspecialchars($e->getMessage()) . "</div>";
-    }
-}
-        ?>
-
         <!-- FORM -->
         <form method="post">
             <div class="ADMIN-ROW">
@@ -111,54 +87,44 @@ if (isset($_POST['create_auth0_user'])) {
                     <table class="ADMIN-TABLE" id="USER-TABLE">
                         <thead>
                             <tr>
-                                <th>Username</th>
+                                <th>User ID</th>
                                 <th>Email</th>
-                                <th>Clearance</th>
-                                <th>Status</th>
+                                <th>Role</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while ($user = $result->fetch_assoc()): ?>
-                                <form method="post" class="inline-form user-row-form">
+                            <?php foreach ($users as $user):
+                                $metadata = $user['app_metadata'] ?? [];
+                                $role = $metadata['role'] ?? 'User';
+                                $uid = $user['user_id'] ?? $user['sub'] ?? 'unknown';
+                                $email = $user['email'] ?? 'unknown';
+                            ?>
+                                <form method="post">
                                     <tr>
                                         <td>
                                             <div class="INPUT-GROUP-2">
-                                                <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required readonly>
+                                                <input type="text" name="username" value="<?php echo htmlspecialchars($uid); ?>" required readonly>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="INPUT-GROUP-2">
-                                                <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required readonly>
+                                                <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required readonly>
+                                            </div>
+                                            <div class="INPUT-GROUP-2">
+                                                <input type="email" name="email" value="<?php echo htmlspecialchars($role); ?>" required readonly>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="INPUT-GROUP-2">
-                                                <select name="clearance" class="DROPDOWN-GROUP-3" disabled>
-                                                    <option value="User" <?= $user['clearance'] === 'User' ? 'selected' : '' ?>>User</option>
-                                                    <option value="Manager" <?= $user['clearance'] === 'Manager' ? 'selected' : '' ?>>Manager</option>
-                                                    <option value="Admin" <?= $user['clearance'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
+                                                <select name="role" class="DROPDOWN-GROUP-3" disabled>
+                                                    <option value="User" <?php if ($role === 'User') echo 'selected'; ?>>User</option>
+                                                    <option value="Admin" <?php if ($role === 'Admin') echo 'selected'; ?>>Admin</option>
                                                 </select>
                                             </div>
                                         </td>
-                                        <td class="status <?= strtolower(trim($user['status'])) ?>">
-                                            <?php
-                                            $status = $user['status'];
-                                            switch ($status) {
-                                                case 'Active':
-                                                    echo "<button class='PILL-NEW PILL-ACTIVE'>Active</button>";
-                                                    break;
-                                                case 'Disabled':
-                                                    echo "<button class='PILL-INACTIVE'>Disabled</button>";
-                                                    break;
-                                                default:
-                                                    echo "<button class='PILL-INACTIVE'>$status</button>";
-                                                    break;
-                                            }
-                                            ?>
-                                        </td>
                                         <td>
-                                            <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+                                            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user['user_id']); ?>">
                                             <div class="INPUT-INLINE">
                                                 <p class="PASSWORD-BADGE">Password managed by Auth0</p>
                                                 <div class="ACTION-DROPDOWN">
@@ -166,24 +132,20 @@ if (isset($_POST['create_auth0_user'])) {
 
                                                     <div class="ACTION-DROPDOWN-MENU">
                                                         <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
-
-                                                        <?php if ($user['id'] != $_SESSION['id']): ?>
-                                                            <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
-                                                            <button type="submit" name="toggle_user" class="ACTION-DROPDOWN-ITEM">
-                                                                <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
-                                                            </button>
-                                                            <button type="submit" name="delete_user" class="ACTION-DROPDOWN-ITEM" onclick="return confirm('Delete this user?');">Delete</button>
+                                                        <?php if ($uid === ($_SESSION['user']['sub'] ?? $_SESSION['user']['user_id'])): ?>
+                                                            <button type="submit" disabled>You cannot change yourself</button>
+                                                        <?php else: ?>
+                                                            <button type="submit">Update</button>
                                                         <?php endif; ?>
-
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
                                 </form>
-                            <?php endwhile; ?>
                         </tbody>
                     </table>
+                <?php endforeach; ?>
                 </div>
             </div>
         </div>
