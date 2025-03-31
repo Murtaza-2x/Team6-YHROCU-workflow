@@ -11,6 +11,7 @@ Functionality includes:
 $title = "Admin Panel";
 include 'INCLUDES/inc_connect.php';
 include 'INCLUDES/inc_header.php';
+require_once 'INCLUDES/Auth0Manager.php';
 
 if (!isset($_SESSION['clearance']) || $_SESSION['clearance'] !== 'Admin') {
     header("Location: index.php");

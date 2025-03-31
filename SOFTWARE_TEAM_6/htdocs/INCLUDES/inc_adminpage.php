@@ -8,6 +8,7 @@
     <script src="JS/SEARCH-USERS.js"></script>
     <script src="JS/ADMIN-ACTIONS.js"></script>
     <script src="JS/TOGGLE-DROPDOWN.js"></script>
+    <script src="JS/PASSWORD-STRENGTH.js"></script>
 
 </head>
 
@@ -20,6 +21,80 @@
             <h1>User Management</h1>
             <p>Manage Users below</p>
         </div>
+
+        <?php
+if (isset($_POST['create_auth0_user'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $clearance = $_POST['clearance'];
+
+    try {
+        $auth0 = new Auth0Manager();
+        $api_result = $auth0->createUser($email, $password, ['clearance' => $clearance]);
+
+        if ($api_result === true) {
+            echo "<div class='SUCCESS-MESSAGE'>✅ User successfully created in Auth0!</div>";
+        } elseif (is_array($api_result) && isset($api_result['status'])) {
+            // cleaner error formatting
+            echo "<div class='ERROR-MESSAGE'> Error {$api_result['code']}: {$api_result['message']}</div>";
+        } else {
+            echo "<div class='ERROR-MESSAGE'>An unexpected error occurred.</div>";
+        }
+    } catch (Exception $e) {
+        echo "<div class='ERROR-MESSAGE'> Exception: " . htmlspecialchars($e->getMessage()) . "</div>";
+    }
+}
+        ?>
+
+        <!-- FORM -->
+        <form method="post">
+            <div class="ADMIN-ROW">
+                <div class="ADMIN-LABEL">
+                    <label for="email">Email:</label>
+                </div>
+                <div class="INPUT-WRAPPER">
+                    <div class="INPUT-GROUP">
+                        <input type="email" id="email" name="email" placeholder="New Email" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ADMIN-ROW">
+                <div class="ADMIN-LABEL">
+                    <label for="password">Temp Password:</label>
+                </div>
+                <div class="INPUT-WRAPPER">
+                    <div class="INPUT-GROUP">
+                        <input type="text" id="password" name="password" placeholder="Temporary Password" oninput="updateStrength()" required>
+                    </div>
+                    <div id="STRENGTH-BAR">
+                        <div id="STRENGTH-FILL"></div>
+                    </div>
+                    <small id="STRENGTH-FEEDBACK">Password Strength</small>
+                </div>
+            </div>
+
+            <div class="ADMIN-ROW">
+                <div class="ADMIN-LABEL">
+                    <label for="clearance">Role:</label>
+                </div>
+                <div class="INPUT-WRAPPER">
+                    <div class="INPUT-GROUP">
+                        <select id="clearance" class="DROPDOWN-GROUP" name="clearance" required>
+                            <option value="">Select Role</option>
+                            <option value="User">User</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="TASK-BUTTONS">
+                <button type="submit" id="create-user-button" name="create_auth0_user" class="CREATE-BUTTON" disabled>Create Auth0 User</button>
+            </div>
+        </form>
+        <!-- FORM END -->
 
         <!-- SEARCH BAR -->
         <div class="ADMIN-FILTER">
@@ -85,19 +160,19 @@
                                         <td>
                                             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                             <div class="INPUT-INLINE">
-                                            <p class="PASSWORD-BADGE">Password managed by Auth0</p>
+                                                <p class="PASSWORD-BADGE">Password managed by Auth0</p>
                                                 <div class="ACTION-DROPDOWN">
                                                     <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
 
                                                     <div class="ACTION-DROPDOWN-MENU">
-                                                            <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
+                                                        <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
 
                                                         <?php if ($user['id'] != $_SESSION['id']): ?>
                                                             <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
                                                             <button type="submit" name="toggle_user" class="ACTION-DROPDOWN-ITEM">
                                                                 <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
                                                             </button>
-                                                                <button type="submit" name="delete_user" class="ACTION-DROPDOWN-ITEM" onclick="return confirm('Delete this user?');">Delete</button>
+                                                            <button type="submit" name="delete_user" class="ACTION-DROPDOWN-ITEM" onclick="return confirm('Delete this user?');">Delete</button>
                                                         <?php endif; ?>
 
                                                     </div>

@@ -53,11 +53,17 @@
   opacity: 0.8;
 }
 
+.ADMIN-BOX small {
+  font-size: 0.7rem;
+  color: var(--dark-grey);
+  opacity: 0.8;
+}
+
 .ADMIN-LABEL {
   flex: 0 0 150px;
   text-align: right;
-  margin-right: 10px;
   color: var(--dark-grey);
+  transform: translateX(5rem);
 }
 
 .ADMIN-ROW {
@@ -65,7 +71,7 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  transform: translateX(-5rem);
+  transform: translateX(-5.5rem);
 }
 
 .ADMIN-COLUMN {
@@ -86,14 +92,20 @@
   opacity: 0.3;
 }
 
-.INPUT-GROUP {
+.INPUT-WRAPPER {
   width: 50%;
+  margin: 0 auto;
+}
+
+.INPUT-GROUP {
+  width: 100%;
   padding: 0.4rem;
   border: 1px solid var(--off-white);
   border-radius: 20px;
 }
 
 .INPUT-GROUP input {
+  width: 100%;
   text-align: center;
   padding: 4px;
   font-size: 0.9rem;
@@ -179,7 +191,8 @@
 .ADMIN-LIST th,
 .ADMIN-LIST td {
   border: 1px solid var(--off-white);
-  padding: 4px;
+  padding: 5px;
+  padding-bottom: 1px;
   text-decoration: none;
   text-align: center;
 }
@@ -243,6 +256,50 @@
   height: 20px;
   padding: 0.1rem;
   border: none;
+}
+
+.SUCCESS-MESSAGE, .ERROR-MESSAGE {
+  color: white;
+  padding: 5px;
+  padding-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.SUCCESS-MESSAGE {
+  background-color: var(--green);
+}
+
+.ERROR-MESSAGE {
+  background-color: var(--dark-grey);
+}
+
+#STRENGTH-BAR {
+  height: 8px;
+  width: 100%;
+  background: var(--off-white);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 5px;
+  transform: translateX(0.4rem);
+}
+
+#STRENGTH-FILL {
+  height: 100%;
+  width: 0%;
+  background: red;
+  border-radius: 20px;
+  transition: width 0.3s, background 0.3s;
+}
+
+#STRENGTH-FEEDBACK {
+  display: block;
+  text-align: center;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  transform: translateX(0.4rem);
 }
 
 /* ADMIN BOX END */

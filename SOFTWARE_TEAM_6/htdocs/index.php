@@ -11,39 +11,21 @@ This file handles user login functionality.
 $title = "ROCU: Login";
 ?>
 
+<?php
+
+if (isset($_SESSION["id"])) {
+    header('Location: list-task-page.php?clearance=' . urlencode($_SESSION["role"]) . '&id=' . urlencode($_SESSION["id"]));
+    exit();
+}
+?>
+
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
 
-<!-- Check if already logged in -->
-<?php if (isset($_SESSION["id"])): ?>
-    <?php header('Location: list-task-page.php?clearance=' . $_SESSION["clearance"] . '&id=' . $_SESSION["id"]); exit(); ?>
-<?php endif; ?>
-
 <?php
 $errorMsg = '';
-
-if (isset($_POST["email"])) {
-    $email_input = $conn->real_escape_string($_POST["email"]);
-    $sql = "SELECT * FROM users WHERE email = '$email_input'";
-    $result = $conn->query($sql);
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        if (password_verify($_POST["password"], $row["password"])) {
-            if (strtolower(trim($row["status"])) === "active") {
-                $_SESSION["id"] = $row["id"];
-                $_SESSION["email"] = $row["email"];
-                $_SESSION["clearance"] = $row["clearance"];
-                header('Location: list-task-page.php?clearance=' . $_SESSION["clearance"] . '&id=' . $_SESSION["id"]);
-                exit();
-            } else {
-                $errorMsg = 'Your account has been disabled. Please contact an administrator.';
-            }
-        } else {
-            $errorMsg = 'Incorrect Email Address or Password';
-        }
-    } else {
-        $errorMsg = 'Incorrect Email Address or Password';
-    }
+if (isset($_GET['error'])) {
+    $errorMsg = htmlspecialchars($_GET['msg'] ?? 'Unknown authentication error');
 }
 
 include 'INCLUDES/inc_login.php';

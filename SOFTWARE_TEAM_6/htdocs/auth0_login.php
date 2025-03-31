@@ -1,14 +1,11 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/INCLUDES/env_loader.php';
+require_once __DIR__ . '/INCLUDES/Auth0Factory.php';
 
-$auth0 = new \Auth0\SDK\Auth0([
-    'domain' => 'dev-1kz8p05uenan0uz6.us.auth0.com',
-    'clientId' => 'BcXE3qlpzEEfSprHX2DIVXCJUJIdBoqp',
-    'redirectUri' => 'http://localhost/YHROCU-CLONE\Team6-YHROCU-workflow\SOFTWARE_TEAM_6\htdocs/auth0_callback.php',
-    'audience' => '',
-    'scope' => 'openid profile email',
-]);
+session_start();
 
-header('Location: ' . $auth0->login());
+$auth0 = Auth0Factory::create();
+
+$authorizeUrl = $auth0->login();
+header('Location: ' . $authorizeUrl);
 exit;
-?>
