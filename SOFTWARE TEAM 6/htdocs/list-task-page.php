@@ -9,12 +9,12 @@ that takes you to view-project-page.php with the project id.
 
 $title = "ROCU: Dashboard";
 ?>
-
+<!-- This section links the includes files to the list task page ensuring consistency in styling/other functions -->
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
 
-
+<!-- This section fetches data from the database using SQL commands  -->
 <?php
 if ($clearance === 'User') {
   $sql = "
