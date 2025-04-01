@@ -2,7 +2,7 @@
 
 A simple PHP web application that allows admins to create and manage tasks and projects, with user assignment using Auth0 for authentication and user management.
 
-   **For now for demonstration purposes ALL Configuration is done. You do not need to do anything with 0Auth**
+   **For now for demonstration purposes ALL Configuration is done. You do not need to do anything with 0Auth but requires YHROCU-CLONE/[GITHUB CLONE IN THIS FOLDER] folder in htdocs folder**
 
 ## Table of Contents
 
