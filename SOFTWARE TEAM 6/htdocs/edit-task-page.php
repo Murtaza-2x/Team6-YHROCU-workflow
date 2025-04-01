@@ -9,6 +9,8 @@
 
   The form is in inc_taskedit.php, which has a <button name="update_task">Update Task</button>.
 */
+include 'INCLUDES/inc_email-task-update.php';
+
 
 $clearance = $_SESSION['clearance'] ?? '';
 if ($clearance === 'User') {
@@ -128,7 +130,6 @@ if ($result_users && $result_users->num_rows > 0) {
 }
 
 include 'INCLUDES/inc_taskedit.php';
-include 'INCLUDES/inc_email-task-update.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
 ?>
