@@ -1,20 +1,32 @@
+<?php
+/*
+-------------------------------------------------------------
+File: inc_adminpage.php
+Description:
+- Displays the Admin Panel styled with the provided layout.
+- Allows:
+    > Viewing Auth0 users.
+    > Creating users into Auth0.
+    > Changing user roles.
+    > Password reset trigger.
+-------------------------------------------------------------
+*/
+?>
+
 <head>
     <title><?php echo $title; ?></title>
-    <link href="CSS/pill_styles.css" rel="stylesheet">
-    <link href="CSS/dropdown_styles.css" rel="stylesheet">
     <link href="CSS/admin_styles.css" rel="stylesheet">
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="JS/SEARCH-USERS.js"></script>
     <script src="JS/ADMIN-ACTIONS.js"></script>
     <script src="JS/TOGGLE-DROPDOWN.js"></script>
     <script src="JS/PASSWORD-STRENGTH.js"></script>
-
+    <script src="JS/RESET-LINK-COPY.js"></script>
 </head>
 
 <p class="MIDDLE-HERO-IMAGE"></p>
 
-<!-- ADMIN SECTION -->
+<!-- ADMIN PANEL -->
 <div class='ADMIN-CONTAINER'>
     <div class='ADMIN-BOX'>
         <div class='ADMIN-HEAD'>
@@ -22,26 +34,28 @@
             <p>Manage Users below</p>
         </div>
 
-        <!-- FORM -->
+        <?php if (!empty($errorMsg)) : ?>
+            <div class="LOGIN-ERROR-MESSAGE"><?php echo $errorMsg; ?></div>
+        <?php elseif (!empty($successMsg)) : ?>
+            <div class="LOGIN-SUCCESS-MESSAGE"><?php echo $successMsg; ?></div>
+        <?php endif; ?>
+
+        <!-- CREATE FORM -->
         <form method="post">
             <div class="ADMIN-ROW">
-                <div class="ADMIN-LABEL">
-                    <label for="email">Email:</label>
-                </div>
+                <div class="ADMIN-LABEL"><label for="new_email">Email:</label></div>
                 <div class="INPUT-WRAPPER">
                     <div class="INPUT-GROUP">
-                        <input type="email" id="email" name="email" placeholder="New Email" required>
+                        <input type="email" id="new_email" name="new_email" placeholder="New Email" required>
                     </div>
                 </div>
             </div>
 
             <div class="ADMIN-ROW">
-                <div class="ADMIN-LABEL">
-                    <label for="password">Temp Password:</label>
-                </div>
+                <div class="ADMIN-LABEL"><label for="password">Password:</label></div>
                 <div class="INPUT-WRAPPER">
                     <div class="INPUT-GROUP">
-                        <input type="text" id="password" name="password" placeholder="Temporary Password" oninput="updateStrength()" required>
+                        <input type="text" id="password" name="new_password" placeholder="Password" oninput="updateStrength()" required>
                     </div>
                     <div id="STRENGTH-BAR">
                         <div id="STRENGTH-FILL"></div>
@@ -51,37 +65,28 @@
             </div>
 
             <div class="ADMIN-ROW">
-                <div class="ADMIN-LABEL">
-                    <label for="clearance">Role:</label>
-                </div>
+                <div class="ADMIN-LABEL"><label for="new_role">Role:</label></div>
                 <div class="INPUT-WRAPPER">
                     <div class="INPUT-GROUP">
-                        <select id="clearance" class="DROPDOWN-GROUP" name="clearance" required>
-                            <option value="">Select Role</option>
-                            <option value="User">User</option>
-                            <option value="Manager">Manager</option>
-                            <option value="Admin">Admin</option>
+                        <select id="new_role" class="DROPDOWN-GROUP" name="new_role" required>
+                            <?php foreach ($allowed_roles as $roleOption): ?>
+                                <option value="<?php echo $roleOption; ?>" <?php if ($roleOption === 'User') echo 'selected'; ?>>
+                                    <?php echo $roleOption; ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="TASK-BUTTONS">
-                <button type="submit" id="create-user-button" name="create_auth0_user" class="CREATE-BUTTON" disabled>Create Auth0 User</button>
+                <button class="CREATE-BUTTON" type="submit" name="create_user">Create User</button>
             </div>
         </form>
-        <!-- FORM END -->
-
-        <!-- SEARCH BAR -->
-        <div class="ADMIN-FILTER">
-            <input type="text" id="searchInput" placeholder="Search...">
-            <button>Filter</button>
-        </div>
-        <!-- SEARCH BAR END -->
+        <!-- CREATE FORM END -->
 
         <!-- USER TABLE -->
         <div class="ADMIN-CONTENT">
-
             <div class="ADMIN-AREA">
                 <div class="ADMIN-LIST">
                     <table class="ADMIN-TABLE" id="USER-TABLE">
@@ -94,7 +99,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($users as $user):
+                            <?php foreach ($auth0_users as $user):
                                 $metadata = $user['app_metadata'] ?? [];
                                 $role = $metadata['role'] ?? 'User';
                                 $uid = $user['user_id'] ?? $user['sub'] ?? 'unknown';
@@ -103,53 +108,44 @@
                                 <form method="post">
                                     <tr>
                                         <td>
-                                            <div class="INPUT-GROUP-2">
-                                                <input type="text" name="username" value="<?php echo htmlspecialchars($uid); ?>" required readonly>
-                                            </div>
+                                            <div class="INPUT-GROUP-2"><input type="text" value="<?php echo htmlspecialchars($uid); ?>" readonly></div>
+                                        </td>
+                                        <td>
+                                            <div class="INPUT-GROUP-2"><input type="email" value="<?php echo htmlspecialchars($email); ?>" readonly></div>
                                         </td>
                                         <td>
                                             <div class="INPUT-GROUP-2">
-                                                <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required readonly>
-                                            </div>
-                                            <div class="INPUT-GROUP-2">
-                                                <input type="email" name="email" value="<?php echo htmlspecialchars($role); ?>" required readonly>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="INPUT-GROUP-2">
-                                                <select name="role" class="DROPDOWN-GROUP-3" disabled>
-                                                    <option value="User" <?php if ($role === 'User') echo 'selected'; ?>>User</option>
-                                                    <option value="Admin" <?php if ($role === 'Admin') echo 'selected'; ?>>Admin</option>
+                                                <select name="role_change[<?php echo $uid; ?>]" class="DROPDOWN-GROUP-3">
+                                                    <?php foreach ($allowed_roles as $roleOption): ?>
+                                                        <option value="<?php echo $roleOption; ?>" <?php if ($role === $roleOption) echo 'selected'; ?>>
+                                                            <?php echo $roleOption; ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </td>
                                         <td>
-                                            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user['user_id']); ?>">
+                                            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($uid); ?>">
                                             <div class="INPUT-INLINE">
-                                                <p class="PASSWORD-BADGE">Password managed by Auth0</p>
                                                 <div class="ACTION-DROPDOWN">
                                                     <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
-
                                                     <div class="ACTION-DROPDOWN-MENU">
                                                         <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
-                                                        <?php if ($uid === ($_SESSION['user']['sub'] ?? $_SESSION['user']['user_id'])): ?>
-                                                            <button type="submit" disabled>You cannot change yourself</button>
-                                                        <?php else: ?>
-                                                            <button type="submit">Update</button>
-                                                        <?php endif; ?>
+                                                        <button class="ACTION-DROPDOWN-ITEM" type="submit" name="change_role" value="<?php echo htmlspecialchars($uid); ?>">Update</button>
+                                                        <button class="ACTION-DROPDOWN-ITEM" type="submit" name="reset_password" value="<?php echo htmlspecialchars($uid); ?>">Reset Password</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
                                 </form>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
-                <?php endforeach; ?>
                 </div>
             </div>
         </div>
         <!-- USER TABLE END -->
     </div>
 </div>
-<!-- ADMIN SECTION END -->
+<!-- ADMIN PANEL END -->

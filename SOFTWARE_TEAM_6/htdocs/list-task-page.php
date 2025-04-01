@@ -1,193 +1,159 @@
 <?php
-/*
-This file displays a list of tasks for the currently logged-in user or for all users,
-depending on the user's clearance level.
-It retrieves tasks along with their associated project names (from the projects table)
-and displays them in a table. The project column now shows the project name as a clickable link
-that takes you to view-project-page.php with the project id.
-*/
-
 $title = "ROCU: Dashboard";
-?>
 
-<?php include 'INCLUDES/inc_connect.php'; ?>
-<?php include 'INCLUDES/inc_header.php'; ?>
-<?php include 'INCLUDES/inc_dashboard.php'; ?>
+require_once __DIR__ . '/INCLUDES/env_loader.php';
+require_once __DIR__ . '/INCLUDES/role_helper.php';
+require_once __DIR__ . '/INCLUDES/inc_connect.php';
+require_once __DIR__ . '/INCLUDES/Auth0UserManager.php'; // Ensure we include Auth0 manager
+require_once __DIR__ . '/INCLUDES/inc_header.php';
+require_once __DIR__ . '/INCLUDES/inc_dashboard.php';
 
-
-<?php
-
-// You MUST restore these values from the session
-$clearance = isset($_SESSION['clearance']) ? $_SESSION['clearance'] : null;
-$id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
-
-if (!$clearance || !$id) {
-    die("Unauthorized access or missing session.");
+if (!is_logged_in()) {
+    header('Location: index.php?error=1&msg=Please log in first.');
+    exit;
 }
+
+// Fetch the Auth0 user list for mapping IDs to usernames
+$auth0_users = Auth0UserManager::getUsers();
+
+$user      = $_SESSION['user'];
+$clearance = $user['role'] ?? 'User';
+$userId    = $user['user_id'] ?? null;
 
 if ($clearance === 'User') {
-  $sql = "
-      SELECT
-          t.id,
-          t.subject,
-          t.project_id,
-          p.project_name,
-          t.status,
-          t.priority,
-          c.username AS creator_name,
-          GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
-      FROM tasks AS t
-      LEFT JOIN projects p ON t.project_id = p.id
-      JOIN task_assigned_users AS tau ON t.id = tau.task_id
-      JOIN users AS u ON tau.user_id = u.id
-      LEFT JOIN users AS c ON t.created_by = c.id
-      WHERE tau.user_id = {$id}
-      GROUP BY t.id
-  ";
+    // For normal users
+    $stmt = $conn->prepare("
+        SELECT t.id, t.subject, t.project_id, p.project_name, t.status, t.priority, t.created_by
+        FROM tasks t
+        LEFT JOIN projects p ON t.project_id = p.id
+        JOIN task_assigned_users tau ON t.id = tau.task_id
+        WHERE tau.user_id = ?
+        GROUP BY t.id
+    ");
+    $stmt->bind_param("s", $userId);
 } else {
-  $sql = "
-      SELECT
-          t.id,
-          t.subject,
-          t.project_id,
-          p.project_name,
-          t.status,
-          t.priority,
-          c.username AS creator_name,
-          GROUP_CONCAT(u.username SEPARATOR ', ') AS assigned_users
-      FROM tasks AS t
-      LEFT JOIN projects p ON t.project_id = p.id
-      LEFT JOIN task_assigned_users AS tau ON t.id = tau.task_id
-      LEFT JOIN users AS u ON tau.user_id = u.id
-      LEFT JOIN users AS c ON t.created_by = c.id
-      GROUP BY t.id
-  ";
+    // For admins
+    $stmt = $conn->prepare("
+        SELECT t.id, t.subject, t.project_id, p.project_name, t.status, t.priority, t.created_by
+        FROM tasks t
+        LEFT JOIN projects p ON t.project_id = p.id
+        GROUP BY t.id
+    ");
 }
 
-$result = $conn->query($sql);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!-- TASK SECTION -->
 <div class="TASK-CONTENT">
-  <div class="TASK-HEADER">
-    <p class="TASK-HEADER-1">Task List</p>
-    <p class="TASK-HEADER-2">(<?php echo $result->num_rows; ?>)</p>
-  </div>
-
-  <!-- TASK SECTION AREA -->
-  <div class="TASK-AREA">
-    <!-- TASK SECTION FILTER -->
-    <div class="TASK-FILTER">
-      <input type="text" id="searchInput" placeholder="Search tasks...">
-      <button type="button" id="filterButton">Filter</button>
+    <div class="TASK-HEADER">
+        <p class="TASK-HEADER-1">Task List</p>
+        <p class="TASK-HEADER-2">(<?php echo $result->num_rows; ?>)</p>
     </div>
-    <!-- TASK SECTION FILTER END -->
 
-    <!-- TASK SECTION LIST -->
-    <div class="TASK-LIST">
-      <?php
-      if ($result->num_rows > 0) {
-        echo "<table class='TASK-TABLE' id='TASK-TABLE'>
-  <thead>
-    <tr>
-      <th>
-        Subject
-        <img src='ICONS/filter-filled.png' class='filter'/>
-      </th>
-      <th>
-        Project
-        <img src='ICONS/filter-filled.png' class='filter'/>
-      </th>
-      <th>
-        Assignee
-        <img src='ICONS/filter-filled.png' class='filter'/>
-      </th>
-      <th>
-        Status
-        <img src='ICONS/filter-filled.png' class='filter'/>
-      </th>
-      <th>
-        Priority
-        <img src='ICONS/filter-filled.png' class='filter'/>
-      </th>
-    </tr>
-  </thead>
-  <tbody>";
+    <div class="TASK-AREA">
 
-        while ($row = $result->fetch_assoc()) {
-          $taskId      = $row["id"];
-          $subject     = $row["subject"];
-          $project_id  = $row["project_id"];
-          $projectName = $row["project_name"] ? htmlspecialchars($row["project_name"]) : 'N/A';
-          $creator     = isset($row["creator_name"]) ? $row["creator_name"] : "";
-          $status      = $row["status"];
-          $priority    = $row["priority"];
+        <div class="TASK-FILTER">
+            <input type="text" id="searchInput" placeholder="Search tasks...">
+            <button type="button" id="filterButton">Filter</button>
+        </div>
 
-          $statusPill = '';
-          switch ($status) {
-            case 'New':
-              $statusPill = "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>";
-              break;
-            case 'In Progress':
-              $statusPill = "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>";
-              break;
-            case 'Complete':
-              $statusPill = "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>";
-              break;
-            default:
-              $statusPill = "<button class='PILL-INACTIVE'>$status</button>";
-              break;
-          }
+        <div class="TASK-LIST">
+            <?php if ($result->num_rows > 0): ?>
+                <table class='TASK-TABLE' id='TASK-TABLE'>
+                    <thead>
+                        <tr>
+                            <th>Subject <img src='ICONS/filter-filled.png' class='filter' /></th>
+                            <th>Project <img src='ICONS/filter-filled.png' class='filter' /></th>
+                            <th>Assignee <img src='ICONS/filter-filled.png' class='filter' /></th>
+                            <th>Status <img src='ICONS/filter-filled.png' class='filter' /></th>
+                            <th>Priority <img src='ICONS/filter-filled.png' class='filter' /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <?php
+                            // Build pills for Status
+                            $status = $row["status"];
+                            switch ($status) {
+                                case 'New':
+                                    $statusPill = "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>";
+                                    break;
+                                case 'In Progress':
+                                    $statusPill = "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>";
+                                    break;
+                                case 'Complete':
+                                    $statusPill = "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>";
+                                    break;
+                                default:
+                                    $statusPill = "<button class='PILL-INACTIVE'>" . htmlspecialchars($status) . "</button>";
+                                    break;
+                            }
 
-          $priorityPill = '';
-          switch ($priority) {
-            case 'Urgent':
-              $priorityPill = "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>";
-              break;
-            case 'Moderate':
-              $priorityPill = "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>";
-              break;
-            case 'Low':
-              $priorityPill = "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>";
-              break;
-            default:
-              $priorityPill = "<button id='PILL-INACTIVE'>$priority</button>";
-              break;
-          }
+                            // Build pills for Priority
+                            $priority = $row["priority"];
+                            switch ($priority) {
+                                case 'Urgent':
+                                    $priorityPill = "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>";
+                                    break;
+                                case 'Moderate':
+                                    $priorityPill = "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>";
+                                    break;
+                                case 'Low':
+                                    $priorityPill = "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>";
+                                    break;
+                                default:
+                                    $priorityPill = "<button class='PILL-INACTIVE'>" . htmlspecialchars($priority) . "</button>";
+                                    break;
+                            }
 
-          echo "<tr>
-                <td class='VIEW-TASK'>
-                  <a onclick=\"location.href='view-task-page.php?clearance=" .urlencode($_SESSION['clearance']) ."&id={$taskId}'\">$subject</a>
-                </td>
-                <td>
-                  <a onclick=\"location.href='view-project-page.php?clearance=" .urlencode($_SESSION['clearance']) ."&id={$project_id}'\">$projectName</a>
-                </td>
-                <td>$creator</td>
-                <td>$statusPill</td>
-                <td>$priorityPill</td>
-              </tr>";
-        }
-        echo "</tbody></table>";
+                            $createdById = $row["created_by"];
+                            $creatorName = "Unknown";
 
-        if ($_SESSION["clearance"] != 'User') {
-          $createTaskUrl = "create-task-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($_SESSION['id']);
-          $createProjectUrl = "create-project-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($_SESSION['id']);
-          echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='$createTaskUrl'\">Create Task</button>";
-          echo "<button class='CREATE-PROJECT-BUTTON' onclick=\"document.location='$createProjectUrl'\">Create Project</button>";
-        }
-      } else {
-        echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";
-      }
-      ?>
+                            // Loop through our $auth0_users and match user_id
+                            foreach ($auth0_users as $auth0User) {
+                                if (isset($auth0User['user_id']) && $auth0User['user_id'] === $createdById) {
+                                    // Choose what to display: name, nickname, email, etc.
+                                    $creatorName = $auth0User['name']
+                                        ?? $auth0User['nickname']
+                                        ?? $auth0User['email']
+                                        ?? "Unknown";
+                                    break;
+                                }
+                            }
+                            ?>
+                            <tr>
+                                <td>
+                                    <a href='view-task-page.php?id=<?php echo urlencode($row["id"]); ?>'>
+                                        <?php echo htmlspecialchars($row["subject"]); ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href='view-project-page.php?id=<?php echo urlencode($row["project_id"]); ?>'>
+                                        <?php echo htmlspecialchars($row["project_name"]) ?: "N/A"; ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <?php echo htmlspecialchars($creatorName); ?>
+                                </td>
+                                <td><?php echo $statusPill; ?></td>
+                                <td><?php echo $priorityPill; ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <h1 class='USER-MESSAGE'>No tasks found.</h1>
+            <?php endif; ?>
+
+            <?php if (is_admin()): ?>
+                <button class='CREATE-TASK-BUTTON' onclick="location.href='create-task-page.php'">Create Task</button>
+                <button class='CREATE-PROJECT-BUTTON' onclick="location.href='create-project-page.php'">Create Project</button>
+            <?php endif; ?>
+        </div>
     </div>
-    <!-- TASK SECTION LIST END -->
-  </div>
-  <!-- TASK SECTION AREA END -->
 </div>
-<!-- TASK SECTION END -->
-
-</div>
-<!-- MIDDLE SECTION END -->
 
 <?php include 'INCLUDES/inc_footer.php'; ?>
 <?php include 'INCLUDES/inc_disconnect.php'; ?>

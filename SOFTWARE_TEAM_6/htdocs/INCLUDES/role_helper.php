@@ -1,4 +1,12 @@
 <?php
+/*
+-------------------------------------------------------------
+ File: ROLE_helper.php
+ Description: 
+ - Contains helpers related to roles
+-------------------------------------------------------------
+*/
+
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
@@ -27,4 +35,25 @@ function require_login(): void {
         header('Location: index.php?error=login_required');
         exit;
     }
+}
+
+function is_admin(): bool
+{
+    return isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Admin';
+}
+
+function is_manager() {
+    return get_role() === 'Manager';
+}
+
+function getAssignedUsers(int $taskId, mysqli $conn): array {
+    $assigned = [];
+    $stmt = $conn->prepare("SELECT auth0_user_id FROM task_assigned_users WHERE task_id = ?");
+    $stmt->bind_param('i', $taskId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $assigned[] = $row['auth0_user_id'];
+    }
+    return $assigned;
 }

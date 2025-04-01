@@ -10,8 +10,10 @@ class Auth0TokenManager {
             'grant_type'    => 'client_credentials',
             'client_id'     => $clientId,
             'client_secret' => $clientSecret,
-            'audience'      => "https://$domain/api/v2/"
+            'audience'      => "https://$domain/api/v2/",
+            'scope'         => 'read:users update:users create:user_tickets'
         ];
+
         $context = stream_context_create([
             'http' => [
                 'method'  => 'POST',
@@ -21,6 +23,7 @@ class Auth0TokenManager {
         ]);
         $response = file_get_contents($url, false, $context);
         $json = json_decode($response, true);
+
         if (!isset($json['access_token'])) {
             die("Failed to obtain Management API token: " . json_encode($json));
         }

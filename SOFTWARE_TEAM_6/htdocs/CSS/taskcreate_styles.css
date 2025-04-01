@@ -124,15 +124,4 @@
 }
 
 /* CREATE TASK BOX END */
-
-.ERROR-MESSAGE {
-  background-color: var(--dark-grey);
-  color: white;
-  padding: 5px;
-  padding-top: 10px;
-  margin-bottom: 15px;
-  border-radius: 20px;
-  text-align: center;
-}
-
 /* MIDDLE SECTION END */

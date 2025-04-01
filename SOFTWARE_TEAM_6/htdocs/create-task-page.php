@@ -1,73 +1,106 @@
 <?php
 /*
-This file is responsible for creating a new task in the application’s database.
-
-For POST requests, the code gathers user inputs (subject, project_id, assignee, status, priority, description) from the form,
-checks for duplicate task names (based on subject), constructs an SQL INSERT statement, and attempts to insert the new task into the `tasks` table.
-If a duplicate exists or an error occurs, an error message is displayed on the same page.
-If successful, the user is redirected to a “view” page for the newly inserted task.
-If it’s a GET request, the script displays an HTML form (from inc_taskcreate.php) that allows users to enter the details for a new task.
-An email notification is sent to each assigned user.
+-------------------------------------------------------------
+File: create-task-page.php
+Description:
+- Allows Admins to create new tasks.
+- Collects:
+    > Subject, project, status, priority, description.
+    > Multiple assigned users (from Auth0).
+- Shows success or error messages and redirects.
+- Also stores `created_by` = the current Auth0 user_id.
+-------------------------------------------------------------
 */
 
-$title = 'ROCU: Create Task';
+$title = "ROCU: Create Task";
 
-include 'INCLUDES/inc_connect.php';
-include 'INCLUDES/inc_header.php';
-include 'INCLUDES/inc_basicemail.php';
+require_once __DIR__ . '/INCLUDES/env_loader.php';
+require_once __DIR__ . '/INCLUDES/role_helper.php';
+require_once __DIR__ . '/INCLUDES/inc_connect.php';
+require_once __DIR__ . '/INCLUDES/inc_header.php';
+require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
-$clearance = $_SESSION['clearance'] ?? '';
-if ($clearance === 'User') {
-    echo "You do not have permission to create tasks.";
+if (!is_logged_in()) {
+    header('Location: index.php?error=1&msg=Please log in first.');
     exit;
 }
 
-$errorMsg = "";
+if (!has_role('Admin')) {
+    header('Location: index.php?error=1&msg=Not authorized.');
+    exit;
+}
 
+$errorMsg = '';
+$successMsg = '';
+
+// When the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $subject     = $conn->real_escape_string($_POST['subject']);
-    $project_id  = $conn->real_escape_string($_POST['project_id']);
-    $status      = $conn->real_escape_string($_POST['status']);
-    $priority    = $conn->real_escape_string($_POST['priority']);
-    $description = $conn->real_escape_string($_POST['description']);
-    $creatorId   = $_SESSION['id'];
+    $subject     = trim($_POST['subject'] ?? '');
+    $project_id  = trim($_POST['project_id'] ?? '');
+    $status      = trim($_POST['status'] ?? '');
+    $priority    = trim($_POST['priority'] ?? '');
+    $description = trim($_POST['description'] ?? '');
+    $assigned    = $_POST['assign'] ?? [];
 
-    $duplicateQuery = "SELECT id FROM tasks WHERE subject = '$subject'";
-    $dupResult = $conn->query($duplicateQuery);
-    if ($dupResult && $dupResult->num_rows > 0) {
-        $errorMsg = "Error: A task with the same subject already exists. Please choose a different task name.";
+    // Pull the Auth0 user_id of the currently logged in user
+    // This will be stored in the `created_by` column
+    $created_by = $_SESSION['user']['user_id'] ?? '';
+
+    // Basic validation
+    if (empty($subject) || empty($project_id) || empty($status) || empty($priority)
+        || empty($description) || empty($assigned) || empty($created_by)) {
+        $errorMsg = "All fields are required, you must assign at least one user, and you must be logged in.";
     } else {
-        $sql = "INSERT INTO tasks (`id`, `subject`, `project_id`, `status`, `priority`, `created_by`, `description`) 
-                VALUES (NULL, '$subject', '$project_id', '$status', '$priority', '$creatorId', '$description')";
-        
-        if ($conn->query($sql) === true) {
-            $task_id = $conn->insert_id;
+        // Insert into tasks table
+        $stmt = $conn->prepare("
+            INSERT INTO tasks (created_by, subject, project_id, status, priority, description)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        // created_by (string), subject (string), project_id (int), status (string), priority (string), description (string)
+        $stmt->bind_param("ssisss", $created_by, $subject, $project_id, $status, $priority, $description);
 
-            if (!empty($_POST['assign'])) {
-                foreach ($_POST['assign'] as $user_id) {
-                    $user_id = (int)$user_id;
-                    $sql_link = "INSERT INTO task_assigned_users (task_id, user_id) VALUES ($task_id, $user_id)";
-                    $conn->query($sql_link);
+        if ($stmt->execute()) {
+            $newTaskId = $stmt->insert_id;
 
-                    $userQuery = "SELECT email FROM users WHERE id = $user_id";
-                    $userResult = $conn->query($userQuery);
-                    if ($userResult && $userResult->num_rows > 0) {
-                        $userRow = $userResult->fetch_assoc();
-                        sendTaskEmail($userRow['email']);
-                    }
-                }
+            // Assign multiple users
+            $stmtAssign = $conn->prepare("
+                INSERT INTO task_assigned_users (task_id, user_id) 
+                VALUES (?, ?)
+            ");
+            foreach ($assigned as $uid) {
+                $stmtAssign->bind_param("is", $newTaskId, $uid);
+                $stmtAssign->execute();
             }
-            header("Location: view-task-page.php?clearance=" . urlencode($project_id) . urlencode($_SESSION['clearance']) . "&id=" . urlencode($task_id));
+
+            // Success message & redirect
+            echo "<p class='SUCCESS-MESSAGE'>Task created successfully. Redirecting...</p>";
+            echo "<script>
+                    setTimeout(function() {
+                        window.location.href='view-task-page.php?id=" . urlencode($newTaskId) . "';
+                    }, 1500);
+                  </script>";
             exit;
         } else {
-            $errorMsg = "Error: " . $sql . "<br>" . $conn->error;
+            $errorMsg = "Failed to create task. Please try again.";
         }
     }
 }
 
-// Display the form (for GET or if there is an error)
-include 'INCLUDES/inc_taskcreate.php';
+// Load projects for dropdown
+$projects = [];
+$res_proj = $conn->query("SELECT id, project_name FROM projects");
+while ($p = $res_proj->fetch_assoc()) {
+    $projects[] = $p;
+}
 
+// Load Auth0 users for assignment
+$auth0_users = Auth0UserFetcher::getUsers();
+$user_map = [];
+foreach ($auth0_users as $u) {
+    // Use nickname or email as display name
+    $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'] ?? 'Unknown';
+}
+
+include 'INCLUDES/inc_taskcreate.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
-?>

@@ -1,54 +1,58 @@
 <?php
 /*
-This file creates a new project in the projects table.
-
-For POST requests, it gathers user inputs (project_name, description, status, priority) from the form,
-checks for duplicate project names (based on project_name),
-constructs an INSERT statement, and inserts the new project into the `projects` table.
-If a duplicate exists or an error occurs, an error message is displayed on the same page.
-If successful, the user is redirected to the view-project-page for the new project.
-For GET requests, it displays an HTML form for creating a new project.
+-------------------------------------------------------------
+File: create-project-page.php
+Description:
+- Allows Admins to create new projects.
+- Collects:
+    > Project title, status, priority, description.
+- Shows success or error messages and redirects.
+-------------------------------------------------------------
 */
 
-$title = 'ROCU: Create Project';
-include 'INCLUDES/inc_connect.php';
-include 'INCLUDES/inc_header.php';
+$title = "ROCU: Create Project";
 
-$clearance = $_SESSION['clearance'] ?? '';
-if ($clearance === 'User') {
-    echo "You do not have permission to create projects.";
+require_once __DIR__ . '/INCLUDES/env_loader.php';
+require_once __DIR__ . '/INCLUDES/role_helper.php';
+require_once __DIR__ . '/INCLUDES/inc_connect.php';
+require_once __DIR__ . '/INCLUDES/inc_header.php';
+
+if (!is_logged_in()) {
+    header('Location: index.php?error=1&msg=Please log in first.');
     exit;
 }
 
-$errorMsg = "";
+if (!has_role('Admin')) {
+    header('Location: index.php?error=1&msg=Not authorized.');
+    exit;
+}
+
+$errorMsg = '';
+$successMsg = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $projectName = $conn->real_escape_string($_POST['project_name']);
-    $description = $conn->real_escape_string($_POST['description']);
-    $status      = $conn->real_escape_string($_POST['status']);
-    $priority    = $conn->real_escape_string($_POST['priority']);
+    $project_name = trim($_POST['project_name'] ?? '');
+    $status       = trim($_POST['status'] ?? '');
+    $priority     = trim($_POST['priority'] ?? '');
+    $description  = trim($_POST['description'] ?? '');
 
-    $duplicateQuery = "SELECT id FROM projects WHERE project_name = '$projectName'";
-    $dupResult = $conn->query($duplicateQuery);
-    if ($dupResult && $dupResult->num_rows > 0) {
-        $errorMsg = "Error: A project with the same name already exists. Please choose a different project name.";
+    if (empty($project_name) || empty($status) || empty($priority) || empty($description)) {
+        $errorMsg = "All fields are required.";
     } else {
-        $sql = "INSERT INTO projects (project_name, description, status, priority)
-                VALUES ('$projectName', '$description', '$status', '$priority')";
-        if ($conn->query($sql) === TRUE) {
-            $project_id = $conn->insert_id;
-            header("Location: view-project-page.php?clearance=" . urlencode($project_id) . urlencode($_SESSION['clearance']) . "&id=" . urlencode($project_id));
+        $stmt = $conn->prepare("INSERT INTO projects (project_name, status, priority, description) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $project_name, $status, $priority, $description);
+        if ($stmt->execute()) {
+            $newProjectId = $stmt->insert_id;
+            echo "<p class='SUCCESS-MESSAGE'>Project created successfully. Redirecting...</p>";
+            echo "<script>setTimeout(function(){ window.location.href='view-project-page.php?id=" . urlencode($newProjectId) . "'; }, 1500);</script>";
             exit;
         } else {
-            $errorMsg = "Error: " . $sql . "<br>" . $conn->error;
+            $errorMsg = "Failed to create project. Please try again.";
         }
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' || !empty($errorMsg)) {
-    include 'INCLUDES/inc_projectcreate.php';
-}
-
+include 'INCLUDES/inc_projectcreate.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
 ?>

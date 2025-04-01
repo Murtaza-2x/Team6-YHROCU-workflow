@@ -1,51 +1,74 @@
 <?php
 /*
-This file displays the details for a single project from the projects table.
-It also retrieves and displays all the distinct users assigned to tasks that belong to this project.
+-------------------------------------------------------------
+File: view-project-page.php
+Description:
+- Displays a detailed view of a single project.
+- Shows:
+    > Project information (Title, Status, Priority, Description)
+    > Assigned Users aggregated from tasks linked to this project
+    > Admin-only button to edit
+-------------------------------------------------------------
 */
 
 $title = "ROCU: View Project";
-include 'INCLUDES/inc_connect.php';
-include 'INCLUDES/inc_header.php';
 
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-if ($id <= 0) {
-    echo "Invalid project ID.";
+require_once __DIR__ . '/INCLUDES/env_loader.php';
+require_once __DIR__ . '/INCLUDES/role_helper.php';
+require_once __DIR__ . '/INCLUDES/inc_connect.php';
+require_once __DIR__ . '/INCLUDES/inc_header.php';
+require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
+
+if (!is_logged_in()) {
+    header('Location: index.php?error=1&msg=Please log in first.');
     exit;
 }
 
-$sql_project = "SELECT * FROM projects WHERE id = $id";
-$result_project = $conn->query($sql_project);
-if ($result_project && $result_project->num_rows > 0) {
-    $row = $result_project->fetch_assoc();
-    $project_id  = $row["id"];
-    $projectName = $row['project_name'];
-    $description  = $row['description'] ?? '';
-    $status       = $row['status'] ?? '';
-    $priority     = $row['priority'] ?? '';
-} else {
-    echo "Project not found.";
+$user = $_SESSION['user'];
+$projectId = $_GET['id'] ?? null;
+
+if (!$projectId || !is_numeric($projectId)) {
+    echo "<p class='ERROR-MESSAGE'>Invalid project ID.</p>";
+    include 'INCLUDES/inc_footer.php';
     exit;
 }
 
-$sql_assigned = "
-    SELECT GROUP_CONCAT(DISTINCT u.username SEPARATOR ', ') AS assigned_users
-    FROM tasks t
-    LEFT JOIN task_assigned_users tau ON t.id = tau.task_id
-    LEFT JOIN users u ON tau.user_id = u.id
-    WHERE t.project_id = $id
-    GROUP BY t.project_id
-";
-$result_assigned = $conn->query($sql_assigned);
-if ($result_assigned && $result_assigned->num_rows > 0) {
-    $row_assigned = $result_assigned->fetch_assoc();
-    $assignedUsers = $row_assigned['assigned_users'] ?? 'No Users Assigned';
-} else {
-    $assignedUsers = 'No Users Assigned';
+// Project Info
+$stmt = $conn->prepare("SELECT * FROM projects WHERE id = ?");
+$stmt->bind_param("i", $projectId);
+$stmt->execute();
+$result = $stmt->get_result();
+$project = $result->fetch_assoc();
+
+if (!$project) {
+    echo "<p class='ERROR-MESSAGE'>Project not found.</p>";
+    include 'INCLUDES/inc_footer.php';
+    exit;
+}
+
+// Auth0 Users
+$auth0_users = Auth0UserFetcher::getUsers();
+$user_map = [];
+foreach ($auth0_users as $u) {
+    $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
+}
+
+// Get all assigned users via tasks under this project
+$stmt = $conn->prepare("
+    SELECT DISTINCT tau.user_id 
+    FROM tasks t 
+    JOIN task_assigned_users tau ON t.id = tau.task_id 
+    WHERE t.project_id = ?
+");
+$stmt->bind_param("i", $projectId);
+$stmt->execute();
+$assignedResult = $stmt->get_result();
+$assignedUsers = [];
+while ($row = $assignedResult->fetch_assoc()) {
+    $assignedUsers[] = $row['user_id'];
 }
 
 include 'INCLUDES/inc_projectview.php';
-
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
 ?>

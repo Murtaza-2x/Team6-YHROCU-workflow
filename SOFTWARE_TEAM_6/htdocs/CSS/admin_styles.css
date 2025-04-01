@@ -186,6 +186,7 @@
   border-collapse: collapse;
   background-color: white;
   text-align: center;
+  margin-top: 20px;
 }
 
 .ADMIN-LIST th,
@@ -209,7 +210,6 @@
 .ADMIN-LIST button {
   padding: 4px 12px;
   border: none;
-  color: #fff;
   border-radius: 20px;
   cursor: pointer;
 }
@@ -256,23 +256,6 @@
   height: 20px;
   padding: 0.1rem;
   border: none;
-}
-
-.SUCCESS-MESSAGE, .ERROR-MESSAGE {
-  color: white;
-  padding: 5px;
-  padding-top: 10px;
-  margin-bottom: 15px;
-  border-radius: 20px;
-  text-align: center;
-}
-
-.SUCCESS-MESSAGE {
-  background-color: var(--green);
-}
-
-.ERROR-MESSAGE {
-  background-color: var(--dark-grey);
 }
 
 #STRENGTH-BAR {

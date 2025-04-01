@@ -66,6 +66,7 @@
 
 .ACTION-DROPDOWN-TOGGLE {
   border: none;
+  margin-bottom: 3px;
   font-size: 1.2rem;
   cursor: pointer;
 }

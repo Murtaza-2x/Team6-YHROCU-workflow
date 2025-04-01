@@ -1,0 +1,42 @@
+.SUCCESS-MESSAGE,
+.ERROR-MESSAGE {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 300px;
+  max-width: 600px;
+  padding: 15px 25px;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 1.1em;
+}
+
+.SUCCESS-MESSAGE {
+  background-color: var(--green);
+}
+
+.ERROR-MESSAGE {
+  background-color: var(--dark-grey);
+}
+
+.LOGIN-SUCCESS-MESSAGE, .LOGIN-ERROR-MESSAGE {
+  color: white;
+  padding: 5px;
+  padding-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+
+.LOGIN-SUCCESS-MESSAGE {
+  background-color: var(--green);
+}
+
+.LOGIN-ERROR-MESSAGE {
+  background-color: var(--dark-grey);
+}

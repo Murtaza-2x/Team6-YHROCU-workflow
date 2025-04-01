@@ -25,7 +25,6 @@ $errorMsg = '';
 if (isset($_GET['error'])) {
     $errorMsg = htmlspecialchars($_GET['msg'] ?? 'Unknown authentication error');
 }
-
 include 'INCLUDES/inc_login.php';
 ?>
 

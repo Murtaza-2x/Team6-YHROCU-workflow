@@ -1,126 +1,117 @@
 <?php
 /*
-  edit-task-page.php
-
-  1) Only Admin or Manager can edit tasks.
-  2) On GET, retrieves the current task (plus assigned users) to display in the form.
-  3) On POST (update_task), it archives the current task in the `archive` table, then updates `tasks`.
-  4) The assigned users in `task_assigned_users` are deleted and reinserted.
-
-  The form is in inc_taskedit.php, which has a <button name="update_task">Update Task</button>.
+-------------------------------------------------------------
+File: edit-task-page.php
+Description:
+- Displays the edit task page for Admins or authorized users.
+- Loads task data from the database.
+- Loads assigned Auth0 users.
+- Passes data to inc_taskedit.php for rendering.
+-------------------------------------------------------------
 */
 
-$clearance = $_SESSION['clearance'] ?? '';
-if ($clearance === 'User') {
-    echo "You do not have permission to edit tasks.";
+$title = "ROCU: Edit Task";
+
+require_once __DIR__ . '/INCLUDES/env_loader.php';
+require_once __DIR__ . '/INCLUDES/role_helper.php';
+require_once __DIR__ . '/INCLUDES/inc_connect.php';
+require_once __DIR__ . '/INCLUDES/inc_header.php';
+require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
+
+if (!is_logged_in()) {
+    header('Location: index.php?error=1&msg=Please log in first.');
     exit;
 }
 
-$title = 'ROCU: Edit Task';
-include 'INCLUDES/inc_connect.php';
-include 'INCLUDES/inc_header.php';
-
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($id <= 0) {
-    echo "Invalid task ID.";
+if (!has_role('Admin')) {
+    header('Location: index.php?error=1&msg=Not authorized.');
     exit;
 }
 
-$subject       = '';
-$project_id    = '';
-$status        = '';
-$priority      = '';
-$description   = '';
-$assignedUserIds = [];
+$taskId = $_GET['id'] ?? null;
 
-$sql_assigned = "SELECT user_id FROM task_assigned_users WHERE task_id = $id";
-$result_assigned = $conn->query($sql_assigned);
-if ($result_assigned && $result_assigned->num_rows > 0) {
-    while ($r = $result_assigned->fetch_assoc()) {
-        $assignedUserIds[] = $r['user_id'];
-    }
-}
-
-$sql_current = "SELECT * FROM tasks WHERE id = $id";
-$result_current = $conn->query($sql_current);
-if ($result_current && $result_current->num_rows > 0) {
-    $currentTask = $result_current->fetch_assoc();
-} else {
-    echo "Task not found.";
+if (!$taskId || !is_numeric($taskId)) {
+    echo "<p class='ERROR-MESSAGE'>Invalid task ID.</p>";
+    include 'INCLUDES/inc_footer.php';
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
-    $edited_by = $_SESSION['id'];
-    $archiveSql = "INSERT INTO archive (task_id, subject, project_id, status, priority, description, created_at, edited_by)
-                   VALUES (
-                     {$currentTask['id']},
-                     '" . $conn->real_escape_string($currentTask['subject']) . "',
-                     '" . $conn->real_escape_string($currentTask['project_id']) . "',
-                     '" . $conn->real_escape_string($currentTask['status']) . "',
-                     '" . $conn->real_escape_string($currentTask['priority']) . "',
-                     '" . $conn->real_escape_string($currentTask['description']) . "',
-                     '" . $currentTask['created_at'] . "',
-                     $edited_by
-                   )";
-    $conn->query($archiveSql);
+// Handle update
+if (isset($_POST['update_task'])) {
+    $subject = $_POST['subject'] ?? '';
+    $project_id = $_POST['project_id'] ?? '';
+    $status = $_POST['status'] ?? '';
+    $priority = $_POST['priority'] ?? '';
+    $description = $_POST['description'] ?? '';
+    $assigned = $_POST['assign'] ?? [];
 
-    $subject     = $conn->real_escape_string($_POST['subject']);
-    $project_id  = $conn->real_escape_string($_POST['project_id']);
-    $status      = $conn->real_escape_string($_POST['status']);
-    $priority    = $conn->real_escape_string($_POST['priority']);
-    $description = $conn->real_escape_string($_POST['description']);
-
-    $sql_update = "UPDATE tasks 
-                   SET subject     = '$subject',
-                       project_id  = '$project_id',
-                       status      = '$status',
-                       priority    = '$priority',
-                       description = '$description'
-                   WHERE id = $id";
-
-    if ($conn->query($sql_update) === TRUE) {
-        $conn->query("DELETE FROM task_assigned_users WHERE task_id = $id");
-        if (isset($_POST['assign']) && is_array($_POST['assign'])) {
-            foreach ($_POST['assign'] as $user_id) {
-                $user_id = (int)$user_id;
-                $sql_link = "INSERT INTO task_assigned_users (task_id, user_id) VALUES ($id, $user_id)";
-                $conn->query($sql_link);
-            }
-        }
-        header("Location: view-task-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($id));
-        exit;
+    if (empty($subject) || empty($project_id) || empty($status) || empty($priority)) {
+        $errorMsg = "All fields are required.";
     } else {
-        echo "Error updating task: " . $conn->error;
+        $stmt = $conn->prepare("UPDATE tasks SET subject=?, project_id=?, status=?, priority=?, description=? WHERE id=?");
+        $stmt->bind_param("sisssi", $subject, $project_id, $status, $priority, $description, $taskId);
+        if ($stmt->execute()) {
+            // update assigned users
+            $conn->query("DELETE FROM task_assigned_users WHERE task_id=$taskId");
+            if (!empty($assigned)) {
+                $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
+                foreach ($assigned as $uid) {
+                    $stmtAssign->bind_param("is", $taskId, $uid);
+                    $stmtAssign->execute();
+                }
+            }
+            echo "<p class='SUCCESS-MESSAGE'>Task updated successfully. Redirecting...</p>";
+            echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($taskId) . "'; }, 1500);</script>";
+            exit;
+        } else {
+            echo "<p class='ERROR-MESSAGE'>Failed to update task. Please try again.</p>";
+        }
     }
 }
-else {
-    $subject     = $currentTask['subject'];
-    $project_id  = $currentTask['project_id'];
-    $status      = $currentTask['status'];
-    $priority    = $currentTask['priority'];
-    $description = $currentTask['description'];
+
+// Load task data
+$stmt = $conn->prepare("SELECT * FROM tasks WHERE id = ?");
+$stmt->bind_param("i", $taskId);
+$stmt->execute();
+$result = $stmt->get_result();
+$task = $result->fetch_assoc();
+
+if (!$task) {
+    echo "<p class='ERROR-MESSAGE'>Task not found.</p>";
+    include 'INCLUDES/inc_footer.php';
+    exit;
 }
 
+$subject = $task['subject'];
+$description = $task['description'];
+$project_id = $task['project_id'];
+$status = $task['status'];
+$priority = $task['priority'];
+
+// Assigned Users
+$assignedUsers = [];
+$stmtAssigned = $conn->prepare("SELECT user_id FROM task_assigned_users WHERE task_id = ?");
+$stmtAssigned->bind_param("i", $taskId);
+$stmtAssigned->execute();
+$resAssigned = $stmtAssigned->get_result();
+while ($row = $resAssigned->fetch_assoc()) {
+    $assignedUsers[] = $row['user_id'];
+}
+
+// Auth0 Users
+$auth0_users = Auth0UserFetcher::getUsers();
+$user_map = [];
+foreach ($auth0_users as $u) {
+    $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
+}
+
+// Projects
 $projects = [];
-$sql_projects = "SELECT id, project_name FROM projects ORDER BY project_name";
-$result_projects = $conn->query($sql_projects);
-if ($result_projects && $result_projects->num_rows > 0) {
-    while ($projRow = $result_projects->fetch_assoc()) {
-        $projects[] = $projRow;
-    }
-}
-
-$users = [];
-$sql_users = "SELECT id, username FROM users ORDER BY username";
-$result_users = $conn->query($sql_users);
-if ($result_users && $result_users->num_rows > 0) {
-    while ($userRow = $result_users->fetch_assoc()) {
-        $users[] = $userRow;
-    }
+$res_proj = $conn->query("SELECT id, project_name FROM projects");
+while ($p = $res_proj->fetch_assoc()) {
+    $projects[] = $p;
 }
 
 include 'INCLUDES/inc_taskedit.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
-?>
