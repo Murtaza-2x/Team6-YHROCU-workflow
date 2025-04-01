@@ -1,0 +1,30 @@
+# Composer / Vendor
+/vendor/
+composer.lock
+
+# Node Modules (if you're using Node for front-end build)
+node_modules/
+
+# # Environment & Sensitive Files
+# .env
+# .env.local
+# .env.*.local
+
+# IDE directories
+.idea/
+.vscode/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# PHPUnit coverage reports
+coverage/
+
+# Log files
+*.log
+
+# Any compiled templates or caches (Symfony, Laravel, etc.)
+/var/
+/storage/
+/bootstrap/cache/
