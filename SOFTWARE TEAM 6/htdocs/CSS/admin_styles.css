@@ -31,8 +31,10 @@
   border-radius: 20px;
   padding: 2rem;
   width: 800px;
+  height: 650px;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
 }
 
 .ADMIN-BOX h1 {
@@ -62,7 +64,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   transform: translateX(-5rem);
 }
 
@@ -85,24 +87,63 @@
 }
 
 .INPUT-GROUP {
-  width:50%;
-  padding: 0.3rem;
+  width: 50%;
+  padding: 0.4rem;
   border: 1px solid var(--off-white);
   border-radius: 20px;
 }
 
 .INPUT-GROUP input {
   text-align: center;
-  width: 100%;
-  padding: 8px;
-  font-size: 1rem;
+  padding: 4px;
+  font-size: 0.9rem;
   border: none;
-  opacity: 0.3;
+  opacity: 0.4;
   outline: none;
 }
 
-.INPUT-GROUP:hover {
+.INPUT-GROUP-2 {
+  width: 40%;
+  padding: 0.1rem;
+  border: none;
+}
+
+.INPUT-GROUP-2 input {
+  text-align: center;
+  padding: 4px;
+  font-size: 0.9rem;
+  border: none;
+  opacity: 0.4;
+  outline: none;
+}
+
+.INPUT-GROUP-3 {
+  width: 80%;
+  height: 20px;
+  padding: 0.1rem;
+  border: 1px solid var(--off-white);
+  border-radius: 20px;
+}
+
+.INPUT-GROUP-3 input {
+  width: 80%;
+  height: 15px;
+  text-align: center;
+  padding: 3px;
+  font-size: 0.9rem;
+  border: none;
+  opacity: 0.4;
+  outline: none;
+}
+
+.INPUT-GROUP:hover, .INPUT-GROUP-2:hover, .INPUT-GROUP-3:hover {
   opacity: 1;
+}
+
+.INPUT-INLINE {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .ADMIN-FILTER {
@@ -120,6 +161,46 @@
   border-radius: 5px;
   border: white;
   outline: none;
+  background-color: var(--dark-grey);
+}
+
+.ADMIN-LIST {
+  text-align: center;
+}
+
+.ADMIN-LIST table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  text-align: center;
+}
+
+.ADMIN-LIST th,
+.ADMIN-LIST td {
+  border: 1px solid var(--off-white);
+  padding: 4px;
+  text-decoration: none;
+  text-align: center;
+}
+
+
+.ADMIN-LIST a:hover {
+  color: var(--blue);
+}
+
+.ADMIN-LIST th {
+  background-color: var(--off-white);
+}
+
+.ADMIN-LIST button {
+  padding: 4px 12px;
+  border: none;
+  color: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.ADMIN-LIST button:hover {
   background-color: var(--dark-grey);
 }
 
@@ -155,3 +236,4 @@
 .CREATE-BUTTON {
   background-color: var(--blue);
 }
+/* ADMIN BOX END */

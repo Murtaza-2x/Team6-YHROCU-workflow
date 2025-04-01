@@ -9,12 +9,12 @@ that takes you to view-project-page.php with the project id.
 
 $title = "ROCU: Dashboard";
 ?>
-
+<!-- This section links the includes files to the list task page ensuring consistency in styling/other functions -->
 <?php include 'INCLUDES/inc_connect.php'; ?>
 <?php include 'INCLUDES/inc_header.php'; ?>
 <?php include 'INCLUDES/inc_dashboard.php'; ?>
 
-
+<!-- This section fetches data from the database using SQL commands  -->
 <?php
 if ($clearance === 'User') {
   $sql = "
@@ -69,9 +69,9 @@ $result = $conn->query($sql);
   <div class="TASK-AREA">
     <!-- TASK SECTION FILTER -->
     <div class="TASK-FILTER">
-  <input type="text" id="searchInput" placeholder="Search tasks...">
-  <button type="button" id="filterButton">Filter</button>
-</div>
+      <input type="text" id="searchInput" placeholder="Search tasks...">
+      <button type="button" id="filterButton">Filter</button>
+    </div>
     <!-- TASK SECTION FILTER END -->
 
     <!-- TASK SECTION LIST -->
@@ -148,10 +148,10 @@ $result = $conn->query($sql);
 
           echo "<tr>
                 <td class='VIEW-TASK'>
-                  <a href='view-task-page.php?id=$taskId' title='Detailed view'>$subject</a>
+                  <a onclick=\"location.href='view-task-page.php?clearance=" .urlencode($_SESSION['clearance']) ."&id={$taskId}'\">$subject</a>
                 </td>
                 <td>
-                  <a href='view-project-page.php?id=$project_id' title='View Project'>$projectName</a>
+                  <a onclick=\"location.href='view-project-page.php?clearance=" .urlencode($_SESSION['clearance']) ."&id={$project_id}'\">$projectName</a>
                 </td>
                 <td>$creator</td>
                 <td>$statusPill</td>
@@ -161,8 +161,10 @@ $result = $conn->query($sql);
         echo "</tbody></table>";
 
         if ($_SESSION["clearance"] != 'User') {
-          echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='create-task-page.php'\">Create Task</button>";
-          echo "<button class='CREATE-PROJECT-BUTTON' onclick=\"document.location='create-project-page.php'\">Create Project</button>";
+          $createTaskUrl = "create-task-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($_SESSION['id']);
+          $createProjectUrl = "create-project-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($_SESSION['id']);
+          echo "<button class='CREATE-TASK-BUTTON' onclick=\"document.location='$createTaskUrl'\">Create Task</button>";
+          echo "<button class='CREATE-PROJECT-BUTTON' onclick=\"document.location='$createProjectUrl'\">Create Project</button>";
         }
       } else {
         echo "<h1 class='USER-MESSAGE'>There are No Tasks Assigned to you!</h1>";

@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE id = $id";
 
     if ($conn->query($sql) === TRUE) {
-        header("Location: view-project-page.php?id=$id");
+        header("Location: view-project-page.php?clearance=" . urlencode($_SESSION['clearance']) . "&id=" . urlencode($id));
         exit;
     } else {
         echo "Error updating project: " . $conn->error;

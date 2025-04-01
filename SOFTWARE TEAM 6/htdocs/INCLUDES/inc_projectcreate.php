@@ -67,7 +67,7 @@
             <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class="CREATE-BUTTON" type="submit">Create Project</button>
-                <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='list-task-page.php'">Cancel</button>
+                <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='list-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>'">Cancel</button>
             </div>
             <!-- BUTTONS END -->
         </form>

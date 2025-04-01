@@ -1,7 +1,3 @@
-<?php
-$clearance = $_SESSION["clearance"];
-?>
-
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/pill_styles.css" rel="stylesheet">
@@ -21,7 +17,6 @@ $clearance = $_SESSION["clearance"];
 
         <!-- LOG SECTION LIST -->
         <div class="LOG-LIST">
-
             <?php if ($logCount > 0): ?>
                 <table class="LOG-TABLE">
                     <thead>
@@ -36,7 +31,7 @@ $clearance = $_SESSION["clearance"];
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($log = $result_logs->fetch_assoc()):
+                        <?php foreach ($logsArray as $log):
                             $logEditor   = htmlspecialchars($log['username'] ?? 'Unknown');
                             $archivedAt  = $log['archived_at'];
                             $createdAt   = $log['created_at'];
@@ -45,6 +40,7 @@ $clearance = $_SESSION["clearance"];
                             $logPriority = htmlspecialchars($log['priority']);
                             $logDesc     = nl2br(htmlspecialchars($log['description']));
 
+                            // Pill logic
                             $statusPill = match ($logStatus) {
                                 'New'         => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
                                 'In Progress' => "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>",
@@ -68,21 +64,22 @@ $clearance = $_SESSION["clearance"];
                                 <td><?php echo $priorityPill; ?></td>
                                 <td class="LOG-DESC"><?php echo $logDesc; ?></td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
-
             <?php else: ?>
                 <h1 class="USER-MESSAGE">No logs available for this task.</h1>
             <?php endif; ?>
 
             <!-- BUTTONS -->
-            <button class="BACK-BUTTON" onclick="window.location.href='view-task-page.php?id=<?php echo $id; ?>'">Back to Task</button>
-            <!-- LOG SECTION LIST END -->
+            <button class="BACK-BUTTON" onclick="window.location.href='view-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($id); ?>'">
+                Back to Task
+            </button>
+            <button class="EXPORT-BUTTON" onclick="window.location.href='view-task-logs-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($id); ?>&export=1'">
+                Export Logs
+            </button>
         </div>
-        <!-- LOG SECTION AREA END -->
+        <!-- LOG SECTION LIST END -->
     </div>
-    <!-- LOG SECTION END -->
-
 </div>
 <!-- MIDDLE SECTION END -->

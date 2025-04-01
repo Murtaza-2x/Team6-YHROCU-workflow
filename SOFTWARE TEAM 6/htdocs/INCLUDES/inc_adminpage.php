@@ -1,7 +1,3 @@
-<?php
-$clearance = $_SESSION["clearance"];
-?>
-
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/pill_styles.css" rel="stylesheet">
@@ -49,7 +45,7 @@ $clearance = $_SESSION["clearance"];
                     <label for="password">Password:</label>
                 </div>
                 <div class="INPUT-GROUP">
-                    <input type="password" id="password" name="password" placeholder="New Password" required>
+                    <input type="text" id="password" name="password" placeholder="New Password" required>
                 </div>
             </div>
 
@@ -80,11 +76,11 @@ $clearance = $_SESSION["clearance"];
         <!-- SEARCH BAR END -->
 
         <!-- USER TABLE -->
-        <div class="TASK-CONTENT">
+        <div class="ADMIN-CONTENT">
 
-            <div class="TASK-AREA">
-                <div class="TASK-LIST">
-                    <table class="TASK-TABLE" id="USER-TABLE">
+            <div class="ADMIN-AREA">
+                <div class="ADMIN-LIST">
+                    <table class="ADMIN-TABLE" id="USER-TABLE">
                         <thead>
                             <tr>
                                 <th>Username</th>
@@ -99,17 +95,23 @@ $clearance = $_SESSION["clearance"];
                                 <form method="post" class="inline-form user-row-form">
                                     <tr>
                                         <td>
-                                            <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required readonly>
+                                            <div class="INPUT-GROUP-2">
+                                                <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required readonly>
+                                            </div>
                                         </td>
                                         <td>
-                                            <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required readonly>
+                                            <div class="INPUT-GROUP-2">
+                                                <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required readonly>
+                                            </div>
                                         </td>
                                         <td>
-                                            <select name="clearance" disabled>
-                                                <option value="User" <?= $user['clearance'] === 'User' ? 'selected' : '' ?>>User</option>
-                                                <option value="Manager" <?= $user['clearance'] === 'Manager' ? 'selected' : '' ?>>Manager</option>
-                                                <option value="Admin" <?= $user['clearance'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
-                                            </select>
+                                            <div class="INPUT-GROUP-2">
+                                                <select name="clearance" class="DROPDOWN-GROUP-3" disabled>
+                                                    <option value="User" <?= $user['clearance'] === 'User' ? 'selected' : '' ?>>User</option>
+                                                    <option value="Manager" <?= $user['clearance'] === 'Manager' ? 'selected' : '' ?>>Manager</option>
+                                                    <option value="Admin" <?= $user['clearance'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
+                                                </select>
+                                            </div>
                                         </td>
                                         <td class="status <?= strtolower(trim($user['status'])) ?>">
                                             <?php
@@ -129,16 +131,20 @@ $clearance = $_SESSION["clearance"];
                                         </td>
                                         <td>
                                             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                                            <input type="password" name="password" placeholder="Password" readonly>
-                                            <button type="button" class="btn-secondary edit-btn">Edit</button>
-                                            <button type="submit" name="edit_user" class="btn-primary action-btn" style="display:none;">Save</button>
-                                            <?php if ($user['id'] != $_SESSION['id']): ?>
-                                                <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
-                                                <button type="submit" name="toggle_user" class="btn-warning action-btn" style="display:none;">
-                                                    <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
-                                                </button>
-                                                <button type="submit" name="delete_user" class="btn-danger action-btn" style="display:none;" onclick="return confirm('Delete this user?');">Delete</button>
-                                            <?php endif; ?>
+                                            <div class="INPUT-INLINE">
+                                                <div class="INPUT-GROUP-3">
+                                                    <input type="text" name="password" placeholder="Password" readonly>
+                                                </div>
+                                                <button type="button" class="btn-secondary edit-btn">Edit</button>
+                                                <button type="submit" name="edit_user" class="btn-primary action-btn" style="display:none;">Save</button>
+                                                <?php if ($user['id'] != $_SESSION['id']): ?>
+                                                    <input type="hidden" name="current_status" value="<?= $user['status'] ?>">
+                                                    <button type="submit" name="toggle_user" class="btn-warning action-btn" style="display:none;">
+                                                        <?= $user['status'] === 'Active' ? 'Disable' : 'Re-enable' ?>
+                                                    </button>
+                                                    <button type="submit" name="delete_user" class="btn-danger action-btn" style="display:none;" onclick="return confirm('Delete this user?');">Delete</button>
+                                                <?php endif; ?>
+                                            </div>
                                         </td>
                                     </tr>
                                 </form>

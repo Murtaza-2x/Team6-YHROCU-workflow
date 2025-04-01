@@ -18,6 +18,7 @@ $sql_project = "SELECT * FROM projects WHERE id = $id";
 $result_project = $conn->query($sql_project);
 if ($result_project && $result_project->num_rows > 0) {
     $row = $result_project->fetch_assoc();
+    $project_id  = $row["id"];
     $projectName = $row['project_name'];
     $description  = $row['description'] ?? '';
     $status       = $row['status'] ?? '';

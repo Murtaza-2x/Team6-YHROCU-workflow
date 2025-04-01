@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 VALUES ('$projectName', '$description', '$status', '$priority')";
         if ($conn->query($sql) === TRUE) {
             $project_id = $conn->insert_id;
-            header("Location: view-project-page.php?id=$project_id");
+            header("Location: view-project-page.php?clearance=" . urlencode($project_id) . urlencode($_SESSION['clearance']) . "&id=" . urlencode($project_id));
             exit;
         } else {
             $errorMsg = "Error: " . $sql . "<br>" . $conn->error;

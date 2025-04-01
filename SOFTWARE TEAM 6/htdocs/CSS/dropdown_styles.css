@@ -10,6 +10,16 @@
   .DROPDOWN-GROUP-2 {
     width:350px;
   }
+
+  .DROPDOWN-GROUP-3 {
+    text-align: left;
+    padding: 0rem;
+    padding-left: 0;
+    border: none;
+    opacity: 0.8;
+    font-size: 0.9rem;
+  }
+  
   
   .select2-container--default .select2-selection--multiple {
     position: relative;

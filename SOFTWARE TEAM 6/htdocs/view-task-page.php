@@ -34,6 +34,7 @@ $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     $row         = $result->fetch_assoc();
     $subject     = $row['subject'];
+    $taskId     = $row['id'];
     $projectName = $row['project_name'] ?? 'No Project Assigned';
     $status      = $row['status'];
     $priority    = $row['priority'];
@@ -50,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
     $sql_insert_comment = "INSERT INTO comments (task_id, user_id, comment) 
                            VALUES ($id, $user_id, '$comment')";
     if ($conn->query($sql_insert_comment) === TRUE) {
-        header("Location: view-task-page.php?id=$id");
+        header("Location: view-task-page.php?clearance=" . urlencode($project_id) . urlencode($_SESSION['clearance']) . "&id=" . urlencode($taskId));
         exit;
     } else {
         echo "Error adding comment: " . $conn->error;

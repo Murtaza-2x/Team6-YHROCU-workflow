@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 27, 2025 at 09:54 PM
+-- Generation Time: Mar 28, 2025 at 04:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,7 +56,12 @@ INSERT INTO `archive` (`archive_id`, `task_id`, `subject`, `project_id`, `status
 (10, 29, 'Yess', 2, 'Complete', 'Urgent', 'drgirshogserpoihgseg', '2025-03-27 20:32:43', '2025-03-27 20:33:13', 1),
 (11, 29, 'Yessssss', 2, 'Complete', 'Urgent', 'drgirshogserpoihgseg', '2025-03-27 20:32:43', '2025-03-27 20:33:50', 1),
 (12, 29, 'Yessssss', 2, 'Complete', 'Urgent', 'drgirshogserpoihgseg', '2025-03-27 20:32:43', '2025-03-27 20:33:53', 1),
-(13, 29, 'Yessssss', 2, 'Complete', 'Urgent', 'drgirshogserpoihgseg', '2025-03-27 20:32:43', '2025-03-27 20:34:00', 1);
+(13, 29, 'Yessssss', 2, 'Complete', 'Urgent', 'drgirshogserpoihgseg', '2025-03-27 20:32:43', '2025-03-27 20:34:00', 1),
+(14, 1, 'First', 1, 'In Progress', 'Urgent', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Yeaesfsdfyhfrhdrfhdefesf', '2025-03-26 14:10:17', '2025-03-28 13:37:50', 1),
+(15, 25, 'Third', 3, 'New', 'Moderate', 'Aquamarine Dive into Me', '2025-03-26 14:10:17', '2025-03-28 13:46:22', 1),
+(16, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'Crazy Gloss style', '2025-03-28 12:53:59', '2025-03-28 13:57:11', 1),
+(17, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'LISTEN TO ARCA ON SPOTIFY', '2025-03-28 12:53:59', '2025-03-28 14:26:42', 1),
+(18, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'LISTEN TO ARCA ON SPOTIFY T', '2025-03-28 12:53:59', '2025-03-28 14:30:31', 1);
 
 -- --------------------------------------------------------
 
@@ -82,7 +87,9 @@ INSERT INTO `comments` (`comment_id`, `task_id`, `user_id`, `comment`, `created_
 (3, 1, 1, 'yass', '2025-03-26 12:16:07'),
 (4, 1, 1, 'Heyy :) ', '2025-03-26 21:12:15'),
 (5, 1, 3, 'Yooo :D', '2025-03-26 23:05:59'),
-(6, 1, 1, 'tfygfhjgghgihu', '2025-03-27 19:35:18');
+(6, 1, 1, 'tfygfhjgghgihu', '2025-03-27 19:35:18'),
+(7, 1, 1, 'yes', '2025-03-28 13:32:06'),
+(8, 1, 1, 't', '2025-03-28 13:47:16');
 
 -- --------------------------------------------------------
 
@@ -104,9 +111,11 @@ CREATE TABLE `projects` (
 
 INSERT INTO `projects` (`id`, `project_name`, `description`, `status`, `priority`) VALUES
 (1, 'Project One', 'Test123', 'New', 'Low'),
-(2, 'Project Two', 'I DONT NEED YOUR DRUGS, I\'D RATHER GET, RATHER GET...HIGH FASHION', 'In Progress', 'Moderate'),
+(2, 'Project Two', 'I DONT NEED YOUR DRUGS, I\'D RATHER GET, RATHER GET...HIGH FASHION\r\n\r\nI DON\'T NEED YOU', 'In Progress', 'Moderate'),
 (3, 'Project Three', 'I\'VE GOT NOTHING ON BUT THE RADIO', 'New', 'Moderate'),
-(4, 'Project Four', 'listen to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify', 'New', 'Low');
+(4, 'Project Four', 'listen to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify', 'New', 'Low'),
+(5, 'Project Five', 'its Charli baby', 'New', 'Moderate'),
+(6, 'Project Six', 'AR1', 'New', 'Moderate');
 
 -- --------------------------------------------------------
 
@@ -131,11 +140,13 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `subject`, `status`, `priority`, `created_by`, `description`, `project_id`, `created_at`, `updated_at`) VALUES
-(1, 'First', 'In Progress', 'Urgent', 1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Yeaesfsdfyhfrhdrfhdefesf', 1, '2025-03-26 14:10:17', '2025-03-27 19:35:31'),
+(1, 'First', 'In Progress', 'Urgent', 1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Yeaesfsdfyhfrhdrfhdefesf sefsrgsrgh', 1, '2025-03-26 14:10:17', '2025-03-28 13:37:50'),
 (24, 'Second', 'New', 'Moderate', 1, 'Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan Threat racing corps japan ', 2, '2025-03-26 14:10:17', '2025-03-26 14:10:17'),
-(25, 'Third', 'New', 'Moderate', 1, 'Aquamarine Dive into Me', 3, '2025-03-26 14:10:17', '2025-03-26 14:10:17'),
+(25, 'Third', 'New', 'Moderate', 1, 'Aquamarine Dive into Me IM A RAY OF LIGHT', 3, '2025-03-26 14:10:17', '2025-03-28 13:46:22'),
 (28, 'The boy is mine', 'New', 'Low', 1, 'rgrsgsegsegf', 1, '2025-03-27 20:31:45', '2025-03-27 20:31:45'),
-(29, 'Yessssss', 'Complete', 'Urgent', 1, 'drgirshogserpoihgseg', 2, '2025-03-27 20:32:43', '2025-03-27 20:33:13');
+(29, 'Yessssss', 'Complete', 'Urgent', 1, 'drgirshogserpoihgseg', 2, '2025-03-27 20:32:43', '2025-03-27 20:33:13'),
+(30, 'ORIGIN PLAT LINE 02', 'In Progress', 'Urgent', 1, 'LISTEN TO ARCA ON SPOTIFY TT', 4, '2025-03-28 12:53:59', '2025-03-28 14:30:31'),
+(31, 'A & W', 'In Progress', 'Moderate', 1, 'XCX WORLD', 2, '2025-03-28 13:34:57', '2025-03-28 13:34:57');
 
 -- --------------------------------------------------------
 
@@ -159,7 +170,9 @@ INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
 (25, 3),
 (28, 2),
 (29, 2),
-(29, 3);
+(29, 3),
+(30, 3),
+(31, 2);
 
 -- --------------------------------------------------------
 
@@ -181,7 +194,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `clearance`, `status`) VALUES
-(1, 'johnAdmin', 'johnAdmin@gmail.com', '$2y$10$KQmD34SaCfljg4I2tMo.F.lp8R4zygDaAHKiWsnALQyYq0LXop86S', 'Admin', 'Active'),
+(1, 'johnAdmin', 'johnAdmin@gmail.com', '$2y$10$QqXm9FwYOaMMo.WFjanCwOUmwvwqhzDCSZ1BJC9TRX2eJ6wLzGL6.', 'Admin', 'Active'),
 (2, 'joeManager', 'joeManager@gmail.com', '$2y$10$SVr/8MjS73HhyzoNKSImWeVofySdGwxBK4P10Skk3ATMqELaPqo5e', 'Manager', 'Active'),
 (3, 'jimUser', 'jimUser@gmail.com', '$2y$10$e.7FdoNpAgrytnLq2kduwOdlXx8RmcqldFa6HZXjH9/k7GhSVfe26', 'User', 'Active');
 
@@ -240,25 +253,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `archive`
 --
 ALTER TABLE `archive`
-  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `users`
