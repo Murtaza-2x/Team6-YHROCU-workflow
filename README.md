@@ -2,12 +2,13 @@
 
 A simple PHP web application that allows admins to create and manage tasks and projects, with user assignment using Auth0 for authentication and user management.
 
+   **For now for demonstration purposes ALL Configuration is done. You do not need to do anything with 0Auth**
+
 ## Table of Contents
 
 - [Overview](#overview)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Project Structure](#project-structure)
 - [Configuration](#configuration)
 - [Usage](#usage)
 
@@ -63,31 +64,6 @@ This application enables users (admin or normal roles) to:
   Configure your Apache/nginx document root to point to the project folder (or a public subdirectory if you have one).
 
   Ensure any .htaccess or rewrite rules (if needed) are properly
-
-**Project Structure**
-
-  A simplified overview of the relevant files/folders:
-
-your-project/
-├── INCLUDES/
-│   ├── env_loader.php
-│   ├── role_helper.php
-│   ├── inc_connect.php
-│   ├── inc_disconnect.php
-│   ├── inc_header.php
-│   ├── inc_footer.php
-│   ├── inc_dashboard.php
-│   ├── inc_taskcreate.php
-│   └── Auth0UserFetcher.php
-├── create-task-page.php
-├── list-task-page.php
-├── view-task-page.php
-├── create-project-page.php
-├── view-project-page.php
-├── index.php
-├── .gitignore
-├── composer.json
-└── README.md
 
 **Configuration**
 

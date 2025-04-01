@@ -83,6 +83,11 @@
                 <button class="UPDATE-BUTTON" onclick="window.location.href='edit-task-page.php?id=<?php echo urlencode($taskId); ?>'">Update Task</button>
             <?php endif; ?>
             <button class="CANCEL-BUTTON" onclick="window.location.href='list-task-page.php'">Cancel</button>
+            <?php if (is_admin()): ?>
+                <button class="LOGS-BUTTON" onclick="window.location.href='task-logs.php?id=<?php echo urlencode($taskId); ?>'">
+                    View Task Logs
+                </button>
+            <?php endif; ?>
         </div>
 
         <!-- COMMENTS -->
@@ -111,7 +116,7 @@
 
             <div class="ADD-COMMENT">
                 <div id="comment-form">
-                <form action="view-task-page.php?id=<?php echo urlencode($taskId); ?>" method="post">
+                    <form action="view-task-page.php?id=<?php echo urlencode($taskId); ?>" method="post">
                         <textarea name="comment" placeholder="Enter your comment here" required></textarea>
                         <button type="submit" name="submit_comment">Submit Comment</button>
                     </form>

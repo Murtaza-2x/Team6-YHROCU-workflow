@@ -89,6 +89,11 @@
                 <button class="UPDATE-BUTTON" onclick="window.location.href='edit-project-page.php?id=<?php echo urlencode($projectId); ?>'">Update Project</button>
             <?php endif; ?>
             <button class="CANCEL-BUTTON" onclick="window.location.href='list-task-page.php'">Cancel</button>
+            <?php if (is_admin()): ?>
+                <button class="LOGS-BUTTON" onclick="window.location.href='project-logs.php?id=<?php echo urlencode($projectId); ?>'">
+                    View Project Logs
+                </button>
+            <?php endif; ?>
         </div>
     </div>
 </div>
