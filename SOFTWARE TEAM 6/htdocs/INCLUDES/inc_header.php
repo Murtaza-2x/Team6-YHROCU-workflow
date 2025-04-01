@@ -2,6 +2,9 @@
 
 <?php
 session_start();
+
+$id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+$clearance = isset($_SESSION['clearance']) ? $_SESSION['clearance'] : null;
 ?>
 
 <!DOCTYPE html>

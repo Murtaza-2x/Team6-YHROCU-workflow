@@ -153,7 +153,7 @@
             </div>
             <div class="ADD-COMMENT">
                 <div id="comment-form">
-                    <form action='view-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($_SESSION['id']); ?>' method="post">
+                    <form action='view-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($id); ?>' method="post">
                         <textarea
                             name="comment"
                             placeholder="Enter your comment here"
