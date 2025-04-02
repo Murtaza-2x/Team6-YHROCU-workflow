@@ -44,7 +44,7 @@ This application enables users (admin or normal roles) to:
 
 2. **Set up your database**:
 
-   Create a new MySQL database (e.g., rocu_tasks).
+   Create a new MySQL database (e.g., rocu).
 
    Run any provided SQL migrations or create tables manually. Tables typically include:
     - tasks
