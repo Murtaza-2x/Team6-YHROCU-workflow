@@ -14,7 +14,7 @@ $title = 'ROCU: Create Task';
 
 include 'INCLUDES/inc_connect.php';
 include 'INCLUDES/inc_header.php';
-include 'INCLUDES/inc_basicemail.php';
+include 'INCLUDES/inc_email-task-create.php';
 
 $clearance = $_SESSION['clearance'] ?? '';
 if ($clearance === 'User') {
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $userResult = $conn->query($userQuery);
                     if ($userResult && $userResult->num_rows > 0) {
                         $userRow = $userResult->fetch_assoc();
-                        sendTaskEmail($userRow['email']);
+                        sendTaskCreateEmail($userRow['email']);
                     }
                 }
             }
