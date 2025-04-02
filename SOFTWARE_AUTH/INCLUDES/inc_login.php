@@ -39,7 +39,7 @@
       <!-- PASSWORD INPUT END -->
 
       <!-- PASSWORD RESET LINK -->
-      <a href="auth0_reset.php" class="RESET-LINK">Forgot Password?</a>
+      <a class="RESET-LINK">Forgot Password?</a>
       <a class="RESET-LINK-2">(contact admin for reset)</a>
       <!-- PASSWORD RESET LINK END -->
 

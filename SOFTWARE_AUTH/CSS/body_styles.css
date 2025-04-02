@@ -16,3 +16,13 @@ body.dark-mode {
     --off-white: var(--off-white-dark);
     --light-grey: var(--light-grey-dark);
 }
+
+/* For Dark Mode - Apply invert to images */
+body.dark-mode img:not(.no-invert) {
+    filter: invert(1);
+}
+
+/* For Light Mode - No invert */
+body.light-mode img:not(.no-invert) {
+    filter: none;
+}

@@ -31,10 +31,10 @@ $role = $user['role'] ?? null;
     <script src="JS/TOGGLE-THEME.js"></script>
 </head>
 
-<body class="light-mode">
+<body>
     <!-- TOP SECTION -->
     <div class="TOP-SECTION">
-        <img src="IMAGES/ROCU.png" class="TOP-HERO-IMAGE" alt="ROCU Logo">
+        <img src="IMAGES/ROCU.png" class="TOP-HERO-IMAGE no-invert">
     </div>
     <!-- TOP SECTION END -->
 
