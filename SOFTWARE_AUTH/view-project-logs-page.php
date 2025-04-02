@@ -79,11 +79,13 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
 
     // Project Logs Section
     fputcsv($out, ["--- Project Logs ---"]);
-    fputcsv($out, ["Edited By", "Archived At", "Created At", "Project Name", "Status", "Priority", "Due Date", "Description"]);
+    fputcsv($out, ["Edited By", "Created By", "Archived At", "Created At", "Project Name", "Status", "Priority", "Due Date", "Description"]);
     foreach ($projectLogs as $log) {
-        $editor = $user_map[$log['edited_by']] ?? $log['edited_by'];
+        $editor  = $user_map[$log['edited_by']] ?? $log['edited_by'];
+        $creator = $user_map[$log['created_by']] ?? $log['created_by'];
         fputcsv($out, [
             $editor,
+            $creator,
             $log['archived_at'],
             $log['created_at'],
             $log['project_name'],
@@ -93,6 +95,7 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
             $log['description']
         ]);
     }
+    
 
     // Empty row between
     fputcsv($out, []);

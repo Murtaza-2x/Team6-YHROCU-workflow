@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $priority     = trim($_POST['priority'] ?? '');
     $description  = trim($_POST['description'] ?? '');
     $due_date     = trim($_POST['due_date'] ?? '');
+    $created_by   = $_SESSION['user']['user_id'] ?? '';
 
     if (empty($project_name) || empty($status) || empty($priority) || empty($description) || empty($due_date)) {
         $errorMsg = "All fields are required.";
     } else {
-        $stmt = $conn->prepare("INSERT INTO projects (project_name, status, priority, due_date, description) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $project_name, $status, $priority, $due_date, $description);
-
+        $stmt = $conn->prepare("INSERT INTO projects (project_name, status, priority, description, due_date, created_by) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $project_name, $status, $priority, $description, $due_date, $created_by);
         if ($stmt->execute()) {
             $newProjectId = $stmt->insert_id;
             echo "<p class='SUCCESS-MESSAGE'>Project created successfully. Redirecting...</p>";

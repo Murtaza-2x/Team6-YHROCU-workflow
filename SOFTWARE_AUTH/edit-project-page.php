@@ -59,9 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
         echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
     } else {
         // Archive previous
-        $stmtArchive = $conn->prepare("INSERT INTO project_archive (project_id, created_at, project_name, status, priority, due_date, description, edited_by)
-        SELECT id, created_at, project_name, status, priority, due_date, description, ? 
-        FROM projects 
+        $stmtArchive = $conn->prepare("INSERT INTO project_archive (project_id, created_at, project_name, status, priority, due_date, description, edited_by, created_by)
+        SELECT id, created_at, project_name, status, priority, due_date, description, ?, created_by
+        FROM projects
         WHERE id = ?");
         $stmtArchive->bind_param("si", $editor, $projectId);
         $stmtArchive->execute();
