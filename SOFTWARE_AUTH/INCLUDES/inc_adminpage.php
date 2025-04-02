@@ -11,11 +11,10 @@
 
 <p class="MIDDLE-HERO-IMAGE"></p>
 
-<!-- ADMIN PANEL SECTION -->
-<div class='ADMIN-CONTAINER'>
-    <div class='ADMIN-BOX'>
+<div class="ADMIN-CONTAINER">
+    <div class="ADMIN-BOX">
         <!-- ADMIN HEADER -->
-        <div class='ADMIN-HEAD'>
+        <div class="ADMIN-HEAD">
             <h1>User Management</h1>
             <p>Manage Users below</p>
         </div>
@@ -82,6 +81,7 @@
                                 <th>User ID</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -89,6 +89,7 @@
                             <?php foreach ($auth0_users as $user):
                                 $metadata = $user['app_metadata'] ?? [];
                                 $role = $metadata['role'] ?? 'User';
+                                $status = $metadata['status'] ?? 'active';
                                 $uid = $user['user_id'] ?? $user['sub'] ?? 'unknown';
                                 $email = $user['email'] ?? 'unknown';
                                 $currentAdminId = $_SESSION['user']['user_id'] ?? null;
@@ -97,7 +98,7 @@
                             ?>
                                 <?php if (!$isSelf): ?>
                                     <form method="post">
-                                        <tr>
+                                        <tr class="<?= $status === 'inactive' ? 'disabled-row' : '' ?>">
                                             <td>
                                                 <div class="INPUT-GROUP-2"><input type="text" value="<?php echo htmlspecialchars($userId); ?>" readonly></div>
                                             </td>
@@ -116,14 +117,23 @@
                                                 </div>
                                             </td>
                                             <td>
+                                                <?php echo ucfirst($status); ?>
+                                            </td>
+                                            <td>
                                                 <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($userId); ?>">
                                                 <div class="INPUT-INLINE">
                                                     <div class="ACTION-DROPDOWN">
                                                         <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
                                                         <div class="ACTION-DROPDOWN-MENU">
                                                             <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
-                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="change_role" value="<?php echo htmlspecialchars($userId); ?>">Update</button>
+                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="change_role" value="<?php echo htmlspecialchars($userId); ?>">Update Role</button>
                                                             <button class="ACTION-DROPDOWN-ITEM" type="submit" name="reset_password" value="<?php echo htmlspecialchars($userId); ?>">Reset Password</button>
+                                                            <?php if ($status === 'inactive'): ?>
+                                                                <button class="ACTION-DROPDOWN-ITEM" type="submit" name="reenable_user" value="<?php echo htmlspecialchars($userId); ?>">Enable</button>
+                                                            <?php else: ?>
+                                                                <button class="ACTION-DROPDOWN-ITEM" type="submit" name="disable_user" value="<?php echo htmlspecialchars($userId); ?>">Disable</button>
+                                                            <?php endif; ?>
+                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="delete_user" value="<?php echo htmlspecialchars($userId); ?>">Delete</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -132,7 +142,7 @@
                                     </form>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="4" style="opacity:0.3;">[<?php echo htmlspecialchars($email); ?>] - You cannot edit yourself</td>
+                                        <td colspan="5" style="opacity:0.3;">[<?php echo htmlspecialchars($email); ?>] - You cannot edit yourself</td>
                                     </tr>
                                 <?php endif; ?>
                             <?php endforeach; ?>

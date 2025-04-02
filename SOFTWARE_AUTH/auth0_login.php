@@ -8,18 +8,44 @@ Description:
 -------------------------------------------------------------
 */
 
-require_once __DIR__ . '/INCLUDES/env_loader.php';
-require_once __DIR__ . '/INCLUDES/Auth0Factory.php';
+use Auth0\SDK\API\Management;
+use Auth0\SDK\Configuration\SdkConfiguration;
 
-session_start(); // Start the session to access login email
+function getAuth0User($userId) {
+    $token = Auth0TokenManager::getToken();
+    $config = new SdkConfiguration([
+        'domain'          => $_ENV['AUTH0_DOMAIN'],
+        'clientId'        => $_ENV['AUTH0_MGMT_CLIENT_ID'],
+        'clientSecret'    => $_ENV['AUTH0_MGMT_CLIENT_SECRET'],
+        'managementToken' => $token,
+    ]);
+    $mgmt = new Management($config);
+    $user = $mgmt->users()->get($userId);
+    return json_decode($user->getBody(), true);
+}
 
-// Create Auth0 object and generate login URL
-$auth0 = Auth0Factory::create();
-$authorizeUrl = $auth0->login();
+function checkUserStatus($userId) {
+    $user = getAuth0User($userId);
 
-// Append login hint if email exists in session
-$authorizeUrl .= '&login_hint=' . urlencode($_SESSION['login_email'] ?? '');
+    // Check if the user's status is "active"
+    if (isset($user['app_metadata']['status']) && $user['app_metadata']['status'] !== 'active') {
+        return false;  // User is inactive
+    }
+    return true;  // User is active
+}
 
-// Redirect to Auth0 for authentication
-header('Location: ' . $authorizeUrl);
-exit;
+// After getting the user authentication
+if (!is_logged_in()) {
+    header("Location: index.php?error=login_required");
+    exit;
+}
+
+$userId = $_SESSION['user']['user_id']; // Assuming user_id is stored in session
+
+if (!checkUserStatus($userId)) {
+    // If the user is inactive, prevent login and show an error message
+    echo "<p class='ERROR-MESSAGE'>Your account is inactive. Please contact an administrator.</p>";
+    exit;  // Terminate the script to prevent login
+}
+
+// Proceed with the login process if the user is active

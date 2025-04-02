@@ -9,7 +9,9 @@ Description:
     > Role updates
     > Password reset link generation
     > Shows all Auth0 users
+    > Disable and Delete users
 -------------------------------------------------------------
+
 */
 
 $title = "ROCU: Admin Panel";
@@ -78,9 +80,34 @@ if (isset($_POST['reset_password'])) {
     }
 }
 
+// Disable User functionality
+if (isset($_GET['disable_user'])) {
+    $userId = $_GET['disable_user'];
+    try {
+        Auth0UserManager::updateUserRole($userId, 'Inactive'); // Assuming 'Inactive' is the status for disabled users
+        $successMsg = "User disabled successfully.";
+    } catch (Exception $e) {
+        $errorMsg = "Error disabling user: " . htmlspecialchars($e->getMessage());
+    }
+}
+
+// Delete User functionality
+if (isset($_GET['delete_user'])) {
+    $userId = $_GET['delete_user'];
+    try {
+        // Assuming Auth0UserManager has a method to delete users
+        Auth0UserManager::deleteUser($userId);
+        $successMsg = "User deleted successfully.";
+    } catch (Exception $e) {
+        $errorMsg = "Error deleting user: " . htmlspecialchars($e->getMessage());
+    }
+}
+
 // Get Users functionality
 $auth0_users = Auth0UserManager::getUsers();
 
 include 'INCLUDES/inc_adminpage.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
+
+?>

@@ -75,8 +75,9 @@ class Auth0UserManager
                 'password'       => $password,
                 'email_verified' => true,
                 'app_metadata'   => [
-                    'role' => $role,
+                    'role'     => $role,
                     'approved' => true,
+                    'status'   => 'active',
                 ],
             ],
             null
@@ -173,6 +174,68 @@ class Auth0UserManager
             return $body['ticket'];
         } else {
             throw new Exception('Failed to create reset link: ' . (string)$resTicket->getBody());
+        }
+    }
+
+    /*
+    -------------------------------------------------------------
+    Method: disableUser
+    Description:
+    - Disables a user by updating their app_metadata (or status) to 'inactive'.
+    -------------------------------------------------------------
+    */
+    public static function disableUser(string $userId): void
+    {
+        $mgmt = self::management();
+        $resp = $mgmt->users()->update($userId, [
+            'app_metadata' => ['status' => 'inactive']
+        ]);
+    
+        if ($resp->getStatusCode() !== 200) {
+            throw new \Exception('Failed to disable user: ' . (string)$resp->getBody());
+        }
+    }
+
+    /*
+    -------------------------------------------------------------
+    Method: reenableUser
+    Description:
+    - Re-enables a user by updating their app_metadata (or status) to 'inactive'.
+    -------------------------------------------------------------
+    */
+
+    public static function reenableUser(string $userId): void
+    {
+        $mgmt = self::management();
+        $resp = $mgmt->users()->update($userId, [
+            'app_metadata' => ['status' => 'active']
+        ]);
+
+        if ($resp->getStatusCode() !== 200) {
+            throw new \Exception('Failed to re-enable user: ' . (string)$resp->getBody());
+        }
+    }
+
+
+
+    /*
+    -------------------------------------------------------------
+    Method: deleteUser
+    Description:
+    - Deletes a user from Auth0.
+    -------------------------------------------------------------
+    */
+    public static function deleteUser(string $userId)
+    {
+        $mgmt = self::management();
+        try {
+            $resp = $mgmt->users()->delete($userId);
+
+            if ($resp->getStatusCode() !== 204) {
+                throw new \Exception('Failed to delete user: ' . (string)$resp->getBody());
+            }
+        } catch (Exception $e) {
+            throw new \Exception('Error deleting user: ' . $e->getMessage());
         }
     }
 }

@@ -304,4 +304,17 @@ body.dark-mode {
   transform: translateX(0.4rem);
 }
 
+.DISABLED-ROW {
+  background-color: var(--white);
+  color: var(--light-grey);
+}
+
+.DISABLED-ROW td {
+  cursor: not-allowed;
+}
+
+.DISABLED-ROW .DROPDOWN-TOGGLE {
+  cursor: not-allowed;
+}
+
 /* ADMIN BOX END */
