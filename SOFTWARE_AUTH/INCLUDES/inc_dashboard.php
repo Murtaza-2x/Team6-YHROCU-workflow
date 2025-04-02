@@ -62,10 +62,9 @@ Dashboard page shown after login. Displays different content based on the user's
       $stmt->execute();
       $result = $stmt->get_result();
       while ($row = $result->fetch_assoc()) {
-          $userPriorityBreakdown[] = $row;
+        $userPriorityBreakdown[] = $row;
       }
-  }
-   elseif (has_role('Manager') || has_role('Admin')) {
+    } elseif (has_role('Manager') || has_role('Admin')) {
       // Bar chart data for project status
       $sql = "SELECT status, COUNT(*) AS total FROM projects WHERE 1";
       if ($filterPriority !== 'All') {
@@ -177,19 +176,19 @@ Dashboard page shown after login. Displays different content based on the user's
                       <?php foreach ($activeTaskStatusBreakdown as $statusRow): ?>
                         <!-- Dynamically setting the class based on status -->
                         <button class="PILL 
-                      <?php
-                        switch ($statusRow['status']) {
-                          case 'New':
-                            echo 'PILL-NEW';
-                            break;
-                          case 'In Progress':
-                            echo 'PILL-IN-PROGRESS';
-                            break;
-                          case 'Completed':
-                            echo 'PILL-COMPLETE';
-                            break;
-                        } ?> 
-                      <?php echo $statusRow['status'] == 'New' ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">
+                          <?php
+                          switch ($statusRow['status']) {
+                            case 'New':
+                              echo 'PILL-NEW';
+                              break;
+                            case 'In Progress':
+                              echo 'PILL-IN-PROGRESS';
+                              break;
+                            case 'Completed':
+                              echo 'PILL-COMPLETE';
+                              break;
+                          }
+                          ?>">
                           <strong><?php echo $statusRow['status']; ?>:</strong> <?php echo $statusRow['total']; ?>
                         </button>
                       <?php endforeach; ?>
