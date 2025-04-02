@@ -1,59 +1,208 @@
-/* DASH SECTION */
+
 .DASH-CONTENT {
   width: 100%;
-  height: 700px;
-}
-
-.DASH-AREA {
-  height: 100%;
+  padding-bottom: 60px;
   background-color: var(--light-grey);
-  padding: 16px;
-  padding-left: 0%;
-  padding-right: 0%;
 }
 
 .DASH-HEADER {
-  height: 40px;
+  height: 50px;
   display: flex;
+  align-items: center;
   background-color: white;
   border-bottom: 1px solid var(--off-white);
-  padding-top: 2px;
-  padding-left: 15px;
-  padding-bottom: 0px;
+  padding: 0 20px;
 }
 
 .DASH-HEADER-1 {
   font-family: "Helvetica Neue Medium";
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--black);
 }
 
 .DASH-HEADER-2 {
   font-family: "Helvetica Neue Light";
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--dark-grey);
-  padding-left: 7px;
-  opacity: 0.6;
+  padding-left: 10px;
+  opacity: 0.7;
+}
+
+.DASH-AREA {
+  padding: 30px;
+  background-color: var(--light-grey);
 }
 
 .DASH-SECTION-CONTAINER {
-  display: flex;
-  padding: 20px;
-  gap: 20px;
-}
-
-.DASH-SECTION-1 {
-  padding: 10px;
   background-color: white;
-  border: none;
-  border-radius: 1vw;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
-.DASH-SECTION-1 {
+.MANAGER-CHART-WRAPPER {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
   width: 100%;
-  height: 500px;
+  margin-bottom: 30px;
 }
 
-/* DASH SECTION END */
-/* MIDDLE SECTION END */
+.CHARTS-ROW {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 30px;
+  width: 100%;
+}
+
+.DASH-CHART-BOX {
+  flex: 1 1 45%;
+  min-width: 300px;
+  height: 400px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.DASH-MIDDLE-CHART-BOX {
+  flex: 0 1 20%;
+  min-width: 200px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.TASK-STATUS-LIST {
+  width: 100%;
+  line-height: 4;
+}
+
+.TASK-STATUS-LIST h3 {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  color: var(--black);
+  text-align: center;
+}
+
+.TASK-STATUS-LIST ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.TASK-STATUS-LIST li {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.DASH-PIE-CHART-BOX {
+  flex: 1 1 35%;
+  min-width: 250px;
+  height: 400px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.USER-CHART-BOX {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 400px;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
+
+.USER-CHART-BOX canvas {
+  width: 100%;
+  max-width: 400px;
+  height: 400px;
+  box-sizing: border-box;
+}
+
+.MANAGER-FILTER-FORM {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.MANAGER-FILTER-FORM select,
+.MANAGER-FILTER-FORM input[type="date"] {
+  color: var(--black);
+  padding: 8px;
+  margin-right: 5px;
+  border-radius: 5px;
+  border: var(--dark-grey);
+  outline: none;
+  background-color: var(--light-grey);
+}
+
+.MANAGER-FILTER-FORM button {
+  padding: 6px 12px;
+  border: none;
+  background-color: var(--blue);
+  color: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.MANAGER-FILTER-FORM button:hover {
+  background-color: var(--dark-grey);
+}
+
+@media (max-width: 900px) {
+  .CHARTS-ROW {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .DASH-CHART-BOX,
+  .DASH-MIDDLE-CHART-BOX,
+  .DASH-PIE-CHART-BOX {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .USER-CHART-BOX {
+    justify-content: center;
+    padding-left: 0;
+  }
+
+  .USER-CHART-BOX canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .MANAGER-CHART-WRAPPER {
+    margin-bottom: 40px;
+  }
+
+  .TASK-STATUS-LIST {
+    text-align: center;
+  }
+}
