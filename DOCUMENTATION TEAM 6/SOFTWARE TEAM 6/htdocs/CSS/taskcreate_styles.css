@@ -1,0 +1,138 @@
+/* MIDDLE SECTION */
+.MIDDLE-SECTION {
+  justify-content: center;
+}
+
+.MIDDLE-HERO-IMAGE {
+  position: fixed;
+  background-image: url(../IMAGES/BG.jpg);
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: brightness(50%);
+}
+
+/* CREATE TASK BOX */
+.CREATE-TASK-CONTAINER {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.CREATE-TASK-BOX {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 500px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.CREATE-TASK-BOX h1 {
+  margin: 0;
+  font-size: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--dark-grey);
+}
+
+.CREATE-TASK-BOX p {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+  color: var(--dark-grey);
+  opacity: 0.8;
+}
+
+.INPUT-GROUP {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--off-white);
+  border-radius: 10px;
+}
+
+.INPUT-GROUP input {
+  text-align: left;
+  width: 100%;
+  font-size: 1rem;
+  border: none;
+  opacity: 0.2;
+  outline: none;
+}
+
+.INPUT-GROUP:hover {
+  opacity: 1;
+}
+
+.INPUT-GROUP:hover {
+  opacity: 1;
+}
+
+.DESC-GROUP {
+  width: 100%;
+}
+
+.DESCRIPTION-LABEL {
+  display: block;
+  justify-content: center;
+  margin-bottom: 0.6rem;
+  color: var(--dark-grey);
+  font-size: 1.2rem;
+  border: none;
+  opacity: 0.3;
+  outline: none;
+}
+
+.TASK-TEXT-AREA {
+  width: calc(100% - 40px);
+  font-size: 14px;
+  border: 1px solid var(--light-grey);
+  border-radius: 25px;
+  padding: 20px;
+  color: var(--dark-grey);
+  background-color: white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.TASK-BUTTONS {
+  display: block;
+}
+
+.TASK-BUTTONS button {
+  color: white;
+  padding: 0.6rem 1rem;
+  margin: 0.3rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 40%;
+}
+
+.TASK-BUTTONS button:hover {
+  background: var(--dark-grey);
+}
+
+.CREATE-BUTTON {
+  background-color: var(--blue);
+}
+
+.CANCEL-BUTTON {
+  background-color: var(--light-grey);
+}
+
+/* CREATE TASK BOX END */
+
+.ERROR-MESSAGE {
+  background-color: var(--dark-grey);
+  color: white;
+  padding: 5px;
+  padding-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+/* MIDDLE SECTION END */
