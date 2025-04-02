@@ -23,7 +23,6 @@ This application enables users (admin or normal roles) to:
 - Assign users from Auth0 to specific tasks.
 - View project details and tasks.
 - Track status and priority (e.g., New, In Progress, Complete, Urgent, etc.).
-- Store and display the creator’s Auth0 user info (`created_by`).
 
 ---
 
@@ -55,7 +54,7 @@ This application enables users (admin or normal roles) to:
 
 3. **Configure environment variables**:
 
-   Copy .env.example to .env (if provided) or create a new .env file.
+   Use .env if provided or create a new .env file.
 
    Add your database credentials, Auth0 credentials, and any other sensitive info.
 
@@ -63,7 +62,9 @@ This application enables users (admin or normal roles) to:
 
   Configure your Apache/nginx document root to point to the project folder (or a public subdirectory if you have one).
 
-  Ensure any .htaccess or rewrite rules (if needed) are properly
+  Ensure any .htaccess or rewrite rules (if needed) are properly.
+
+  If using XAMPP run Apache & MySQL.
 
 **Configuration**
 
