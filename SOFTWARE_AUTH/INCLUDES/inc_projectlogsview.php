@@ -17,7 +17,7 @@
         <div class="LOG-LIST">
 
             <!-- PROJECT LOGS -->
-            <h2 class="LOG-SECTION-TITLE">Project Logs</h2>
+            <h2 class="VIEW-HEAD">Project Logs</h2>
             <?php if (count($projectLogs) > 0): ?>
                 <table class="LOG-TABLE">
                     <thead>

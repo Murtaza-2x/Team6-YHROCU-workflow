@@ -16,7 +16,7 @@
 .TASK-HEADER {
   height: 40px;
   display: flex;
-  background-color: white;
+  background-color: var(--white);
   border-bottom: 1px solid var(--off-white);
   padding-top: 2px;
   padding-left: 15px;
@@ -45,13 +45,13 @@
 }
 
 .TASK-FILTER input {
-  color: white;
+  color: var(--white);
   padding: 8px;
   margin-right: 5px;
   border-radius: 5px;
   border: white;
   outline: none;
-  background-color: var(--dark-grey);
+  background-color: #222222;
 }
 
 .TASK-FILTER button {
@@ -74,7 +74,7 @@
 .TASK-LIST table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
+  background-color: var(--white);
   text-align: center;
 }
 
@@ -89,6 +89,7 @@
   width:10px;
   height:10px;
   opacity: 0.5;
+  filter: invert(1);
 }
 
 .TASK-LIST a {

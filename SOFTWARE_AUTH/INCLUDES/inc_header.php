@@ -15,22 +15,37 @@ $role = $user['role'] ?? null;
 <html>
 
 <head>
+    <title><?php echo htmlspecialchars($title); ?></title>
+
     <link rel="shortcut icon" type="image/png" href="IMAGES/ROCU_FAVICON.png">
+
     <link href="CSS/default_styles.css" rel="stylesheet">
     <link href="CSS/root_colors.css" rel="stylesheet">
     <link href="CSS/pill_styles.css" rel="stylesheet">
+    <link href="CSS/body_styles.css" rel="stylesheet">
     <link href="CSS/dropdown_styles.css" rel="stylesheet">
     <link href="CSS/error_styles.css" rel="stylesheet">
+    <link href="CSS/switch_styles.css" rel="stylesheet">
     <link href="CSS/header_footer_styles.css" rel="stylesheet">
-    <title><?php echo htmlspecialchars($title); ?></title>
+
+    <script src="JS/TOGGLE-THEME.js"></script>
 </head>
 
-<body>
+<body class="light-mode">
     <!-- TOP SECTION -->
     <div class="TOP-SECTION">
         <img src="IMAGES/ROCU.png" class="TOP-HERO-IMAGE" alt="ROCU Logo">
     </div>
     <!-- TOP SECTION END -->
+
+    <div class="BUTTON-CONTAINER">
+        <div class="THEME-SWITCH-CONTAINER">
+            <label class="THEME-SWITCH">
+                <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" />
+                <span class="SLIDER"></span>
+            </label>
+        </div>
+    </div>
 
     <?php if ($user): ?>
         <!-- BUTTONS SECTION -->

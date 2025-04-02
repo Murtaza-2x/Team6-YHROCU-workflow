@@ -11,7 +11,7 @@
 
 .MIDDLE-SECTION {
   position: absolute;
-  background-color: white;
+  background-color: var(--white);
   z-index: 1;
 }
 
@@ -33,7 +33,7 @@
 }
 
 .LOGIN-BOX {
-  background: #fff;
+  background: var(--white);
   border-radius: 20px;
   padding: 2rem;
   width: 350px;
@@ -64,12 +64,14 @@
 }
 
 .INPUT-GROUP input {
+  color: var(--black);
+  background-color: transparent;
   text-align: left;
   width: 95%;
   margin-left: 1.5rem;
   font-size: 1rem;
   border: none;
-  opacity: 0.2;
+  opacity: 0.8;
   outline: none;
 }
 
@@ -84,6 +86,7 @@
   height: 15px;
   border: none;
   opacity: 0.3;
+  filter: invert(1);
 }
 
 .PASSWORD-TOGGLE {
@@ -98,6 +101,7 @@
   height: 20px;
   border: none;
   opacity: 0.3;
+  filter: invert(1);
 }
 
 .RESET-LINK {

@@ -58,7 +58,7 @@
 
         <!-- DESCRIPTION -->
         <div class="VIEW-ROW">
-            <label class="TASK-LABEL DESCRIPTION-LABEL">Description</label>
+            <label class="TASK-LABEL DESCRIPTION-LABEL">Description:</label>
             <textarea class="TASK-TEXT-AREA" rows="6" readonly><?php echo htmlspecialchars($task['description']); ?></textarea>
         </div>
 

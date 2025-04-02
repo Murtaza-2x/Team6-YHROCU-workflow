@@ -7,7 +7,7 @@
 
 <!-- PROJECT VIEW SECTION -->
 <div class='VIEW-TASK-CONTAINER'>
-    <div class='VIEW-PROJECT-BOX'>
+    <div class='VIEW-TASK-BOX'>
         <div class='VIEW-HEAD'>
             <h1>View Project</h1>
             <p>See Project Details below</p>
@@ -56,10 +56,7 @@
 
         <!-- DESCRIPTION -->
         <div class="VIEW-ROW">
-            <label for="DESCRIPTION" class="TASK-LABEL DESCRIPTION-LABEL">
-                Description
-                <img class="INFO-ICON" src="ICONS/info.png" />
-            </label>
+            <label for="DESCRIPTION" class="TASK-LABEL DESCRIPTION-LABEL">Description:</label>
             <textarea
                 id="description"
                 name="description"

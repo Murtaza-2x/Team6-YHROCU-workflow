@@ -1,64 +1,97 @@
 .DROPDOWN-GROUP {
-    text-align: left;
-    padding: 0rem;
-    padding-left: 0;
-    border: none;
-    opacity: 0.2;
-    font-size: 1rem;
-  }
+  color: var(--black);
+  background-color: transparent;
+  text-align: left;
+  padding: 0rem;
+  padding-left: 0;
+  border: none;
+  opacity: 0.8;
+  font-size: 1rem;
+}
 
-  .DROPDOWN-GROUP-2 {
-    width:350px;
-  }
+.DROPDOWN-GROUP-2 {
+  width: 350px;
+}
 
-  .DROPDOWN-GROUP-3 {
-    text-align: left;
-    padding: 0rem;
-    padding-left: 0;
-    border: none;
-    opacity: 0.8;
-    font-size: 0.9rem;
-  }
-  
-  
-  .select2-container--default .select2-selection--multiple {
-    position: relative;
-  }
-  
-  .select2-container--default .select2-selection--multiple .select2-selection__rendered:empty::before {
-    content: "Select one or more users";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--dark-grey);
-    pointer-events: none;
-    font-size: 1rem;
-    white-space: nowrap;
-    opacity: 0.4;
-  }
-  
-  .select2-container--default .select2-selection--multiple {
-    background: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    min-height: 40px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 0 !important;
-  }
-  
-  .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: var(--green) !important;
-    border: none !important;
-    border-radius: 20px !important;
-    font-size: 0.9rem !important;
-    display: inline-block !important;
-    line-height: 1.4 !important;
-    color: white !important;
-  }
-  
+.DROPDOWN-GROUP-3 {
+  color: var(--black);
+  background-color: transparent;
+  text-align: left;
+  padding: 0rem;
+  padding-left: 0;
+  border: none;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.select2-container {
+  width: 200px !important;
+}
+
+.select2-container--default .select2-selection--multiple {
+  position: relative;
+}
+
+.select2-container--default .select2-search--inline .select2-search__field {
+  text-align: center;
+  width: 100% !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--black);
+  min-height: 40px;
+  text-align: center;
+  padding: 0 !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  color: var(--black);
+}
+
+.select2-container--default .select2-results__option {
+  text-align: center;
+  padding: 10px;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: var(--blue) !important;
+  color: white !important;
+}
+
+.select2-container--default .select2-results__option {
+  color: var(--black) !important;
+}
+
+.select2-container--default .select2-selection--multiple {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  min-height: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0 !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  display: inline-block;
+  text-align: center;
+  margin: 0 4px;
+  background-color: var(--green) !important;
+  border-radius: 20px !important;
+  font-size: 0.9rem !important;
+  line-height: 1.4 !important;
+  color: white !important;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: var(--blue) !important;
+  color: white !important;
+}
+
 .ACTION-DROPDOWN {
   position: relative;
   display: inline-block;
@@ -81,7 +114,7 @@
   border: none;
   border-radius: 10px;
   z-index: 10;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .ACTION-DROPDOWN-ITEM {
@@ -95,7 +128,8 @@
   font-size: 0.9rem;
 }
 
-.ACTION-DROPDOWN-ITEM:hover, .ACTION-DROPDOWN-MENU:hover {
+.ACTION-DROPDOWN-ITEM:hover,
+.ACTION-DROPDOWN-MENU:hover {
   background: var(--light-grey);
   border-radius: 10px;
 }

@@ -21,7 +21,7 @@
 }
 
 .VIEW-TASK-BOX {
-  background: white;
+  background: var(--white);
   border-radius: 20px;
   padding: 2rem;
   width: 800px;
@@ -32,7 +32,7 @@
 }
 
 .VIEW-PROJECT-BOX {
-  background: white;
+  background: var(--white);
   border-radius: 20px;
   padding: 2rem;
   width: 800px;
@@ -100,12 +100,14 @@
 
 .INPUT-GROUP input, .INPUT-GROUP-2 input {
   text-align: center;
+  color: var(--black);
+  background-color: transparent;
   padding-top: 0.2rem;
   transform: translateX(-0.3rem);
   width: 100%;
   font-size: 1rem;
   border: none;
-  opacity: 0.3;
+  opacity: 0.7;
   outline: none;
 }
 
@@ -139,7 +141,7 @@
   border: 1px solid var(--light-grey);
   border-radius: 25px;
   color: var(--dark-grey);
-  background-color: white;
+  background-color: var(--white);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -157,11 +159,11 @@
 }
 
 .ASSIGNED-LABEL {
-  color: #555;
+  color: var(--dark-grey);
 }
 
 .ASSIGNED-LABEL-2 {
-  color: #555;
+  color: var(--dark-grey);
   font-family: "Helvetica Neue Medium";
 }
 
@@ -266,7 +268,7 @@
   border: 1px solid var(--light-grey);
   border-radius: 25px;
   color: var(--dark-grey);
-  background-color: white;
+  background-color: var(--white);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -274,14 +276,16 @@
   padding: 10px 35px;
   margin-top: 20px;
   border: none;
-  color: #fff;
+  background-color: var(--dark-grey);
+  color: var(--white);
   font-size: 0.8rem;
   border-radius: 20px;
   cursor: pointer;
 }
 
 #comment-form button:hover {
-  background-color: var(--dark-grey);
+  color: var(--black);
+  background-color: var(--light-grey);
 }
 
 /* COMMENT SECTION SECTON*/

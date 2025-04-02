@@ -1,0 +1,18 @@
+/* Light Mode Styles */
+body.light-mode {
+    background-color: var(--background-light);
+    color: var(--text-light);
+}
+
+/* Dark Mode Styles with Inverted Colors */
+body.dark-mode {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+
+    /* Use Inverted Colors for Dark Mode */
+    --black: var(--black-dark);
+    --dark-grey: var(--dark-grey-dark);
+    --white: var(--white-dark);
+    --off-white: var(--off-white-dark);
+    --light-grey: var(--light-grey-dark);
+}

@@ -1,8 +1,24 @@
 :root {
-    --black: #292f34; 
-    --dark-grey: #353e44;
+    --black: #343535;
+    --dark-grey: #444444;
+    --white: #ffffff;
     --off-white: #ececec;
     --blue: #169bcb;
     --light-grey: #e0e0e0;
     --green: #39b54a;
+
+    /* Light Mode */
+    --background-light: white;
+    --text-light: var(--black);
+
+    /* Dark Mode */
+    --background-dark: var(--black);
+    --text-dark: white;
+
+    /* Inverted Colors for Dark Mode */
+    --black-dark: #c0c0c0;
+    --dark-grey-dark: #afafaf;
+    --white-dark: #292929;
+    --off-white-dark: #222222;
+    --light-grey-dark: #383838;
 }

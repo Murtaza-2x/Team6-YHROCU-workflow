@@ -1,4 +1,3 @@
-
 .DASH-CONTENT {
   width: 100%;
   padding-bottom: 60px;
@@ -9,7 +8,7 @@
   height: 50px;
   display: flex;
   align-items: center;
-  background-color: white;
+  background-color: var(--white);
   border-bottom: 1px solid var(--off-white);
   padding: 0 20px;
 }
@@ -34,7 +33,7 @@
 }
 
 .DASH-SECTION-CONTAINER {
-  background-color: white;
+  background-color: var(--white);
   border-radius: 12px;
   padding: 25px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -68,14 +67,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: var(--white);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .DASH-MIDDLE-CHART-BOX {
-  flex: 0 1 20%;
+  flex: 0 1 50%;
   min-width: 200px;
   height: 400px;
   display: flex;
@@ -83,7 +82,7 @@
   justify-content: center;
   box-sizing: border-box;
   padding: 20px;
-  background-color: white;
+  background-color: var(--white);
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
@@ -119,7 +118,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: var(--white);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -203,6 +202,10 @@
   }
 
   .TASK-STATUS-LIST {
+    width: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }

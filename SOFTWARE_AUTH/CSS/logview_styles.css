@@ -11,7 +11,7 @@
 
 .MIDDLE-SECTION {
   position: absolute;
-  background-color: white;
+  background-color: var(--white);
   z-index: 1;
 }
 
@@ -33,7 +33,7 @@
 }
 
 .VIEW-LOG-BOX {
-  background: #fff;
+  background: var(--white);
   border-radius: 20px;
   padding: 2rem;
   width: 800px;
@@ -68,15 +68,16 @@
 .LOG-LIST table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
+  background-color: var(--white);
   text-align: center;
 }
 
 .LOG-LIST th,
-.LOG-LIST td {
-  border: 1px solid var(--off-white);
+.LOG-LIST td,
+.LOG-LIST h2 {
   padding: 8px;
   text-decoration: none;
+  opacity: 0.8;
 }
 
 .LOG-HEAD {
@@ -91,6 +92,7 @@
   width:10px;
   height:10px;
   opacity: 0.5;
+  filter: invert(1);
 }
 
 .LOG-LIST a {

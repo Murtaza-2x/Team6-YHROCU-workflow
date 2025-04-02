@@ -1,3 +1,13 @@
+body.light-mode {
+  background-color: var(--background-light);
+  color: var(--text-light);
+}
+
+body.dark-mode {
+  background-color: var(--background-dark);
+  color: var(--text-dark);
+}
+
 /* MIDDLE SECTION */
 .MIDDLE-SECTION {
   justify-content: center;
@@ -27,7 +37,7 @@
 }
 
 .ADMIN-BOX {
-  background: white;
+  background: var(--white);
   border-radius: 20px;
   padding: 2rem;
   width: 800px;
@@ -105,12 +115,14 @@
 }
 
 .INPUT-GROUP input {
+  color: var(--black);
+  background-color: transparent;
   width: 100%;
   text-align: center;
   padding: 4px;
   font-size: 0.9rem;
   border: none;
-  opacity: 0.4;
+  opacity: 0.7;
   outline: none;
 }
 
@@ -122,6 +134,8 @@
 }
 
 .INPUT-GROUP-2 input {
+  color: var(--black);
+  background-color: transparent;
   text-align: center;
   padding: 4px;
   font-size: 0.9rem;
@@ -139,6 +153,8 @@
 }
 
 .INPUT-GROUP-3 input {
+  color: var(--black);
+  background-color: transparent;
   width: 80%;
   height: 15px;
   text-align: center;
@@ -168,7 +184,7 @@
 }
 
 .ADMIN-FILTER input {
-  color: white;
+  color: var(--light-grey);
   padding: 8px;
   margin-right: 5px;
   border-radius: 5px;
@@ -184,13 +200,14 @@
 .ADMIN-LIST table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
+  background-color: var(--white);
   text-align: center;
   margin-top: 20px;
 }
 
 .ADMIN-LIST th,
 .ADMIN-LIST td {
+  color: var(--dark-grey);
   border: 1px solid var(--off-white);
   padding: 5px;
   padding-bottom: 1px;
@@ -208,6 +225,8 @@
 }
 
 .ADMIN-LIST button {
+  color: var(--dark-grey);
+  background: transparent;
   padding: 4px 12px;
   border: none;
   border-radius: 20px;
@@ -232,7 +251,7 @@
 }
 
 .TASK-BUTTONS button {
-  color: white;
+  color: var(--white);
   padding: 0.6rem 1rem;
   margin: 0.3rem;
   margin-top: 1rem;

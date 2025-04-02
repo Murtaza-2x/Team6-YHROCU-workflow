@@ -1,6 +1,6 @@
 $(document).ready(function() {
   $('#assign').select2({
-      placeholder: '',
+      placeholder: "Select one or more users",
       allowClear: true
   });
 });

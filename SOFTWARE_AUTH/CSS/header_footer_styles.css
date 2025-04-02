@@ -12,7 +12,7 @@
 
 .MIDDLE-SECTION {
   position: absolute;
-  background-color: white;
+  background-color: var(--white);
   z-index: 1;
 }
 /* MIDDLE SECTION END */
@@ -21,7 +21,7 @@
 .BOTTOM-SECTION {
   position: fixed;
   width: 100%;
-  background-color: var(--dark-grey);
+  background-color: #353e44;
   z-index: 2;
 }
 
@@ -30,7 +30,7 @@
   top: 0;
   left: 0;
   height: 75px;
-  background-color: var(--dark-grey);
+  background-color: #353e44;
   overflow: hidden;
 }
 
@@ -45,7 +45,7 @@
 .BUTTON-CONTAINER {
   position: fixed;
   top: 8px;
-  right: 20px;
+  right: 90px;
   z-index: 1000;
   display: flex;
   gap: 10px; 
@@ -63,7 +63,7 @@
 }
 
 .HOME-BUTTON:hover, .ADMIN-BUTTON:hover, .LOGOUT-BUTTON:hover {
-  background-color: var(--black);
+  background-color: #292f34;
 }
 
 .HOME-BUTTON {
@@ -75,7 +75,7 @@
 }
 
 .LOGOUT-BUTTON {
-  background-color: var(--light-grey);
+  background-color: #e0e0e0;
 }
 /* TOP SECTION END */
 

@@ -86,7 +86,7 @@
 
             <!-- DESCRIPTION -->
             <div class="VIEW-ROW">
-                <label class="TASK-LABEL DESCRIPTION-LABEL">Description</label>
+                <label class="TASK-LABEL DESCRIPTION-LABEL">Description:</label>
                 <textarea class="TASK-TEXT-AREA" name="description" rows="6" required><?php echo htmlspecialchars($description); ?></textarea>
             </div>
             <!-- DESCRIPTION END -->

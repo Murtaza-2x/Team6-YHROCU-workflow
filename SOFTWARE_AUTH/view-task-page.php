@@ -89,6 +89,7 @@ if (isset($_POST['submit_comment']) && !empty($_POST['comment'])) {
         $stmtC->bind_param("sss", $taskId, $userId, $commentText);
         if ($stmtC->execute()) {
             echo "<p class='SUCCESS-MESSAGE'>Comment added. Reloading...</p>";
+            echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($taskId) . "'; }, 1500);</script>";
             exit;
         } else {
             echo "<p class='ERROR-MESSAGE'>Failed to add comment.</p>";
