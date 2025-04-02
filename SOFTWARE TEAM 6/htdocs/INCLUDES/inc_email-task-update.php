@@ -8,7 +8,7 @@ require_once __DIR__.'/../../libs/PHPMailer/src/SMTP.php';
 require_once __DIR__.'/../../libs/PHPMailer/src/Exception.php';
 
 
-function sendTaskEmail ($toEmail) {
+function sendTaskUpdateEmail ($toEmail) {
     $mail = new PHPMailer(true);
 
     try {
@@ -25,8 +25,8 @@ function sendTaskEmail ($toEmail) {
 
         // Email body
         $mail->isHTML(true);
-        $mail->Subject = 'A new task has been assigned';
-        $mail->Body = '<p>Hi,</p><p>A new task has been assigned to you</p>';
+        $mail->Subject = "There has been an update to your task.";
+        $mail->Body = '<p>Hi,</p><p>A task you were assigned to has updates.</p>';
 
         $mail->send();
     
