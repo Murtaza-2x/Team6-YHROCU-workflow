@@ -80,22 +80,29 @@ if (isset($_POST['reset_password'])) {
     }
 }
 
-// Disable User functionality
+// Handle disabling a user
 if (isset($_GET['disable_user'])) {
     $userId = $_GET['disable_user'];
     try {
-        Auth0UserManager::updateUserRole($userId, 'Inactive'); // Assuming 'Inactive' is the status for disabled users
-        $successMsg = "User disabled successfully.";
+        // Fetch the current status of the user
+        $user = Auth0UserManager::getUser($userId);
+        $currentStatus = $user['app_metadata']['status'] ?? 'active'; // Default to 'active'
+
+        // Toggle status between active and inactive
+        $newStatus = ($currentStatus === 'active') ? 'inactive' : 'active';
+
+        // Update user status
+        Auth0UserManager::updateUserRole($userId, $user['app_metadata']['role'], $newStatus);
+        $successMsg = "User status updated to " . ucfirst($newStatus) . " successfully.";
     } catch (Exception $e) {
-        $errorMsg = "Error disabling user: " . htmlspecialchars($e->getMessage());
+        $errorMsg = "Error updating user status: " . htmlspecialchars($e->getMessage());
     }
 }
 
-// Delete User functionality
+// Handle deleting a user
 if (isset($_GET['delete_user'])) {
     $userId = $_GET['delete_user'];
     try {
-        // Assuming Auth0UserManager has a method to delete users
         Auth0UserManager::deleteUser($userId);
         $successMsg = "User deleted successfully.";
     } catch (Exception $e) {

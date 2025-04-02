@@ -15,6 +15,15 @@ require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
 
 session_start(); // Start session to store user data
 
+// Clear any previous session data
+session_unset();
+session_regenerate_id(true);
+
+// Prevent the browser from caching the page
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 // Create Auth0 instance and exchange the code for tokens
 $auth0 = Auth0Factory::create();
 $auth0->exchange();
@@ -34,9 +43,19 @@ $fullUser = Auth0UserManager::getUser($rawUser['sub']);
 // Assign role to user, defaulting to 'User' if not found
 $fullUser['role'] = ucfirst(strtolower($fullUser['app_metadata']['role'] ?? 'User'));
 
+// // Check the user's status in app_metadata
+// $status = $fullUser['app_metadata']['status'] ?? 'active';
+
+// // If the status is 'inactive', stop the login and show an error message
+// if ($status === 'inactive') {
+//     // Redirect back to login page with error
+//     header('Location: index.php?error=1&msg=Your account is inactive. Please contact Administrator');
+//     exit;
+// }
+
 // Save user details to session
 $_SESSION['user'] = $fullUser;
 
-// Redirect to the task list page
+// Redirect to the task list page or the dashboard
 header('Location: list-task-page.php');
 exit;

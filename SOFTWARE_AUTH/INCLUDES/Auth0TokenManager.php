@@ -34,7 +34,7 @@ class Auth0TokenManager {
             'client_id'     => $clientId,
             'client_secret' => $clientSecret,
             'audience'      => "https://$domain/api/v2/",
-            'scope'         => 'read:users update:users create:user_tickets'
+            'scope'         => 'read:users update:users create:user_tickets delete:users'
         ];
 
         // Set up the request context

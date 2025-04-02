@@ -96,17 +96,23 @@ class Auth0UserManager
     - Updates the role of a user in their app_metadata.
     -------------------------------------------------------------
     */
-    public static function updateUserRole(string $userId, string $role): void
+    public static function updateUserRole(string $userId, string $role, string $status = 'active'): void
     {
         $mgmt = self::management();
+        
+        // Update both role and status
         $resp = $mgmt->users()->update($userId, [
-            'app_metadata' => ['role' => $role]
+            'app_metadata' => [
+                'role'   => $role,
+                'status' => $status  // Set the status to "active" or "inactive"
+            ]
         ]);
-
+    
         if ($resp->getStatusCode() !== 200) {
-            throw new \Exception('Failed to update user role: ' . (string)$resp->getBody());
+            throw new \Exception('Failed to update user role and status: ' . (string)$resp->getBody());
         }
     }
+    
 
     /*
     -------------------------------------------------------------
@@ -215,8 +221,6 @@ class Auth0UserManager
             throw new \Exception('Failed to re-enable user: ' . (string)$resp->getBody());
         }
     }
-
-
 
     /*
     -------------------------------------------------------------

@@ -126,14 +126,12 @@
                                                         <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
                                                         <div class="ACTION-DROPDOWN-MENU">
                                                             <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
-                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="change_role" value="<?php echo htmlspecialchars($userId); ?>">Update Role</button>
+                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="change_role" value="<?php echo htmlspecialchars($userId); ?>">Update</button>
                                                             <button class="ACTION-DROPDOWN-ITEM" type="submit" name="reset_password" value="<?php echo htmlspecialchars($userId); ?>">Reset Password</button>
-                                                            <?php if ($status === 'inactive'): ?>
-                                                                <button class="ACTION-DROPDOWN-ITEM" type="submit" name="reenable_user" value="<?php echo htmlspecialchars($userId); ?>">Enable</button>
-                                                            <?php else: ?>
-                                                                <button class="ACTION-DROPDOWN-ITEM" type="submit" name="disable_user" value="<?php echo htmlspecialchars($userId); ?>">Disable</button>
-                                                            <?php endif; ?>
-                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="delete_user" value="<?php echo htmlspecialchars($userId); ?>">Delete</button>
+                                                            <button type="button" class="ACTION-DROPDOWN-ITEM" onclick="window.location.href='?disable_user=<?php echo $user['user_id']; ?>'">
+                                                                <?php echo ($status === 'inactive') ? 'Re-enable' : 'Disable'; ?>
+                                                            </button>
+                                                            <button type="button" class="ACTION-DROPDOWN-ITEM" onclick="window.location.href='?delete_user=<?php echo $user['user_id']; ?>'">Delete</button>
                                                         </div>
                                                     </div>
                                                 </div>
