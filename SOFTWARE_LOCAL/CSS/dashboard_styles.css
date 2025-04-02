@@ -1,0 +1,159 @@
+/* Main dashboard container */
+.DASH-CONTENT {
+  width: 100%;
+  padding-bottom: 60px; /* Increased for clearer gap before task list */
+  background-color: var(--light-grey);
+}
+
+/* Top header for greeting */
+.DASH-HEADER {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-bottom: 1px solid var(--off-white);
+  padding: 0 20px;
+}
+
+.DASH-HEADER-1 {
+  font-family: "Helvetica Neue Medium";
+  font-size: 1.1rem;
+  color: var(--black);
+}
+
+.DASH-HEADER-2 {
+  font-family: "Helvetica Neue Light";
+  font-size: 1.1rem;
+  color: var(--dark-grey);
+  padding-left: 10px;
+  opacity: 0.7;
+}
+
+/* Dashboard white card box */
+.DASH-AREA {
+  padding: 30px;
+  background-color: var(--light-grey);
+}
+
+.DASH-SECTION-CONTAINER {
+  background-color: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Slightly more vertical spacing between form and chart row */
+}
+
+/* Manager charts container */
+.MANAGER-CHART-WRAPPER {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+  margin-bottom: 30px; /* Additional spacing before task list begins */
+}
+
+/* Container for bar + pie chart side-by-side */
+.CHARTS-ROW {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 30px;
+  width: 100%;
+}
+
+/* Bar chart area */
+.DASH-CHART-BOX {
+  flex: 1 1 60%;
+  min-width: 320px;
+  max-width: 60%;
+  height: 400px;
+  box-sizing: border-box;
+}
+
+/* Pie chart area (manager) */
+.DASH-PIE-CHART-BOX {
+  flex: 1 1 30%;
+  min-width: 250px;
+  max-width: 30%;
+  height: 400px;
+  box-sizing: border-box;
+}
+
+/* Pie chart area (staff) */
+.USER-CHART-BOX {
+  display: flex;
+  justify-content: flex-start;   /* Align chart to the left */
+  align-items: center;
+  width: 100%;
+  height: 400px;
+  padding-left: 20px;            /* Same as manager view padding */
+  box-sizing: border-box;
+}
+
+.USER-CHART-BOX canvas {
+  width: 100%;
+  max-width: 400px;
+  height: 400px;
+  box-sizing: border-box;
+}
+
+/* Filter form styles */
+.MANAGER-FILTER-FORM {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.MANAGER-FILTER-FORM select,
+.MANAGER-FILTER-FORM input[type="date"] {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+.MANAGER-FILTER-FORM button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  background-color: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.MANAGER-FILTER-FORM button:hover {
+  background-color: #1e3a8a; 
+}
+
+/* Responsive behavior */
+@media (max-width: 900px) {
+  .CHARTS-ROW {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .DASH-CHART-BOX,
+  .DASH-PIE-CHART-BOX {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .USER-CHART-BOX {
+    justify-content: center; /* Center on small screens */
+    padding-left: 0;
+  }
+
+  .USER-CHART-BOX canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .MANAGER-CHART-WRAPPER {
+    margin-bottom: 40px;
+  }
+}
