@@ -46,6 +46,10 @@ function is_manager() {
     return get_role() === 'Manager';
 }
 
+function is_staff() {
+    return is_admin() || is_manager();
+}
+
 function getAssignedUsers(int $taskId, mysqli $conn): array {
     $assigned = [];
     $stmt = $conn->prepare("SELECT auth0_user_id FROM task_assigned_users WHERE task_id = ?");

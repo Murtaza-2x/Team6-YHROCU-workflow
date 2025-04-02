@@ -19,8 +19,9 @@ require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
-if (!is_logged_in()) {
-    header('Location: index.php?error=1&msg=Please log in first.');
+if (!is_logged_in() || !is_staff()) {
+    echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
+    include 'INCLUDES/inc_footer.php';
     exit;
 }
 
