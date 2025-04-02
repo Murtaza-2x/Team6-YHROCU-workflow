@@ -83,6 +83,16 @@
         </div>
         <!-- ASSIGNED END -->
 
+        <!-- DUE DATE -->
+        <div class="TASK-ROW ASSIGNED-ROW">
+            <div class="ASSIGNED-INFO">
+                <span class="ASSIGNED-LABEL">Due Date:</span>
+                <div class="ASSIGNED-LABEL-2">
+                    <?php echo (!empty($due_date)) ? htmlspecialchars(date('Y-m-d', strtotime($due_date))) : 'No due date set'; ?>
+                </div>
+            </div>
+        </div>
+
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
             <?php if (has_role('Admin')): ?>

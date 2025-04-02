@@ -8,18 +8,80 @@
 <!-- LOG SECTION -->
 <div class="VIEW-LOG-CONTAINER">
     <div class="VIEW-LOG-BOX">
+
         <div class="VIEW-HEAD">
             <h1>Project Logs</h1>
-            <p>Below are the archived versions for this project, including its tasks:</p>
+            <p>Below are the archived versions for this project and its related tasks:</p>
         </div>
 
         <div class="LOG-LIST">
 
-            <?php if ($logCount > 0): ?>
+            <!-- ===== PROJECT LOGS ===== -->
+            <h2 class="LOG-SECTION-TITLE">Project Logs</h2>
+            <?php if (count($projectLogs) > 0): ?>
                 <table class="LOG-TABLE">
                     <thead>
                         <tr class="LOG-HEAD">
-                            <th>Type</th>
+                            <th>Edited By</th>
+                            <th>Archived At</th>
+                            <th>Created At</th>
+                            <th>Project Name</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Due Date</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($projectLogs as $log):
+                            $logEditorId = $log['edited_by'] ?? 'unknown';
+                            $logEditor   = htmlspecialchars($user_map[$logEditorId] ?? $logEditorId);
+                            $archivedAt  = $log['archived_at'] ?? '-';
+                            $createdAt   = $log['created_at'] ?? '-';
+                            $name        = htmlspecialchars($log['project_name'] ?? '');
+                            $status      = htmlspecialchars($log['status'] ?? '');
+                            $priority    = htmlspecialchars($log['priority'] ?? '');
+                            $description = nl2br(htmlspecialchars($log['description'] ?? ''));
+                            $dueDate = htmlspecialchars($log['due_date'] ?? '-');
+
+                            // Pills
+                            $statusPill = match($status) {
+                                'New'         => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
+                                'In Progress' => "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>",
+                                'Complete'    => "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>",
+                                default       => "<button class='PILL-INACTIVE'>$status</button>",
+                            };
+
+                            $priorityPill = match($priority) {
+                                'Urgent'   => "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>",
+                                'Moderate' => "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>",
+                                'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
+                                default    => "<button class='PILL-INACTIVE'>$priority</button>",
+                            };
+                        ?>
+                            <tr>
+                                <td><?php echo $logEditor; ?></td>
+                                <td><?php echo $archivedAt; ?></td>
+                                <td><?php echo $createdAt; ?></td>
+                                <td><?php echo $name; ?></td>
+                                <td><?php echo $statusPill; ?></td>
+                                <td><?php echo $priorityPill; ?></td>
+                                <td><?php echo $dueDate; ?></td>
+                                <td class="LOG-DESC"><?php echo $description; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <h1 class="USER-MESSAGE">No project logs available.</h1>
+            <?php endif; ?>
+
+            <!-- ===== TASK LOGS ===== -->
+            <h2 class="LOG-SECTION-TITLE">Task Logs</h2>
+            <?php if (count($taskLogs) > 0): ?>
+                <table class="LOG-TABLE">
+                    <thead>
+                        <tr class="LOG-HEAD">
                             <th>Edited By</th>
                             <th>Archived At</th>
                             <th>Created At</th>
@@ -30,9 +92,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($logsArray as $log):
-                            $logType     = htmlspecialchars($log['log_type'] ?? 'Log');
-                            $logEditor   = htmlspecialchars($log['editor'] ?? 'Unknown');
+                        <?php foreach ($taskLogs as $log):
+                            $logEditorId = $log['edited_by'] ?? 'unknown';
+                            $logEditor   = htmlspecialchars($user_map[$logEditorId] ?? $logEditorId);
                             $archivedAt  = $log['archived_at'] ?? '-';
                             $createdAt   = $log['created_at'] ?? '-';
                             $subject     = htmlspecialchars($log['subject'] ?? '');
@@ -56,7 +118,6 @@
                             };
                         ?>
                             <tr>
-                                <td><?php echo $logType; ?></td>
                                 <td><?php echo $logEditor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>
                                 <td><?php echo $createdAt; ?></td>
@@ -68,9 +129,8 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-
             <?php else: ?>
-                <h1 class="USER-MESSAGE">No logs available for this project.</h1>
+                <h1 class="USER-MESSAGE">No task logs available for this project.</h1>
             <?php endif; ?>
 
             <!-- BUTTONS -->
@@ -80,7 +140,7 @@
             <button class="EXPORT-BUTTON" onclick="window.location.href='view-project-logs-page.php?id=<?php echo urlencode($project_id); ?>&export=1'">
                 Export Logs
             </button>
-            <!-- BUTTONS END -->
+
         </div>
     </div>
 </div>

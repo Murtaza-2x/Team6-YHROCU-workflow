@@ -62,7 +62,7 @@
             <textarea class="TASK-TEXT-AREA" rows="6" readonly><?php echo htmlspecialchars($task['description']); ?></textarea>
         </div>
 
-        <!-- ASSIGNED USERS -->
+        <!-- ASSIGNED -->
         <div class="TASK-ROW ASSIGNED-ROW">
             <div class="ASSIGNED-INFO">
                 <span class="ASSIGNED-LABEL">Assigned:</span>

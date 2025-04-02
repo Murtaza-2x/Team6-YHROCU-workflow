@@ -39,46 +39,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_id  = trim($_POST['project_id'] ?? '');
     $status      = trim($_POST['status'] ?? '');
     $priority    = trim($_POST['priority'] ?? '');
+    $due_date    = trim($_POST['due_date'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $assigned    = $_POST['assign'] ?? [];
+    $creator     = $_SESSION['user']['user_id'] ?? '';
 
-    // Pull the Auth0 user_id of the currently logged in user
-    // This will be stored in the `created_by` column
-    $created_by = $_SESSION['user']['user_id'] ?? '';
-
-    // Basic validation
-    if (empty($subject) || empty($project_id) || empty($status) || empty($priority)
-        || empty($description) || empty($assigned) || empty($created_by)) {
-        $errorMsg = "All fields are required, you must assign at least one user, and you must be logged in.";
+    if (empty($subject) || empty($project_id) || empty($status) || empty($priority)) {
+        $errorMsg = "All fields are required.";
     } else {
-        // Insert into tasks table
-        $stmt = $conn->prepare("
-            INSERT INTO tasks (created_by, subject, project_id, status, priority, description)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ");
-        // created_by (string), subject (string), project_id (int), status (string), priority (string), description (string)
-        $stmt->bind_param("ssisss", $created_by, $subject, $project_id, $status, $priority, $description);
+        $stmt = $conn->prepare("INSERT INTO tasks (subject, project_id, status, priority, due_date, description, created_by, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
+        $stmt->bind_param("sisssss", $subject, $project_id, $status, $priority, $due_date, $description, $creator);
 
         if ($stmt->execute()) {
             $newTaskId = $stmt->insert_id;
 
-            // Assign multiple users
-            $stmtAssign = $conn->prepare("
-                INSERT INTO task_assigned_users (task_id, user_id) 
-                VALUES (?, ?)
-            ");
-            foreach ($assigned as $uid) {
-                $stmtAssign->bind_param("is", $newTaskId, $uid);
-                $stmtAssign->execute();
+            // Assign users
+            if (!empty($assigned)) {
+                $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
+                foreach ($assigned as $uid) {
+                    $stmtAssign->bind_param("is", $newTaskId, $uid);
+                    $stmtAssign->execute();
+                }
             }
 
-            // Success message & redirect
             echo "<p class='SUCCESS-MESSAGE'>Task created successfully. Redirecting...</p>";
-            echo "<script>
-                    setTimeout(function() {
-                        window.location.href='view-task-page.php?id=" . urlencode($newTaskId) . "';
-                    }, 1500);
-                  </script>";
+            echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($newTaskId) . "'; }, 1500);</script>";
             exit;
         } else {
             $errorMsg = "Failed to create task. Please try again.";

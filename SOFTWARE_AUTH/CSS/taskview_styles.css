@@ -91,7 +91,14 @@
   border-radius: 20px;
 }
 
-.INPUT-GROUP input {
+.INPUT-GROUP-2 {
+  width: 20%;
+  padding: 0.3rem;
+  border: 1px solid var(--off-white);
+  border-radius: 20px;
+}
+
+.INPUT-GROUP input, .INPUT-GROUP-2 input {
   text-align: center;
   padding-top: 0.2rem;
   transform: translateX(-0.3rem);
@@ -102,7 +109,7 @@
   outline: none;
 }
 
-.INPUT-GROUP:hover {
+.INPUT-GROUP:hover, .INPUT-GROUP-2:hover {
   opacity: 1;
 }
 

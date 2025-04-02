@@ -18,8 +18,25 @@
 
         <form id="CREATE-PROJECT-FORM" action="create-project-page.php" method="post">
 
-            <div class="INPUT-GROUP">
-                <input type="text" id="project_name" name="project_name" placeholder="Project Title" required />
+            <?php if (!empty($errorMsg)): ?>
+                <div class="ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
+            <?php elseif (!empty($successMsg)): ?>
+                <div class="SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
+            <?php endif; ?>
+
+            <div class="VIEW-ROW">
+                <div class="VIEW-COLUMN">
+                    <div class='INPUT-GROUP'>
+                        <input type="text" name="project_name" placeholder="Project Name" required>
+                    </div>
+                </div>
+
+                <div class="VIEW-COLUMN">
+                    <label class="DESCRIPTION-LABEL">Due Date</label>
+                    <div class='INPUT-GROUP'>
+                        <input type="date" name="due_date" required>
+                    </div>
+                </div>
             </div>
 
             <div class="INPUT-GROUP">

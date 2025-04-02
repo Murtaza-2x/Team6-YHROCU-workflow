@@ -45,8 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
     if (empty($subject) || empty($project_id) || empty($status) || empty($priority)) {
         echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
     } else {
-        // Archive old version (no created_at)
-        $stmtArchive = $conn->prepare("INSERT INTO task_archive (task_id, subject, status, priority, description, edited_by) SELECT id, subject, status, priority, description, ? FROM tasks WHERE id = ?");
+        // Archive before updating
+        $stmtArchive = $conn->prepare("INSERT INTO task_archive (task_id, subject, status, priority, due_date, description, edited_by, created_at)
+        SELECT id, subject, status, priority, due_date, description, ?, created_at
+        FROM tasks
+        WHERE id = ?");        
         $stmtArchive->bind_param("si", $edited_by, $taskId);
         $stmtArchive->execute();
 
@@ -117,4 +120,3 @@ while ($p = $res_proj->fetch_assoc()) {
 include 'INCLUDES/inc_taskedit.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
-?>

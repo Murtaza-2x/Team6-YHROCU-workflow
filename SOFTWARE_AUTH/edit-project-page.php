@@ -5,7 +5,7 @@ File: edit-project-page.php
 Description:
 - Displays and handles project editing.
 - Admins can:
-    > Edit project name, status, priority, description.
+    > Edit project name, status, priority, description, due date.
     > Archive previous version before updating.
     > View assigned users aggregated from tasks.
 -------------------------------------------------------------
@@ -48,25 +48,30 @@ if (!$project) {
 
 // Archive + Update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
-    $newName = trim($_POST['project_name'] ?? '');
-    $newStatus = trim($_POST['status'] ?? '');
-    $newPriority = trim($_POST['priority'] ?? '');
+    $newName        = trim($_POST['project_name'] ?? '');
+    $newStatus      = trim($_POST['status'] ?? '');
+    $newPriority    = trim($_POST['priority'] ?? '');
     $newDescription = trim($_POST['description'] ?? '');
-    $editor = $_SESSION['user']['user_id'] ?? '';
+    $newDueDate     = trim($_POST['due_date'] ?? '');
+    $editor         = $_SESSION['user']['user_id'] ?? '';
 
-    if (empty($newName) || empty($newStatus) || empty($newPriority) || empty($newDescription)) {
+    if (empty($newName) || empty($newStatus) || empty($newPriority) || empty($newDescription) || empty($newDueDate)) {
         echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
     } else {
         // Archive previous
-        $stmtArchive = $conn->prepare("INSERT INTO project_archive (project_id, project_name, status, priority, description, edited_by) SELECT id, project_name, status, priority, description, ? FROM projects WHERE id = ?");
+        $stmtArchive = $conn->prepare("INSERT INTO project_archive (project_id, created_at, project_name, status, priority, due_date, description, edited_by)
+        SELECT id, created_at, project_name, status, priority, due_date, description, ? 
+        FROM projects 
+        WHERE id = ?");
         $stmtArchive->bind_param("si", $editor, $projectId);
         $stmtArchive->execute();
 
         // Update project
-        $stmtUpdate = $conn->prepare("UPDATE projects SET project_name=?, status=?, priority=?, description=? WHERE id=?");
-        $stmtUpdate->bind_param("ssssi", $newName, $newStatus, $newPriority, $newDescription, $projectId);
+        $stmtUpdate = $conn->prepare("UPDATE projects SET project_name=?, status=?, priority=?, description=?, due_date=? WHERE id=?");
+        $stmtUpdate->bind_param("sssssi", $newName, $newStatus, $newPriority, $newDescription, $newDueDate, $projectId);
         if ($stmtUpdate->execute()) {
-            echo "<p class='SUCCESS-MESSAGE'>Project updated. Redirecting...</p>";
+            echo "<p class='SUCCESS-MESSAGE'>Project updated and archived. Redirecting...</p>";
+            echo "<script>setTimeout(function(){ window.location.href='view-project-page.php?id=" . urlencode($projectId) . "'; }, 1500);</script>";
             exit;
         } else {
             echo "<p class='ERROR-MESSAGE'>Failed to update project.</p>";
@@ -91,7 +96,13 @@ foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
+// Prepare project data for view
+$projectName  = $project['project_name'] ?? '';
+$status       = $project['status'] ?? '';
+$priority     = $project['priority'] ?? '';
+$description  = $project['description'] ?? '';
+$due_date     = $project['due_date'] ?? '';
+
 include 'INCLUDES/inc_projectedit.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
-?>

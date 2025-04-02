@@ -4,8 +4,7 @@
 File: view-project-logs-page.php
 Description:
 - Displays and exports both project logs and task logs assigned to the project.
-- Combined into one timeline sorted by date.
-- Exportable to CSV.
+- Displayed separately in inc_projectlogsview.php.
 -------------------------------------------------------------
 */
 
@@ -29,15 +28,15 @@ if (!$project_id || !is_numeric($project_id)) {
 }
 
 // Fetch Project Logs
-$stmt = $conn->prepare("SELECT pa.*, 'Project Log' AS log_type FROM project_archive pa WHERE pa.project_id = ?");
+$stmt = $conn->prepare("SELECT * FROM project_archive WHERE project_id = ?");
 $stmt->bind_param("i", $project_id);
 $stmt->execute();
 $res1 = $stmt->get_result();
 $projectLogs = ($res1) ? $res1->fetch_all(MYSQLI_ASSOC) : [];
 
-// Fetch Task Logs linked to this Project
+// Fetch Task Logs for Tasks inside this Project
 $stmt2 = $conn->prepare("
-    SELECT ta.*, 'Task Log' AS log_type
+    SELECT ta.*
     FROM task_archive ta
     INNER JOIN tasks t ON ta.task_id = t.id
     WHERE t.project_id = ?
@@ -47,29 +46,70 @@ $stmt2->execute();
 $res2 = $stmt2->get_result();
 $taskLogs = ($res2) ? $res2->fetch_all(MYSQLI_ASSOC) : [];
 
-// Merge + Sort Logs by archived_at DESC
-$logsArray = array_merge($projectLogs, $taskLogs);
-usort($logsArray, fn($a, $b) => strtotime($b['archived_at']) <=> strtotime($a['archived_at']));
+// Sort all logs by archived_at DESC
+usort($projectLogs, function ($a, $b) {
+    return strtotime($b['archived_at']) <=> strtotime($a['archived_at']);
+});
 
-$logCount = count($logsArray);
+usort($taskLogs, function ($a, $b) {
+    return strtotime($b['archived_at']) <=> strtotime($a['archived_at']);
+});
 
-// CSV EXPORT
+// User Map
+$auth0_users = Auth0UserFetcher::getUsers();
+$user_map = [];
+foreach ($auth0_users as $u) {
+    $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
+}
+
+// Export CSV
 if (isset($_GET['export']) && $_GET['export'] == 1) {
     header("Content-Type: text/csv; charset=UTF-8");
-    header("Content-Disposition: attachment; filename=\"project_{$project_id}_logs.csv\"");
+    
+    // Get project name safely
+    $stmtName = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
+    $stmtName->bind_param("i", $project_id);
+    $stmtName->execute();
+    $resName = $stmtName->get_result();
+    $projectRow = $resName->fetch_assoc();
+    $projectNameSafe = isset($projectRow['project_name']) ? preg_replace("/[^A-Za-z0-9_-]/", "_", $projectRow['project_name']) : "Project";
+
+    header("Content-Disposition: attachment; filename=\"{$projectNameSafe}_logs.csv\"");
     $out = fopen("php://output", "w");
 
-    fputcsv($out, ["Log Type", "Edited By", "Archived At", "Created At", "Subject", "Status", "Priority", "Description"]);
-
-    foreach ($logsArray as $log) {
+    // Project Logs Section
+    fputcsv($out, ["--- Project Logs ---"]);
+    fputcsv($out, ["Edited By", "Archived At", "Created At", "Project Name", "Status", "Priority", "Due Date", "Description"]);
+    foreach ($projectLogs as $log) {
+        $editor = $user_map[$log['edited_by']] ?? $log['edited_by'];
         fputcsv($out, [
-            $log['log_type'],
-            $log['edited_by'] ?? 'Unknown',
+            $editor,
+            $log['archived_at'],
+            $log['created_at'],
+            $log['project_name'],
+            $log['status'],
+            $log['priority'],
+            $log['due_date'] ?? '',
+            $log['description']
+        ]);
+    }
+
+    // Empty row between
+    fputcsv($out, []);
+
+    // Task Logs Section
+    fputcsv($out, ["--- Task Logs ---"]);
+    fputcsv($out, ["Edited By", "Archived At", "Created At", "Subject", "Status", "Priority", "Due Date", "Description"]);
+    foreach ($taskLogs as $log) {
+        $editor = $user_map[$log['edited_by']] ?? $log['edited_by'];
+        fputcsv($out, [
+            $editor,
             $log['archived_at'],
             $log['created_at'],
             $log['subject'],
             $log['status'],
             $log['priority'],
+            $log['due_date'] ?? '',
             $log['description']
         ]);
     }
@@ -78,16 +118,7 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     exit;
 }
 
-// Auth0 User List for Mapping
-$auth0_users = Auth0UserFetcher::getUsers();
-$user_map = [];
-foreach ($auth0_users as $u) {
-    $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
-}
-
-require_once __DIR__ . '/INCLUDES/inc_header.php';
-
+include 'INCLUDES/inc_header.php';
 include 'INCLUDES/inc_projectlogsview.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
-?>

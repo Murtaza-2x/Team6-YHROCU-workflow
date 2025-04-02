@@ -15,6 +15,12 @@ Description:
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/taskview_styles.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="JS/SELECT-MULTI-DROPDOWN.js"></script>
+    <script src="JS/SELECT-STATUS.js"></script>
 </head>
 
 <p class="MIDDLE-HERO-IMAGE"></p>
@@ -78,6 +84,15 @@ Description:
                         echo htmlspecialchars(implode(', ', $displayNames)) ?: 'None';
                         ?>
                     </span>
+                </div>
+            </div>
+
+            <div class="TASK-ROW ASSIGNED-ROW">
+                <div class="ASSIGNED-INFO">
+                    <span class="ASSIGNED-LABEL">Due Date</span>
+                    <div class='INPUT-GROUP-2'>
+                        <input type="date" name="due_date" value="<?php echo htmlspecialchars($due_date); ?>" required>
+                    </div>
                 </div>
             </div>
 

@@ -5,7 +5,7 @@ File: view-project-page.php
 Description:
 - Displays a detailed view of a single project.
 - Shows:
-    > Project information (Title, Status, Priority, Description)
+    > Project information (Title, Status, Priority, Description, Due Date)
     > Assigned Users aggregated from tasks linked to this project
     > Admin-only button to edit
 -------------------------------------------------------------
@@ -45,6 +45,13 @@ if (!$project) {
     include 'INCLUDES/inc_footer.php';
     exit;
 }
+
+// Project Details
+$projectName = $project['project_name'];
+$status      = $project['status'];
+$priority    = $project['priority'];
+$description = $project['description'];
+$due_date    = $project['due_date'];
 
 // Auth0 Users
 $auth0_users = Auth0UserFetcher::getUsers();
