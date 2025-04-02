@@ -19,11 +19,13 @@ require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
+// Redirect if user is not logged in
 if (!is_logged_in()) {
     header('Location: index.php?error=1&msg=Please log in first.');
     exit;
 }
 
+// Validate task ID
 $taskId = $_GET['id'] ?? null;
 if (!$taskId || !is_numeric($taskId)) {
     echo "<p class='ERROR-MESSAGE'>Invalid task ID.</p>";
@@ -31,7 +33,7 @@ if (!$taskId || !is_numeric($taskId)) {
     exit;
 }
 
-// Load task
+// Load task data
 $stmt = $conn->prepare("SELECT * FROM tasks WHERE id = ?");
 $stmt->bind_param("i", $taskId);
 $stmt->execute();
@@ -43,14 +45,14 @@ if (!$task) {
     exit;
 }
 
-// Data
+// Extract task details
 $subject     = $task['subject'];
 $description = $task['description'];
 $project_id  = $task['project_id'];
 $status      = $task['status'];
 $priority    = $task['priority'];
 
-// Project Name
+// Get project name
 $projectName = '';
 $stmtP = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
 $stmtP->bind_param("i", $project_id);
@@ -60,7 +62,7 @@ if ($resP && $pRow = $resP->fetch_assoc()) {
     $projectName = $pRow['project_name'];
 }
 
-// Assigned Users
+// Get assigned users
 $assignedUsers = [];
 $stmtA = $conn->prepare("SELECT user_id FROM task_assigned_users WHERE task_id = ?");
 $stmtA->bind_param("i", $taskId);
@@ -70,14 +72,14 @@ while ($row = $resA->fetch_assoc()) {
     $assignedUsers[] = $row['user_id'];
 }
 
-// Auth0 Users
+// Fetch Auth0 users
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
-// Comment Submission
+// Handle comment submission
 if (isset($_POST['submit_comment']) && !empty($_POST['comment'])) {
     $commentText = trim($_POST['comment']);
     $userId = $_SESSION['user']['user_id'] ?? null;
@@ -96,14 +98,14 @@ if (isset($_POST['submit_comment']) && !empty($_POST['comment'])) {
     }
 }
 
-// Get Auth0 users for nickname resolution
+// Reload Auth0 users again for last edit info (Auth0UserFetcher doesn't cache)
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
-// Get the latest archive log for this task
+// Get latest archive log for this task
 $stmtArchive = $conn->prepare("SELECT * FROM task_archive WHERE task_id = ? ORDER BY archived_at DESC LIMIT 1");
 $stmtArchive->bind_param("i", $taskId);
 $stmtArchive->execute();
@@ -114,6 +116,7 @@ if ($archiveRow = $resArchive->fetch_assoc()) {
     $lastEditTime = $archiveRow['archived_at'];
 }
 
+// Render task view page
 include 'INCLUDES/inc_taskview.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';

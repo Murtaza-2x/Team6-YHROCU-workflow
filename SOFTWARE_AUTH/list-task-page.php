@@ -1,4 +1,14 @@
 <?php
+/*
+-------------------------------------------------------------
+File: list-task-page.php
+Description:
+- Displays the dashboard for tasks and projects.
+- Shows tasks for users and admins, filtered by user role.
+- Admins can create new tasks and projects.
+-------------------------------------------------------------
+*/
+
 $title = "ROCU: Dashboard";
 
 require_once __DIR__ . '/INCLUDES/env_loader.php';
@@ -47,18 +57,23 @@ $result = $stmt->get_result();
 
 <!-- TASK SECTION -->
 <div class="TASK-CONTENT">
+    <!-- TASK HEADER -->
     <div class="TASK-HEADER">
         <p class="TASK-HEADER-1">Task List</p>
         <p class="TASK-HEADER-2">(<?php echo $result->num_rows; ?>)</p>
     </div>
+    <!-- TASK HEADER END -->
 
     <div class="TASK-AREA">
 
+        <!-- TASK FILTER -->
         <div class="TASK-FILTER">
             <input type="text" id="searchInput" placeholder="Search tasks...">
             <button type="button" id="filterButton">Filter</button>
         </div>
+        <!-- TASK FILTER END -->
 
+        <!-- TASK LIST -->
         <div class="TASK-LIST">
             <?php if ($result->num_rows > 0): ?>
                 <table class='TASK-TABLE' id='TASK-TABLE'>
@@ -88,7 +103,7 @@ $result = $stmt->get_result();
                             $isCompleted = !is_staff() && $row["status"] === 'Complete';
                             $rowStyle = $isCompleted ? 'style="opacity:0.5;"' : '';
 
-                            // status pill
+                            // Status pill
                             switch ($row["status"]) {
                                 case 'New':
                                     $statusPill = "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>";
@@ -104,7 +119,7 @@ $result = $stmt->get_result();
                                     break;
                             }
 
-                            // priority pill
+                            // Priority pill
                             switch ($row["priority"]) {
                                 case 'Urgent':
                                     $priorityPill = "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>";
@@ -139,7 +154,6 @@ $result = $stmt->get_result();
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
-
                 </table>
             <?php else: ?>
                 <h1 class='USER-MESSAGE'>No tasks found.</h1>
@@ -150,8 +164,10 @@ $result = $stmt->get_result();
                 <button class='CREATE-PROJECT-BUTTON' onclick="location.href='create-project-page.php'">Create Project</button>
             <?php endif; ?>
         </div>
+        <!-- TASK LIST END -->
     </div>
 </div>
+<!-- TASK SECTION END -->
 
 <?php include 'INCLUDES/inc_footer.php'; ?>
 <?php include 'INCLUDES/inc_disconnect.php'; ?>

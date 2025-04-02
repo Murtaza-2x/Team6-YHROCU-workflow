@@ -1,17 +1,3 @@
-<?php
-/*
--------------------------------------------------------------
-File: inc_projectedit.php
-Description:
-- Renders the project edit form.
-- Displays:
-    > Project name, status, priority, description.
-    > Assigned users aggregated from tasks.
-    > Submit + cancel buttons.
--------------------------------------------------------------
-*/
-?>
-
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/taskview_styles.css" rel="stylesheet">
@@ -25,16 +11,20 @@ Description:
 
 <p class="MIDDLE-HERO-IMAGE"></p>
 
+<!-- PROJECT EDIT FORM SECTION -->
 <div class="VIEW-TASK-CONTAINER">
     <div class="VIEW-PROJECT-BOX">
 
+        <!-- HEADER -->
         <div class="VIEW-HEAD">
             <h1>Edit Project</h1>
             <p>Edit project details below</p>
         </div>
+        <!-- HEADER END -->
 
         <form method="post">
 
+            <!-- PROJECT NAME -->
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
                     <h1 class="TASK-LABEL">Project Name</h1>
@@ -43,7 +33,9 @@ Description:
                     </div>
                 </div>
             </div>
+            <!-- PROJECT NAME END -->
 
+            <!-- STATUS & PRIORITY -->
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
                     <h1 class="TASK-LABEL">Status</h1>
@@ -69,12 +61,16 @@ Description:
                     </div>
                 </div>
             </div>
+            <!-- STATUS & PRIORITY END -->
 
+            <!-- DESCRIPTION -->
             <div class="VIEW-ROW">
                 <label class="TASK-LABEL DESCRIPTION-LABEL">Description</label>
                 <textarea class="TASK-TEXT-AREA" name="description" rows="6" required><?php echo htmlspecialchars($project['description']); ?></textarea>
             </div>
+            <!-- DESCRIPTION END -->
 
+            <!-- ASSIGNED USERS -->
             <div class="TASK-ROW ASSIGNED-ROW">
                 <div class="ASSIGNED-INFO">
                     <span class="ASSIGNED-LABEL">Assigned Users:</span>
@@ -86,7 +82,9 @@ Description:
                     </span>
                 </div>
             </div>
+            <!-- ASSIGNED USERS END -->
 
+            <!-- DUE DATE -->
             <div class="TASK-ROW ASSIGNED-ROW">
                 <div class="ASSIGNED-INFO">
                     <span class="ASSIGNED-LABEL">Due Date</span>
@@ -95,12 +93,16 @@ Description:
                     </div>
                 </div>
             </div>
+            <!-- DUE DATE END -->
 
+            <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class="UPDATE-BUTTON" type="submit" name="update_project">Update Project</button>
                 <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-project-page.php?id=<?php echo urlencode($projectId); ?>'">Cancel</button>
             </div>
+            <!-- BUTTONS END -->
 
         </form>
     </div>
 </div>
+<!-- PROJECT EDIT FORM SECTION END -->

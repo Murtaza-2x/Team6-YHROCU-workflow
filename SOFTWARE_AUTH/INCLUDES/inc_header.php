@@ -26,11 +26,14 @@ $role = $user['role'] ?? null;
 </head>
 
 <body>
+    <!-- TOP SECTION -->
     <div class="TOP-SECTION">
         <img src="IMAGES/ROCU.png" class="TOP-HERO-IMAGE" alt="ROCU Logo">
     </div>
+    <!-- TOP SECTION END -->
 
     <?php if ($user): ?>
+        <!-- BUTTONS SECTION -->
         <div class="BUTTON-CONTAINER">
             <button onclick="window.location.href='list-task-page.php'" class="HOME-BUTTON">Home</button>
             <?php if (has_role('Admin')): ?>
@@ -38,5 +41,8 @@ $role = $user['role'] ?? null;
             <?php endif; ?>
             <button onclick="window.location.href='auth0_logout.php'" class="LOGOUT-BUTTON">Logout</button>
         </div>
+        <!-- BUTTONS SECTION END -->
     <?php endif; ?>
+
+    <!-- MIDDLE SECTION -->
     <div class="MIDDLE-SECTION">

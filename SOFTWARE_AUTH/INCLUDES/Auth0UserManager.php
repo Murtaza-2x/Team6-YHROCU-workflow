@@ -20,6 +20,13 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 
 class Auth0UserManager
 {
+    /*
+    -------------------------------------------------------------
+    Method: management
+    Description:
+    - Returns an instance of the Management API client with the proper configuration and authentication token.
+    -------------------------------------------------------------
+    */
     public static function management(): Management
     {
         $token = Auth0TokenManager::getToken();
@@ -36,9 +43,13 @@ class Auth0UserManager
         return new Management($config);
     }
 
-    /**
-     * Fetch all users from Auth0
-     */
+    /*
+    -------------------------------------------------------------
+    Method: getUsers
+    Description:
+    - Fetches all users from the Auth0 Management API.
+    -------------------------------------------------------------
+    */
     public static function getUsers()
     {
         $mgmt = self::management();
@@ -46,10 +57,13 @@ class Auth0UserManager
         return json_decode((string)$response->getBody(), true);
     }
 
-    /**
-     * Create a new DB user with the new users()->create() signature:
-     * public function create(string $connection, string $email, string $password, ?array $additionalOptions = null): ResponseInterface
-     */
+    /*
+    -------------------------------------------------------------
+    Method: createUser
+    Description:
+    - Creates a new user in Auth0 with the specified email, password, and role.
+    -------------------------------------------------------------
+    */
     public static function createUser(string $email, string $password, string $role): void
     {
         $mgmt = self::management();
@@ -74,9 +88,13 @@ class Auth0UserManager
         }
     }
 
-    /**
-     * Update the user's role in app_metadata
-     */
+    /*
+    -------------------------------------------------------------
+    Method: updateUserRole
+    Description:
+    - Updates the role of a user in their app_metadata.
+    -------------------------------------------------------------
+    */
     public static function updateUserRole(string $userId, string $role): void
     {
         $mgmt = self::management();
@@ -89,9 +107,13 @@ class Auth0UserManager
         }
     }
 
-    /**
-     * Retrieve a single user
-     */
+    /*
+    -------------------------------------------------------------
+    Method: getUser
+    Description:
+    - Fetches a single user by their user ID.
+    -------------------------------------------------------------
+    */
     public static function getUser($userId)
     {
         $mgmt = self::management();
@@ -99,9 +121,13 @@ class Auth0UserManager
         return json_decode((string)$resp->getBody(), true);
     }
 
-    /**
-     * Retrieve a user by email
-     */
+    /*
+    -------------------------------------------------------------
+    Method: getUserByEmail
+    Description:
+    - Fetches a user by their email address from Auth0.
+    -------------------------------------------------------------
+    */
     public static function getUserByEmail(string $email): array
     {
         $mgmt = self::management();
@@ -115,10 +141,13 @@ class Auth0UserManager
         return $body;
     }
 
-
-    /**
-     * Generate / Send a password reset link for the user
-     */
+    /*
+    -------------------------------------------------------------
+    Method: generatePasswordResetLink
+    Description:
+    - Generates and sends a password reset link for a user.
+    -------------------------------------------------------------
+    */
     public static function generatePasswordResetLink(string $userId)
     {
         $mgmt = self::management();

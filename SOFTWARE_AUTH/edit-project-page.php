@@ -33,7 +33,7 @@ if (!$projectId || !is_numeric($projectId)) {
     exit;
 }
 
-// Get project
+// Get project info
 $stmt = $conn->prepare("SELECT * FROM projects WHERE id = ?");
 $stmt->bind_param("i", $projectId);
 $stmt->execute();
@@ -46,7 +46,7 @@ if (!$project) {
     exit;
 }
 
-// Archive + Update
+// Archive and Update project details
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
     $newName        = trim($_POST['project_name'] ?? '');
     $newStatus      = trim($_POST['status'] ?? '');
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
     if (empty($newName) || empty($newStatus) || empty($newPriority) || empty($newDescription) || empty($newDueDate)) {
         echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
     } else {
-        // Archive previous
+        // Archive previous project version
         $stmtArchive = $conn->prepare("INSERT INTO project_archive (project_id, created_at, project_name, status, priority, due_date, description, edited_by, created_by)
         SELECT id, created_at, project_name, status, priority, due_date, description, ?, created_by
         FROM projects
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
         $stmtArchive->bind_param("si", $editor, $projectId);
         $stmtArchive->execute();
 
-        // Update project
+        // Update project data
         $stmtUpdate = $conn->prepare("UPDATE projects SET project_name=?, status=?, priority=?, description=?, due_date=? WHERE id=?");
         $stmtUpdate->bind_param("sssssi", $newName, $newStatus, $newPriority, $newDescription, $newDueDate, $projectId);
         if ($stmtUpdate->execute()) {
@@ -89,7 +89,7 @@ while ($row = $resUsers->fetch_assoc()) {
     $assignedUsers[] = $row['user_id'];
 }
 
-// Fetch Auth0 Users
+// Fetch Auth0 users
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {

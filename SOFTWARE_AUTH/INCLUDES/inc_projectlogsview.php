@@ -16,7 +16,7 @@
 
         <div class="LOG-LIST">
 
-            <!-- ===== PROJECT LOGS ===== -->
+            <!-- PROJECT LOGS -->
             <h2 class="LOG-SECTION-TITLE">Project Logs</h2>
             <?php if (count($projectLogs) > 0): ?>
                 <table class="LOG-TABLE">
@@ -75,8 +75,9 @@
             <?php else: ?>
                 <h1 class="USER-MESSAGE">No project logs available.</h1>
             <?php endif; ?>
+            <!-- PROJECT LOGS END -->
 
-            <!-- ===== TASK LOGS ===== -->
+            <!-- TASK LOGS -->
             <h2 class="LOG-SECTION-TITLE">Task Logs</h2>
             <?php if (count($taskLogs) > 0): ?>
                 <table class="LOG-TABLE">
@@ -132,6 +133,7 @@
             <?php else: ?>
                 <h1 class="USER-MESSAGE">No task logs available for this project.</h1>
             <?php endif; ?>
+            <!-- TASK LOGS END -->
 
             <!-- BUTTONS -->
             <button class="BACK-BUTTON" onclick="window.location.href='view-project-page.php?id=<?php echo urlencode($project_id); ?>'">
@@ -140,7 +142,8 @@
             <button class="EXPORT-BUTTON" onclick="window.location.href='view-project-logs-page.php?id=<?php echo urlencode($project_id); ?>&export=1'">
                 Export Logs
             </button>
-
+            <!-- BUTTONS END -->
         </div>
     </div>
 </div>
+<!-- LOG SECTION END -->

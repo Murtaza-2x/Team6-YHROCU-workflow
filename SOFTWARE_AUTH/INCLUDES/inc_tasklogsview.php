@@ -37,7 +37,7 @@
                             $priority = htmlspecialchars($log['priority']);
                             $desc = nl2br(htmlspecialchars($log['description']));
 
-                            // Pill Rendering
+                            // Pills
                             $statusPill = match ($status) {
                                 'New' => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
                                 'In Progress' => "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>",
@@ -68,9 +68,11 @@
                 <h1 class="USER-MESSAGE">No logs available for this task.</h1>
             <?php endif; ?>
 
-            <!-- Fixed Buttons -->
+            <!-- BUTTONS -->
             <button class="BACK-BUTTON" onclick="window.location.href='view-task-page.php?id=<?php echo urlencode($taskId); ?>'">Back to Task</button>
             <button class="EXPORT-BUTTON" onclick="window.location.href='view-task-logs-page.php?id=<?php echo urlencode($taskId); ?>&export=1'">Export Logs</button>
+            <!-- BUTTONS END -->
         </div>
     </div>
 </div>
+<!-- LOG SECTION END -->

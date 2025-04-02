@@ -19,11 +19,13 @@ require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
+// Redirect if user is not logged in
 if (!is_logged_in()) {
     header('Location: index.php?error=1&msg=Please log in first.');
     exit;
 }
 
+// Validate project ID
 $user = $_SESSION['user'];
 $projectId = $_GET['id'] ?? null;
 
@@ -33,7 +35,7 @@ if (!$projectId || !is_numeric($projectId)) {
     exit;
 }
 
-// Project Info
+// Load project details from the database
 $stmt = $conn->prepare("SELECT * FROM projects WHERE id = ?");
 $stmt->bind_param("i", $projectId);
 $stmt->execute();
@@ -46,21 +48,21 @@ if (!$project) {
     exit;
 }
 
-// Project Details
+// Extract project details
 $projectName = $project['project_name'];
 $status      = $project['status'];
 $priority    = $project['priority'];
 $description = $project['description'];
 $due_date    = $project['due_date'];
 
-// Auth0 Users
+// Fetch Auth0 users for nickname resolution
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
-// Get all assigned users via tasks under this project
+// Get all assigned users through tasks under this project
 $stmt = $conn->prepare("
     SELECT DISTINCT tau.user_id 
     FROM tasks t 
@@ -75,6 +77,7 @@ while ($row = $assignedResult->fetch_assoc()) {
     $assignedUsers[] = $row['user_id'];
 }
 
+// Render project view page
 include 'INCLUDES/inc_projectview.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';

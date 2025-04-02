@@ -1,18 +1,3 @@
-<?php
-/*
--------------------------------------------------------------
-File: inc_adminpage.php
-Description:
-- Displays the Admin Panel styled with the provided layout.
-- Allows:
-    > Viewing Auth0 users.
-    > Creating users into Auth0.
-    > Changing user roles.
-    > Password reset trigger.
--------------------------------------------------------------
-*/
-?>
-
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/admin_styles.css" rel="stylesheet">
@@ -26,13 +11,15 @@ Description:
 
 <p class="MIDDLE-HERO-IMAGE"></p>
 
-<!-- ADMIN PANEL -->
+<!-- ADMIN PANEL SECTION -->
 <div class='ADMIN-CONTAINER'>
     <div class='ADMIN-BOX'>
+        <!-- ADMIN HEADER -->
         <div class='ADMIN-HEAD'>
             <h1>User Management</h1>
             <p>Manage Users below</p>
         </div>
+        <!-- ADMIN HEADER END -->
 
         <?php if (!empty($errorMsg)) : ?>
             <div class="LOGIN-ERROR-MESSAGE"><?php echo $errorMsg; ?></div>
@@ -40,7 +27,7 @@ Description:
             <div class="LOGIN-SUCCESS-MESSAGE"><?php echo $successMsg; ?></div>
         <?php endif; ?>
 
-        <!-- CREATE FORM -->
+        <!-- CREATE USER FORM -->
         <form method="post">
             <div class="ADMIN-ROW">
                 <div class="ADMIN-LABEL"><label for="new_email">Email:</label></div>
@@ -83,7 +70,7 @@ Description:
                 <button class="CREATE-BUTTON" type="submit" name="create_user">Create User</button>
             </div>
         </form>
-        <!-- CREATE FORM END -->
+        <!-- CREATE USER FORM END -->
 
         <!-- USER TABLE -->
         <div class="ADMIN-CONTENT">

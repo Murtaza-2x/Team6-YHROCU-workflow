@@ -15,12 +15,14 @@ require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
+// Restrict access to staff members only
 if (!is_logged_in() || !is_staff()) {
     echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
     include 'INCLUDES/inc_footer.php';
     exit;
 }
 
+// Validate project ID
 $project_id = $_GET['id'] ?? null;
 if (!$project_id || !is_numeric($project_id)) {
     echo "<p class='ERROR-MESSAGE'>Invalid project ID.</p>";
@@ -28,14 +30,14 @@ if (!$project_id || !is_numeric($project_id)) {
     exit;
 }
 
-// Fetch Project Logs
+// Fetch project logs from database
 $stmt = $conn->prepare("SELECT * FROM project_archive WHERE project_id = ?");
 $stmt->bind_param("i", $project_id);
 $stmt->execute();
 $res1 = $stmt->get_result();
 $projectLogs = ($res1) ? $res1->fetch_all(MYSQLI_ASSOC) : [];
 
-// Fetch Task Logs for Tasks inside this Project
+// Fetch task logs for tasks inside this project
 $stmt2 = $conn->prepare("
     SELECT ta.*
     FROM task_archive ta
@@ -47,7 +49,7 @@ $stmt2->execute();
 $res2 = $stmt2->get_result();
 $taskLogs = ($res2) ? $res2->fetch_all(MYSQLI_ASSOC) : [];
 
-// Sort all logs by archived_at DESC
+// Sort logs by archived_at date
 usort($projectLogs, function ($a, $b) {
     return strtotime($b['archived_at']) <=> strtotime($a['archived_at']);
 });
@@ -56,18 +58,18 @@ usort($taskLogs, function ($a, $b) {
     return strtotime($b['archived_at']) <=> strtotime($a['archived_at']);
 });
 
-// User Map
+// Map Auth0 users to their nicknames or emails
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
-// Export CSV
+// Handle CSV export
 if (isset($_GET['export']) && $_GET['export'] == 1) {
     header("Content-Type: text/csv; charset=UTF-8");
     
-    // Get project name safely
+    // Fetch project name safely for the filename
     $stmtName = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
     $stmtName->bind_param("i", $project_id);
     $stmtName->execute();
@@ -75,6 +77,7 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     $projectRow = $resName->fetch_assoc();
     $projectNameSafe = isset($projectRow['project_name']) ? preg_replace("/[^A-Za-z0-9_-]/", "_", $projectRow['project_name']) : "Project";
 
+    // Set CSV headers
     header("Content-Disposition: attachment; filename=\"{$projectNameSafe}_logs.csv\"");
     $out = fopen("php://output", "w");
 
@@ -97,8 +100,7 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
         ]);
     }
     
-
-    // Empty row between
+    // Empty row between sections
     fputcsv($out, []);
 
     // Task Logs Section
@@ -122,7 +124,9 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     exit;
 }
 
+// Render the project logs page
 include 'INCLUDES/inc_header.php';
 include 'INCLUDES/inc_projectlogsview.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
+?>

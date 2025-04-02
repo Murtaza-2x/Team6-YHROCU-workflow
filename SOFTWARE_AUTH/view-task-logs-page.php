@@ -20,12 +20,14 @@ require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
+// Restrict access to staff members only
 if (!is_logged_in() || !is_staff()) {
     echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
     include 'INCLUDES/inc_footer.php';
     exit;
 }
 
+// Validate task ID
 $taskId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($taskId <= 0) {
@@ -34,7 +36,7 @@ if ($taskId <= 0) {
     exit;
 }
 
-// Load logs
+// Load archived logs
 $stmt = $conn->prepare("SELECT a.*, a.edited_by as user_id FROM task_archive a WHERE a.task_id = ? ORDER BY a.archived_at DESC");
 $stmt->bind_param("i", $taskId);
 $stmt->execute();
@@ -42,14 +44,14 @@ $res = $stmt->get_result();
 $logsArray = $res->fetch_all(MYSQLI_ASSOC);
 $logCount = count($logsArray);
 
-// Load Auth0 Users
+// Load Auth0 users for editor name resolution
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
-// CSV Export
+// Handle CSV export
 if (isset($_GET['export']) && $_GET['export'] == 1) {
     $stmtName = $conn->prepare("SELECT subject FROM tasks WHERE id = ?");
     $stmtName->bind_param("i", $taskId);
@@ -92,8 +94,9 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     exit;
 }
 
+// Render task logs page
 require_once __DIR__ . '/INCLUDES/inc_header.php';
-
 include 'INCLUDES/inc_tasklogsview.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
+?>

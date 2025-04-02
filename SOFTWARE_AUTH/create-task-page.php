@@ -29,7 +29,6 @@ if (!is_logged_in() || !is_staff()) {
 $errorMsg = '';
 $successMsg = '';
 
-// When the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject     = trim($_POST['subject'] ?? '');
     $project_id  = trim($_POST['project_id'] ?? '');
@@ -49,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->execute()) {
             $newTaskId = $stmt->insert_id;
 
-            // Assign users
+            // Assign users to the new task
             if (!empty($assigned)) {
                 $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
                 foreach ($assigned as $uid) {
@@ -67,18 +66,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Load projects for dropdown
+// Load projects for dropdown menu
 $projects = [];
 $res_proj = $conn->query("SELECT id, project_name FROM projects");
 while ($p = $res_proj->fetch_assoc()) {
     $projects[] = $p;
 }
 
-// Load Auth0 users for assignment
+// Load Auth0 users for task assignment
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {
-    // Use nickname or email as display name
+    // Use nickname or email as display name for user assignment
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'] ?? 'Unknown';
 }
 

@@ -1,13 +1,8 @@
 <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "rocu";
+require __DIR__ . '/inc_database.php';
 
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    // Check connection
-    if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-    }
-?>
+// Using the DatabaseConnection class
+$db = new DatabaseConnection();
+
+// Establish the connection
+$conn = $db->connect();

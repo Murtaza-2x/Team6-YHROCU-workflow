@@ -5,6 +5,7 @@
 
 <p class="MIDDLE-HERO-IMAGE"></p>
 
+<!-- PROJECT VIEW SECTION -->
 <div class='VIEW-TASK-CONTAINER'>
     <div class='VIEW-PROJECT-BOX'>
         <div class='VIEW-HEAD'>
@@ -35,9 +36,11 @@
                     </div>
                 </div>
             </div>
-            <!-- STATUS END -->
+        </div>
+        <!-- STATUS END -->
 
-            <!-- PRIORITY -->
+        <!-- PRIORITY -->
+        <div class="VIEW-ROW">
             <div class="VIEW-COLUMN">
                 <h1 class="TASK-LABEL">Priority</h1>
                 <div class="TASK-PILL-CONTAINER">
@@ -55,7 +58,7 @@
         <div class="VIEW-ROW">
             <label for="DESCRIPTION" class="TASK-LABEL DESCRIPTION-LABEL">
                 Description
-                <img class="INFO-ICON" src="ICONS/info.png" /></img>
+                <img class="INFO-ICON" src="ICONS/info.png" />
             </label>
             <textarea
                 id="description"
@@ -66,7 +69,7 @@
         </div>
         <!-- DESCRIPTION END -->
 
-        <!-- ASSIGNED -->
+        <!-- ASSIGNED USERS -->
         <div class="TASK-ROW ASSIGNED-ROW">
             <div class="ASSIGNED-INFO">
                 <span class="ASSIGNED-LABEL">Assigned:</span>
@@ -92,6 +95,7 @@
                 </div>
             </div>
         </div>
+        <!-- DUE DATE END -->
 
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
@@ -105,5 +109,7 @@
                 </button>
             <?php endif; ?>
         </div>
+        <!-- BUTTONS END -->
     </div>
 </div>
+<!-- PROJECT VIEW SECTION END -->

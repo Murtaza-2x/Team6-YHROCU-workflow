@@ -1,21 +1,3 @@
-<?php
-/*
--------------------------------------------------------------
-File: inc_taskedit.php
-Description:
-- Displays the Edit Task form.
-- Allows editing:
-    > Subject
-    > Project
-    > Status
-    > Priority
-    > Description
-    > Assigned users (via Auth0)
-- Form posts back to edit-task-page.php
--------------------------------------------------------------
-*/
-?>
-
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/taskview_styles.css" rel="stylesheet">
@@ -31,6 +13,7 @@ Description:
 
 <form action="edit-task-page.php?id=<?php echo $taskId; ?>" method="post">
 
+    <!-- TASK EDIT CONTAINER -->
     <div class='VIEW-TASK-CONTAINER'>
         <div class='VIEW-PROJECT-BOX'>
             <div class='VIEW-HEAD'>
@@ -38,6 +21,7 @@ Description:
                 <p>Edit task details below</p>
             </div>
 
+            <!-- ERROR/SUCCESS MESSAGES -->
             <?php if (!empty($errorMsg)): ?>
                 <div class="LOGIN-ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
             <?php elseif (!empty($successMsg)): ?>
@@ -52,7 +36,9 @@ Description:
                         <input type="text" name="subject" value="<?php echo htmlspecialchars($subject); ?>" placeholder="Task Title" required />
                     </div>
                 </div>
+                <!-- SUBJECT END -->
 
+                <!-- PROJECT ALLOCATION -->
                 <div class="VIEW-COLUMN">
                     <h1 class="TASK-LABEL">Project Allocation</h1>
                     <h2 class="TASK-LABEL">(where the task is assigned)</h2>
@@ -68,6 +54,7 @@ Description:
                     </div>
                 </div>
             </div>
+            <!-- PROJECT ALLOCATION END -->
 
             <!-- STATUS & PRIORITY -->
             <div class="VIEW-ROW">
@@ -95,12 +82,14 @@ Description:
                     </div>
                 </div>
             </div>
+            <!-- STATUS & PRIORITY END -->
 
             <!-- DESCRIPTION -->
             <div class="VIEW-ROW">
                 <label class="TASK-LABEL DESCRIPTION-LABEL">Description</label>
                 <textarea class="TASK-TEXT-AREA" name="description" rows="6" required><?php echo htmlspecialchars($description); ?></textarea>
             </div>
+            <!-- DESCRIPTION END -->
 
             <!-- ASSIGNED USERS -->
             <div class="VIEW-ROW">
@@ -111,21 +100,23 @@ Description:
                             <?php foreach ($auth0_users as $u):
                                 $uid = $u['user_id'];
                                 $nickname = htmlspecialchars($u['nickname'] ?? $u['email']);
-                                $selected = in_array($uid, $assignedUsers) ? "selected" : "";
-                            ?>
+                                $selected = in_array($uid, $assignedUsers) ? "selected" : ""; ?>
                                 <option value="<?php echo $uid; ?>" <?php echo $selected; ?>><?php echo $nickname; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
             </div>
+            <!-- ASSIGNED USERS END -->
 
             <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class="UPDATE-BUTTON" type="submit" name="update_task">Update Task</button>
                 <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-task-page.php?id=<?php echo urlencode($taskId); ?>'">Cancel</button>
             </div>
+            <!-- BUTTONS END -->
 
         </div>
     </div>
 </form>
+<!-- TASK EDIT CONTAINER END -->

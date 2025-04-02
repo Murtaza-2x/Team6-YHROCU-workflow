@@ -20,6 +20,7 @@ require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
 
+// Check if the user has Admin role
 if (!has_role('Admin')) {
     echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
     include 'INCLUDES/inc_footer.php';
@@ -32,7 +33,7 @@ $allowed_roles = ['User', 'Manager', 'Admin'];
 $errorMsg = "";
 $successMsg = "";
 
-// Create user
+// Create user functionality
 if (isset($_POST['create_user'])) {
     $email    = trim($_POST['new_email']     ?? '');
     $password = trim($_POST['new_password']  ?? '');
@@ -50,7 +51,7 @@ if (isset($_POST['create_user'])) {
     }
 }
 
-// Change Role
+// Change Role functionality
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_role'])) {
     $userId = $_POST['change_role'];
     $role = $_POST['role_change'][$userId] ?? 'User';
@@ -62,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_role'])) {
     }
 }
 
-// Generate Password Reset Link
+// Generate Password Reset Link functionality
 if (isset($_POST['reset_password'])) {
     $userId = $_POST['reset_password'];
     try {
@@ -77,10 +78,9 @@ if (isset($_POST['reset_password'])) {
     }
 }
 
-// Get Users
+// Get Users functionality
 $auth0_users = Auth0UserManager::getUsers();
 
 include 'INCLUDES/inc_adminpage.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
-?>

@@ -10,6 +10,7 @@
 
 <p class="MIDDLE-HERO-IMAGE"></p>
 
+<!-- CREATE TASK SECTION -->
 <div class="CREATE-TASK-CONTAINER">
     <div class="CREATE-TASK-BOX">
         <h1>Create a New Task</h1>
@@ -23,10 +24,13 @@
 
         <form id="CREATE-TASK-FORM" action="create-task-page.php" method="post">
 
+            <!-- TASK SUBJECT -->
             <div class="INPUT-GROUP">
                 <input type="text" id="subject" name="subject" placeholder="Subject" required />
             </div>
+            <!-- TASK SUBJECT END -->
 
+            <!-- PROJECT SELECTION -->
             <div class="INPUT-GROUP">
                 <select class="DROPDOWN-GROUP" id="project_id" name="project_id" required>
                     <option value="">Select Project</option>
@@ -35,7 +39,9 @@
                     <?php endforeach; ?>
                 </select>
             </div>
+            <!-- PROJECT SELECTION END -->
 
+            <!-- ASSIGNED USERS -->
             <div class="INPUT-GROUP">
                 <select class="DROPDOWN-GROUP-2" id="assign" name="assign[]" multiple required>
                     <?php foreach ($auth0_users as $user): ?>
@@ -45,7 +51,9 @@
                     <?php endforeach; ?>
                 </select>
             </div>
+            <!-- ASSIGNED USERS END -->
 
+            <!-- TASK STATUS -->
             <div class="INPUT-GROUP">
                 <select class="DROPDOWN-GROUP" id="status" name="status" required>
                     <option value="">Select Status</option>
@@ -54,7 +62,9 @@
                     <option value="Complete">Complete</option>
                 </select>
             </div>
+            <!-- TASK STATUS END -->
 
+            <!-- TASK PRIORITY -->
             <div class="INPUT-GROUP">
                 <select class="DROPDOWN-GROUP" id="priority" name="priority" required>
                     <option value="">Select Priority</option>
@@ -63,16 +73,22 @@
                     <option value="Urgent">Urgent</option>
                 </select>
             </div>
+            <!-- TASK PRIORITY END -->
 
+            <!-- TASK DESCRIPTION -->
             <div class="DESC-GROUP">
                 <label for="description" class="DESCRIPTION-LABEL">Description:</label>
                 <textarea id="description" name="description" class="TASK-TEXT-AREA" rows="6" required></textarea>
             </div>
+            <!-- TASK DESCRIPTION END -->
 
+            <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class="CREATE-BUTTON" type="submit">Create Task</button>
                 <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='list-task-page.php'">Cancel</button>
             </div>
+            <!-- BUTTONS END -->
         </form>
     </div>
 </div>
+<!-- CREATE TASK SECTION END -->
