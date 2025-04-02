@@ -3,9 +3,10 @@
 This is the dashboard page shown after login.
 It displays different content based on the user's clearance level:
 - For regular users (Staff), it shows a pie chart with their active tasks by priority.
-- For managers, it shows:
+- For managers and admins, it shows:
   1. A bar chart filtered by priority and due dates for all projects.
-  2. A pie chart showing all active tasks (New or In Progress).
+  2. A pie chart showing tasks by status (New, In Progress, Completed).
+  3. A summary box showing task counts next to their status labels.
 */
 ?>
 
@@ -55,13 +56,13 @@ It displays different content based on the user's clearance level:
     $activeTaskStatusBreakdown = [];
     $userPriorityBreakdown = [];
 
-    // Pre-define filter variables to avoid undefined warning for Admins/Managers
+    // Pre-define filter variables
     $filterPriority = $_GET['priority'] ?? 'All';
     $filterStart = $_GET['start_date'] ?? '';
     $filterEnd = $_GET['end_date'] ?? '';
 
     if ($clearance === 'User') {
-      // Count user's active tasks grouped by priority (Urgent, Moderate, Low)
+      // Staff view - tasks by priority
       $sql = "SELECT priority, COUNT(*) AS total 
               FROM tasks 
               JOIN task_assigned_users tau ON tasks.id = tau.task_id
@@ -76,7 +77,7 @@ It displays different content based on the user's clearance level:
     }
 
     elseif (in_array($clearance, ['Manager', 'Admin'])) {
-      // Project status summary for bar chart
+      // Bar chart data for project status
       $sql = "SELECT status, COUNT(*) AS total FROM projects WHERE 1";
       if ($filterPriority !== 'All') {
         $sql .= " AND priority = '" . $conn->real_escape_string($filterPriority) . "'";
@@ -90,8 +91,18 @@ It displays different content based on the user's clearance level:
         $projectSummary[] = $row;
       }
 
-      // Active task status breakdown for pie chart
-      $sqlActive = "SELECT status, COUNT(*) AS total FROM tasks WHERE status IN ('New', 'In Progress') GROUP BY status";
+      // Pie chart + summary counts for task status
+      $sqlActive = "SELECT 
+                      CASE 
+                        WHEN TRIM(LOWER(status)) = 'new' THEN 'New'
+                        WHEN TRIM(LOWER(status)) = 'in progress' THEN 'In Progress'
+                        WHEN TRIM(LOWER(status)) IN ('complete', 'completed') THEN 'Completed'
+                        ELSE 'Other'
+                      END AS status,
+                      COUNT(*) AS total
+                    FROM tasks
+                    WHERE TRIM(LOWER(status)) IN ('new', 'in progress', 'complete', 'completed')
+                    GROUP BY status";
       $resultActive = $conn->query($sqlActive);
       while ($row = $resultActive->fetch_assoc()) {
         $activeTaskStatusBreakdown[] = $row;
@@ -111,8 +122,7 @@ It displays different content based on the user's clearance level:
           </div>
 
           <script>
-            // User pie chart: breakdown of assigned tasks by priority
-            const userPriorityData = <?= json_encode($userPriorityBreakdown); ?>;
+            const userPriorityData = <?= json_encode($userPriorityBreakdown ?? []); ?>;
             const userLabels = userPriorityData.map(row => row.priority);
             const userCounts = userPriorityData.map(row => parseInt(row.total));
 
@@ -123,7 +133,7 @@ It displays different content based on the user's clearance level:
                 datasets: [{
                   label: 'Your Active Tasks by Priority',
                   data: userCounts,
-                  backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71'] // Urgent, Moderate, Low
+                  backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71']
                 }]
               },
               options: {
@@ -131,17 +141,18 @@ It displays different content based on the user's clearance level:
                   title: {
                     display: true,
                     text: 'Your Active Tasks by Priority'
+                  },
+                  legend: {
+                    position: 'bottom'
                   }
                 }
               }
             });
           </script>
 
-        <!-- MANAGER VIEW & ADMIN VIEW -->
+        <!-- MANAGER / ADMIN VIEW -->
         <?php elseif (in_array($clearance, ['Manager', 'Admin'])): ?>
           <div class="MANAGER-CHART-WRAPPER">
-
-            <!-- Filter Form -->
             <form method="GET" class="MANAGER-FILTER-FORM">
               <label for="priority">Priority:</label>
               <select name="priority" id="priority">
@@ -160,12 +171,30 @@ It displays different content based on the user's clearance level:
               <button type="submit">Apply Filters</button>
             </form>
 
-            <!-- Manager's bar + pie charts -->
+            <!-- Charts Row -->
             <div class="CHARTS-ROW">
+              <!-- Bar Chart -->
               <div class="DASH-CHART-BOX">
                 <canvas id="managerFilteredChart"></canvas>
               </div>
 
+              <!-- Task Summary Box -->
+              <div class="DASH-MIDDLE-CHART-BOX">
+                <div class="TASK-STATUS-LIST">
+                  <h3>Task Status Overview</h3>
+                  <ul>
+                    <?php foreach ($activeTaskStatusBreakdown as $statusRow): 
+                      $statusClass = strtolower(str_replace(' ', '', $statusRow['status']));
+                    ?>
+                      <li class="status-<?= $statusClass ?>">
+                        <strong><?= $statusRow['status'] ?>:</strong> <?= $statusRow['total'] ?>
+                      </li>
+                    <?php endforeach; ?>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Pie Chart -->
               <div class="DASH-PIE-CHART-BOX">
                 <canvas id="activeTaskChart"></canvas>
               </div>
@@ -173,18 +202,18 @@ It displays different content based on the user's clearance level:
           </div>
 
           <script>
-            // Bar Chart (Project Status Summary)
-            const filteredData = <?= json_encode($projectSummary); ?>;
-            const labels = filteredData.map(row => row.status);
-            const values = filteredData.map(row => parseInt(row.total));
+            // Bar Chart
+            const filteredData = <?= json_encode($projectSummary ?? []); ?>;
+            const barLabels = filteredData.map(row => row.status);
+            const barValues = filteredData.map(row => parseInt(row.total));
 
             new Chart(document.getElementById('managerFilteredChart'), {
               type: 'bar',
               data: {
-                labels: labels,
+                labels: barLabels,
                 datasets: [{
                   label: 'Projects',
-                  data: values,
+                  data: barValues,
                   backgroundColor: '#36a2eb'
                 }]
               },
@@ -195,30 +224,37 @@ It displays different content based on the user's clearance level:
                     text: 'Project Status Summary'
                   }
                 },
-                scales: { y: { beginAtZero: true } }
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                }
               }
             });
 
-            // Pie Chart (Active Tasks by Status)
-            const activeTaskData = <?= json_encode($activeTaskStatusBreakdown); ?>;
-            const taskLabels = activeTaskData.map(row => row.status);
-            const taskCounts = activeTaskData.map(row => parseInt(row.total));
+            // Pie Chart
+            const pieData = <?= json_encode($activeTaskStatusBreakdown ?? []); ?>;
+            const pieLabels = pieData.map(row => row.status);
+            const pieValues = pieData.map(row => parseInt(row.total));
 
             new Chart(document.getElementById('activeTaskChart'), {
               type: 'pie',
               data: {
-                labels: taskLabels,
+                labels: pieLabels,
                 datasets: [{
-                  label: 'Active Tasks',
-                  data: taskCounts,
-                  backgroundColor: ['#ff6384', '#ffcd56'] // New, In Progress
+                  label: 'Task Status',
+                  data: pieValues,
+                  backgroundColor: ['#ff6384', '#ffcd56', '#2ecc71']
                 }]
               },
               options: {
                 plugins: {
                   title: {
                     display: true,
-                    text: 'Current Active Tasks (All Projects)'
+                    text: 'Task Breakdown (All Projects)'
+                  },
+                  legend: {
+                    position: 'bottom'
                   }
                 }
               }
