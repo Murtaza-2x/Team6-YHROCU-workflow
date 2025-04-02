@@ -57,6 +57,12 @@
         </div>
         <!-- PRIORITY & STATUS END -->
 
+        <!-- Due Date -->
+        <div class="PROJECT-SECTION">
+           <label for="due_date" class="PROJECT-LABEL">Due Date</label>
+              <input type="date" id="due_date" name="due_date" class="PROJECT-INPUT" value="<?php echo htmlspecialchars($due_date); ?>" disabled>
+        </div>
+
         <!-- DESCRIPTION -->
         <div class="VIEW-ROW">
             <label for="DESCRIPTION" class="TASK-LABEL DESCRIPTION-LABEL">
