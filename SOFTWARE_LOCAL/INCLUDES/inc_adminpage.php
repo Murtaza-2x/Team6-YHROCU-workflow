@@ -7,7 +7,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="JS/SEARCH-USERS.js"></script>
     <script src="JS/ADMIN-ACTIONS.js"></script>
-
 </head>
 
 <p class="MIDDLE-HERO-IMAGE"></p>
@@ -62,6 +61,7 @@
                     </select>
                 </div>
             </div>
+
             <div class="TASK-BUTTONS">
                 <button type="submit" name="create_user" class="CREATE-BUTTON">Create User</button>
             </div>
@@ -77,7 +77,6 @@
 
         <!-- USER TABLE -->
         <div class="ADMIN-CONTENT">
-
             <div class="ADMIN-AREA">
                 <div class="ADMIN-LIST">
                     <table class="ADMIN-TABLE" id="USER-TABLE">
@@ -106,7 +105,8 @@
                                         </td>
                                         <td>
                                             <div class="INPUT-GROUP-2">
-                                                <select name="clearance" class="DROPDOWN-GROUP-3" disabled>
+                                                <select name="clearance" class="DROPDOWN-GROUP-3"
+                                                    <?= $user['id'] != $_SESSION['id'] ? 'disabled data-editable="true"' : 'disabled' ?>>
                                                     <option value="User" <?= $user['clearance'] === 'User' ? 'selected' : '' ?>>User</option>
                                                     <option value="Manager" <?= $user['clearance'] === 'Manager' ? 'selected' : '' ?>>Manager</option>
                                                     <option value="Admin" <?= $user['clearance'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
