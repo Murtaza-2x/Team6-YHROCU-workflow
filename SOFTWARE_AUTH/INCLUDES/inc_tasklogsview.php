@@ -13,7 +13,6 @@
             <p>Below are the archived versions of this task:</p>
         </div>
 
-        <!-- LOG SECTION LIST -->
         <div class="LOG-LIST">
             <?php if ($logCount > 0): ?>
                 <table class="LOG-TABLE">
@@ -29,38 +28,38 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($logsArray as $log):
-                            $logEditor   = htmlspecialchars($log['username'] ?? 'Unknown');
-                            $archivedAt  = $log['archived_at'];
-                            $createdAt   = $log['created_at'];
-                            $logSubject  = htmlspecialchars($log['subject']);
-                            $logStatus   = htmlspecialchars($log['status']);
-                            $logPriority = htmlspecialchars($log['priority']);
-                            $logDesc     = nl2br(htmlspecialchars($log['description']));
+                        <?php foreach ($logsArray as $log): 
+                            $editor = htmlspecialchars($user_map[$log['user_id']] ?? 'Unknown');
+                            $archivedAt = htmlspecialchars($log['archived_at']);
+                            $createdAt = htmlspecialchars($log['created_at']);
+                            $subject = htmlspecialchars($log['subject']);
+                            $status = htmlspecialchars($log['status']);
+                            $priority = htmlspecialchars($log['priority']);
+                            $desc = nl2br(htmlspecialchars($log['description']));
 
-                            // Pill logic
-                            $statusPill = match ($logStatus) {
-                                'New'         => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
+                            // Pill Rendering
+                            $statusPill = match ($status) {
+                                'New' => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
                                 'In Progress' => "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>",
-                                'Complete'    => "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>",
-                                default       => "<button class='PILL-INACTIVE'>$logStatus</button>",
+                                'Complete' => "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>",
+                                default => "<button class='PILL-INACTIVE'>$status</button>",
                             };
 
-                            $priorityPill = match ($logPriority) {
-                                'Urgent'   => "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>",
+                            $priorityPill = match ($priority) {
+                                'Urgent' => "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>",
                                 'Moderate' => "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>",
-                                'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
-                                default    => "<button class='PILL-INACTIVE'>$logPriority</button>",
+                                'Low' => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
+                                default => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
                         ?>
                             <tr>
-                                <td><?php echo $logEditor; ?></td>
+                                <td><?php echo $editor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>
                                 <td><?php echo $createdAt; ?></td>
-                                <td><?php echo $logSubject; ?></td>
+                                <td><?php echo $subject; ?></td>
                                 <td><?php echo $statusPill; ?></td>
                                 <td><?php echo $priorityPill; ?></td>
-                                <td class="LOG-DESC"><?php echo $logDesc; ?></td>
+                                <td class="LOG-DESC"><?php echo $desc; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -69,15 +68,9 @@
                 <h1 class="USER-MESSAGE">No logs available for this task.</h1>
             <?php endif; ?>
 
-            <!-- BUTTONS -->
-            <button class="BACK-BUTTON" onclick="window.location.href='view-task-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($id); ?>'">
-                Back to Task
-            </button>
-            <button class="EXPORT-BUTTON" onclick="window.location.href='view-task-logs-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($id); ?>&export=1'">
-                Export Logs
-            </button>
+            <!-- Fixed Buttons -->
+            <button class="BACK-BUTTON" onclick="window.location.href='view-task-page.php?id=<?php echo urlencode($taskId); ?>'">Back to Task</button>
+            <button class="EXPORT-BUTTON" onclick="window.location.href='view-task-logs-page.php?id=<?php echo urlencode($taskId); ?>&export=1'">Export Logs</button>
         </div>
-        <!-- LOG SECTION LIST END -->
     </div>
 </div>
-<!-- MIDDLE SECTION END -->

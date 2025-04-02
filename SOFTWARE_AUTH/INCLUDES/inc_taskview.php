@@ -77,6 +77,18 @@
             </div>
         </div>
 
+        <!-- LAST EDITED -->
+        <?php if (!empty($lastEditor) && !empty($lastEditTime)): ?>
+            <div class="TASK-ROW ASSIGNED-ROW">
+                <div class="ASSIGNED-INFO">
+                    <div class="ASSIGNED-LABEL">
+                        <span>Last Edited By: <strong><?php echo htmlspecialchars($lastEditor); ?></strong></span>
+                        <span>Archived At: <strong><?php echo htmlspecialchars($lastEditTime); ?></strong></span>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
             <?php if (has_role('Admin')): ?>
@@ -84,7 +96,7 @@
             <?php endif; ?>
             <button class="CANCEL-BUTTON" onclick="window.location.href='list-task-page.php'">Cancel</button>
             <?php if (is_admin()): ?>
-                <button class="LOGS-BUTTON" onclick="window.location.href='task-logs.php?id=<?php echo urlencode($taskId); ?>'">
+                <button class="VIEW-LOGS-BUTTON" onclick="window.location.href='view-task-logs-page.php?id=<?php echo urlencode($taskId); ?>'">
                     View Task Logs
                 </button>
             <?php endif; ?>

@@ -3,11 +3,11 @@
 -------------------------------------------------------------
 File: edit-project-page.php
 Description:
-- Handles editing of a single project.
-- Displays:
-    > Project title, status, priority, and description.
-    > Assigned users aggregated from tasks.
-    > Allows Admins to update project info.
+- Displays and handles project editing.
+- Admins can:
+    > Edit project name, status, priority, description.
+    > Archive previous version before updating.
+    > View assigned users aggregated from tasks.
 -------------------------------------------------------------
 */
 
@@ -19,13 +19,9 @@ require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
-if (!is_logged_in()) {
-    header('Location: index.php?error=1&msg=Please log in first.');
-    exit;
-}
-
-if (!has_role('Admin')) {
-    header('Location: index.php?error=1&msg=Not authorized.');
+if (!is_logged_in() || !is_admin()) {
+    echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
+    include 'INCLUDES/inc_footer.php';
     exit;
 }
 
@@ -37,12 +33,12 @@ if (!$projectId || !is_numeric($projectId)) {
     exit;
 }
 
-// Get project data
+// Get project
 $stmt = $conn->prepare("SELECT * FROM projects WHERE id = ?");
 $stmt->bind_param("i", $projectId);
 $stmt->execute();
-$result = $stmt->get_result();
-$project = $result->fetch_assoc();
+$res = $stmt->get_result();
+$project = $res->fetch_assoc();
 
 if (!$project) {
     echo "<p class='ERROR-MESSAGE'>Project not found.</p>";
@@ -50,17 +46,37 @@ if (!$project) {
     exit;
 }
 
-// Project Details
-$projectName = $project['project_name'];
-$status      = $project['status'];
-$priority    = $project['priority'];
-$description = $project['description'];
+// Archive + Update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
+    $newName = trim($_POST['project_name'] ?? '');
+    $newStatus = trim($_POST['status'] ?? '');
+    $newPriority = trim($_POST['priority'] ?? '');
+    $newDescription = trim($_POST['description'] ?? '');
+    $editor = $_SESSION['user']['user_id'] ?? '';
 
-// Aggregated Assigned Users
+    if (empty($newName) || empty($newStatus) || empty($newPriority) || empty($newDescription)) {
+        echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
+    } else {
+        // Archive previous
+        $stmtArchive = $conn->prepare("INSERT INTO project_archive (project_id, project_name, status, priority, description, edited_by) SELECT id, project_name, status, priority, description, ? FROM projects WHERE id = ?");
+        $stmtArchive->bind_param("si", $editor, $projectId);
+        $stmtArchive->execute();
+
+        // Update project
+        $stmtUpdate = $conn->prepare("UPDATE projects SET project_name=?, status=?, priority=?, description=? WHERE id=?");
+        $stmtUpdate->bind_param("ssssi", $newName, $newStatus, $newPriority, $newDescription, $projectId);
+        if ($stmtUpdate->execute()) {
+            echo "<p class='SUCCESS-MESSAGE'>Project updated. Redirecting...</p>";
+            exit;
+        } else {
+            echo "<p class='ERROR-MESSAGE'>Failed to update project.</p>";
+        }
+    }
+}
+
+// Load assigned users (aggregated from tasks)
 $assignedUsers = [];
-$stmtUsers = $conn->prepare("SELECT DISTINCT tau.user_id FROM task_assigned_users tau 
-                             JOIN tasks t ON tau.task_id = t.id 
-                             WHERE t.project_id = ?");
+$stmtUsers = $conn->prepare("SELECT DISTINCT tau.user_id FROM task_assigned_users tau JOIN tasks t ON tau.task_id = t.id WHERE t.project_id = ?");
 $stmtUsers->bind_param("i", $projectId);
 $stmtUsers->execute();
 $resUsers = $stmtUsers->get_result();
@@ -68,36 +84,12 @@ while ($row = $resUsers->fetch_assoc()) {
     $assignedUsers[] = $row['user_id'];
 }
 
+// Fetch Auth0 Users
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
-
-// Handle update
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
-
-    $newName = trim($_POST['project_name'] ?? '');
-    $newStatus = trim($_POST['status'] ?? '');
-    $newPriority = trim($_POST['priority'] ?? '');
-    $newDescription = trim($_POST['description'] ?? '');
-
-    if (empty($newName) || empty($newStatus) || empty($newPriority) || empty($newDescription)) {
-        echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
-    } else {
-        $stmtUpdate = $conn->prepare("UPDATE projects SET project_name = ?, status = ?, priority = ?, description = ? WHERE id = ?");
-        $stmtUpdate->bind_param("ssssi", $newName, $newStatus, $newPriority, $newDescription, $projectId);
-
-        if ($stmtUpdate->execute()) {
-            echo "<p class='SUCCESS-MESSAGE'>Project updated successfully. Redirecting...</p>";
-            echo "<script>setTimeout(function(){ window.location.href='view-project-page.php?id=" . urlencode($projectId) . "'; }, 1500);</script>";
-            exit;
-        } else {
-            echo "<p class='ERROR-MESSAGE'>Failed to update project. Please try again.</p>";
-        }
-    }
-}
-
 
 include 'INCLUDES/inc_projectedit.php';
 include 'INCLUDES/inc_footer.php';

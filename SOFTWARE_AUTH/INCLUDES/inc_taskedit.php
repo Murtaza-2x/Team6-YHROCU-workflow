@@ -1,3 +1,21 @@
+<?php
+/*
+-------------------------------------------------------------
+File: inc_taskedit.php
+Description:
+- Displays the Edit Task form.
+- Allows editing:
+    > Subject
+    > Project
+    > Status
+    > Priority
+    > Description
+    > Assigned users (via Auth0)
+- Form posts back to edit-task-page.php
+-------------------------------------------------------------
+*/
+?>
+
 <head>
     <title><?php echo $title; ?></title>
     <link href="CSS/taskview_styles.css" rel="stylesheet">
@@ -26,6 +44,7 @@
                 <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
             <?php endif; ?>
 
+            <!-- SUBJECT -->
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
                     <h1 class="TASK-LABEL">Task Title</h1>
@@ -50,6 +69,7 @@
                 </div>
             </div>
 
+            <!-- STATUS & PRIORITY -->
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
                     <div class="TASK-LABEL">Status</div>
@@ -76,11 +96,13 @@
                 </div>
             </div>
 
+            <!-- DESCRIPTION -->
             <div class="VIEW-ROW">
                 <label class="TASK-LABEL DESCRIPTION-LABEL">Description</label>
                 <textarea class="TASK-TEXT-AREA" name="description" rows="6" required><?php echo htmlspecialchars($description); ?></textarea>
             </div>
 
+            <!-- ASSIGNED USERS -->
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
                     <div class="TASK-LABEL">Assign Users</div>
@@ -98,6 +120,7 @@
                 </div>
             </div>
 
+            <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class="UPDATE-BUTTON" type="submit" name="update_task">Update Task</button>
                 <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-task-page.php?id=<?php echo urlencode($taskId); ?>'">Cancel</button>

@@ -3,13 +3,11 @@
 -------------------------------------------------------------
 File: view-task-page.php
 Description:
-- Displays a detailed view of a single task.
-- Shows:
-    > Task information (Title, Project, Status, Priority, Description)
-    > Assigned users (via Auth0)
-    > Comments with Auth0 user IDs or nicknames
-    > Allows adding new comments
-    > Provides edit and cancel buttons (Admin only sees edit)
+- Displays a single task with:
+    > Title, Project, Status, Priority, Description
+    > Assigned Users (from Auth0)
+    > Comments section
+    > Admin-only edit button
 -------------------------------------------------------------
 */
 
@@ -26,51 +24,49 @@ if (!is_logged_in()) {
     exit;
 }
 
-$user = $_SESSION['user'];
 $taskId = $_GET['id'] ?? null;
-
 if (!$taskId || !is_numeric($taskId)) {
     echo "<p class='ERROR-MESSAGE'>Invalid task ID.</p>";
     include 'INCLUDES/inc_footer.php';
     exit;
 }
 
-// Task Info
+// Load task
 $stmt = $conn->prepare("SELECT * FROM tasks WHERE id = ?");
 $stmt->bind_param("i", $taskId);
 $stmt->execute();
 $result = $stmt->get_result();
 $task = $result->fetch_assoc();
-
 if (!$task) {
     echo "<p class='ERROR-MESSAGE'>Task not found.</p>";
     include 'INCLUDES/inc_footer.php';
     exit;
 }
 
-$subject = $task['subject'];
+// Data
+$subject     = $task['subject'];
 $description = $task['description'];
-$project_id = $task['project_id'];
-$status = $task['status'];
-$priority = $task['priority'];
+$project_id  = $task['project_id'];
+$status      = $task['status'];
+$priority    = $task['priority'];
 
 // Project Name
 $projectName = '';
-$projQuery = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
-$projQuery->bind_param("i", $project_id);
-$projQuery->execute();
-$projResult = $projQuery->get_result();
-if ($projResult && $row = $projResult->fetch_assoc()) {
-    $projectName = $row['project_name'];
+$stmtP = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
+$stmtP->bind_param("i", $project_id);
+$stmtP->execute();
+$resP = $stmtP->get_result();
+if ($resP && $pRow = $resP->fetch_assoc()) {
+    $projectName = $pRow['project_name'];
 }
 
 // Assigned Users
 $assignedUsers = [];
-$stmtAssigned = $conn->prepare("SELECT user_id FROM task_assigned_users WHERE task_id = ?");
-$stmtAssigned->bind_param("i", $taskId);
-$stmtAssigned->execute();
-$assignedResult = $stmtAssigned->get_result();
-while ($row = $assignedResult->fetch_assoc()) {
+$stmtA = $conn->prepare("SELECT user_id FROM task_assigned_users WHERE task_id = ?");
+$stmtA->bind_param("i", $taskId);
+$stmtA->execute();
+$resA = $stmtA->get_result();
+while ($row = $resA->fetch_assoc()) {
     $assignedUsers[] = $row['user_id'];
 }
 
@@ -81,16 +77,16 @@ foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
+// Comment Submission
 if (isset($_POST['submit_comment']) && !empty($_POST['comment'])) {
     $commentText = trim($_POST['comment']);
     $userId = $_SESSION['user']['user_id'] ?? null;
 
     if ($userId && $commentText) {
-        $stmt = $conn->prepare("INSERT INTO comments (task_id, user_id, comment) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $taskId, $userId, $commentText);
-        if ($stmt->execute()) {
+        $stmtC = $conn->prepare("INSERT INTO comments (task_id, user_id, comment) VALUES (?, ?, ?)");
+        $stmtC->bind_param("sss", $taskId, $userId, $commentText);
+        if ($stmtC->execute()) {
             echo "<p class='SUCCESS-MESSAGE'>Comment added. Reloading...</p>";
-            echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($taskId) . "'; }, 1000);</script>";
             exit;
         } else {
             echo "<p class='ERROR-MESSAGE'>Failed to add comment.</p>";
@@ -100,7 +96,25 @@ if (isset($_POST['submit_comment']) && !empty($_POST['comment'])) {
     }
 }
 
-// Render View
+// Get Auth0 users for nickname resolution
+$auth0_users = Auth0UserFetcher::getUsers();
+$user_map = [];
+foreach ($auth0_users as $u) {
+    $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
+}
+
+// Get the latest archive log for this task
+$stmtArchive = $conn->prepare("SELECT * FROM task_archive WHERE task_id = ? ORDER BY archived_at DESC LIMIT 1");
+$stmtArchive->bind_param("i", $taskId);
+$stmtArchive->execute();
+$resArchive = $stmtArchive->get_result();
+if ($archiveRow = $resArchive->fetch_assoc()) {
+    $lastEditorId = $archiveRow['edited_by'];
+    $lastEditor = $user_map[$lastEditorId] ?? $lastEditorId;
+    $lastEditTime = $archiveRow['archived_at'];
+}
+
+// View Render
 include 'INCLUDES/inc_taskview.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';

@@ -90,7 +90,7 @@
             <?php endif; ?>
             <button class="CANCEL-BUTTON" onclick="window.location.href='list-task-page.php'">Cancel</button>
             <?php if (is_admin()): ?>
-                <button class="LOGS-BUTTON" onclick="window.location.href='project-logs.php?id=<?php echo urlencode($projectId); ?>'">
+                <button class="VIEW-LOGS-BUTTON" onclick="window.location.href='view-project-logs-page.php?id=<?php echo urlencode($projectId); ?>'">
                     View Project Logs
                 </button>
             <?php endif; ?>
