@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2025 at 02:16 PM
+-- Generation Time: Apr 02, 2025 at 02:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -136,7 +136,7 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `subject`, `description`, `project_id`, `status`, `priority`, `created_by`, `due_date`, `created_at`) VALUES
-(1, 'XCX WORLD', '1. Do you wanna come to my party?\r\n2. Taxi\r\n3. I wanna be with you', 1, 'In Progress', 'Moderate', '', NULL, '2025-04-02 12:50:02'),
+(1, 'XCX WORLD', '1. Do you wanna come to my party?\r\n2. Taxi\r\n3. I wanna be with you', 1, 'Complete', 'Moderate', '', NULL, '2025-04-02 12:50:02'),
 (2, 'LG7', 'I can be your boyfriend for the evening\r\nYou can be my boyfriend for the night', 1, 'New', 'Low', '', NULL, '2025-04-02 12:50:02'),
 (3, 'C.R.A.S.H', '360 featuring robyn and yung lean', 1, 'In Progress', 'Low', 'tougereddesign', NULL, '2025-04-02 12:50:02'),
 (4, 'Puppy', 'Well yes', 1, 'In Progress', 'Low', 'auth0|67e80674b5ac5df6f28de6cd', NULL, '2025-04-02 12:50:02'),
@@ -170,7 +170,8 @@ INSERT INTO `task_archive` (`id`, `task_id`, `edited_by`, `created_at`, `archive
 (2, 3, 'auth0|67e80674b5ac5df6f28de6cd', '0000-00-00 00:00:00', '2025-04-01 21:24:40', 'C.R.A.S.H', 'In Progress', 'Low', 'YUCK'),
 (3, 5, 'auth0|67e80674b5ac5df6f28de6cd', '0000-00-00 00:00:00', '2025-04-02 12:38:24', 'Hey tinashe wanna do this song', 'In Progress', 'Moderate', 'b2b b2b'),
 (4, 1, 'auth0|67e80674b5ac5df6f28de6cd', '2025-04-02 12:50:02', '2025-04-02 12:54:55', 'XCX WORLD', 'In Progress', 'Moderate', 'Do you wanna come to my party?'),
-(5, 1, 'auth0|67e80674b5ac5df6f28de6cd', '2025-04-02 12:50:02', '2025-04-02 12:55:47', 'XCX WORLD', 'In Progress', 'Moderate', 'Do you wanna come to my party?\r\nTaxi');
+(5, 1, 'auth0|67e80674b5ac5df6f28de6cd', '2025-04-02 12:50:02', '2025-04-02 12:55:47', 'XCX WORLD', 'In Progress', 'Moderate', 'Do you wanna come to my party?\r\nTaxi'),
+(6, 1, 'auth0|67e80674b5ac5df6f28de6cd', '2025-04-02 12:50:02', '2025-04-02 13:28:17', 'XCX WORLD', 'In Progress', 'Moderate', '1. Do you wanna come to my party?\r\n2. Taxi\r\n3. I wanna be with you');
 
 -- --------------------------------------------------------
 
@@ -272,7 +273,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `task_archive`
 --
 ALTER TABLE `task_archive`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

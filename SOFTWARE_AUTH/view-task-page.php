@@ -114,7 +114,6 @@ if ($archiveRow = $resArchive->fetch_assoc()) {
     $lastEditTime = $archiveRow['archived_at'];
 }
 
-// View Render
 include 'INCLUDES/inc_taskview.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';

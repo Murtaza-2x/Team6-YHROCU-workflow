@@ -104,41 +104,50 @@ Description:
                                 $role = $metadata['role'] ?? 'User';
                                 $uid = $user['user_id'] ?? $user['sub'] ?? 'unknown';
                                 $email = $user['email'] ?? 'unknown';
+                                $currentAdminId = $_SESSION['user']['user_id'] ?? null;
+                                $userId = $user['user_id'] ?? $user['sub'] ?? 'unknown';
+                                $isSelf = ($userId === $currentAdminId);
                             ?>
-                                <form method="post">
-                                    <tr>
-                                        <td>
-                                            <div class="INPUT-GROUP-2"><input type="text" value="<?php echo htmlspecialchars($uid); ?>" readonly></div>
-                                        </td>
-                                        <td>
-                                            <div class="INPUT-GROUP-2"><input type="email" value="<?php echo htmlspecialchars($email); ?>" readonly></div>
-                                        </td>
-                                        <td>
-                                            <div class="INPUT-GROUP-2">
-                                                <select name="role_change[<?php echo $uid; ?>]" class="DROPDOWN-GROUP-3">
-                                                    <?php foreach ($allowed_roles as $roleOption): ?>
-                                                        <option value="<?php echo $roleOption; ?>" <?php if ($role === $roleOption) echo 'selected'; ?>>
-                                                            <?php echo $roleOption; ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($uid); ?>">
-                                            <div class="INPUT-INLINE">
-                                                <div class="ACTION-DROPDOWN">
-                                                    <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
-                                                    <div class="ACTION-DROPDOWN-MENU">
-                                                        <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
-                                                        <button class="ACTION-DROPDOWN-ITEM" type="submit" name="change_role" value="<?php echo htmlspecialchars($uid); ?>">Update</button>
-                                                        <button class="ACTION-DROPDOWN-ITEM" type="submit" name="reset_password" value="<?php echo htmlspecialchars($uid); ?>">Reset Password</button>
+                                <?php if (!$isSelf): ?>
+                                    <form method="post">
+                                        <tr>
+                                            <td>
+                                                <div class="INPUT-GROUP-2"><input type="text" value="<?php echo htmlspecialchars($userId); ?>" readonly></div>
+                                            </td>
+                                            <td>
+                                                <div class="INPUT-GROUP-2"><input type="email" value="<?php echo htmlspecialchars($email); ?>" readonly></div>
+                                            </td>
+                                            <td>
+                                                <div class="INPUT-GROUP-2">
+                                                    <select name="role_change[<?php echo $userId; ?>]" class="DROPDOWN-GROUP-3">
+                                                        <?php foreach ($allowed_roles as $roleOption): ?>
+                                                            <option value="<?php echo $roleOption; ?>" <?php if ($role === $roleOption) echo 'selected'; ?>>
+                                                                <?php echo $roleOption; ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($userId); ?>">
+                                                <div class="INPUT-INLINE">
+                                                    <div class="ACTION-DROPDOWN">
+                                                        <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
+                                                        <div class="ACTION-DROPDOWN-MENU">
+                                                            <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
+                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="change_role" value="<?php echo htmlspecialchars($userId); ?>">Update</button>
+                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="reset_password" value="<?php echo htmlspecialchars($userId); ?>">Reset Password</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
+                                            </td>
+                                        </tr>
+                                    </form>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4" style="opacity:0.3;">[<?php echo htmlspecialchars($email); ?>] - You cannot edit yourself</td>
                                     </tr>
-                                </form>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         </tbody>
                     </table>

@@ -34,7 +34,7 @@ if ($taskId <= 0) {
     exit;
 }
 
-// Load logs (most recent first)
+// Load logs
 $stmt = $conn->prepare("SELECT a.*, a.edited_by as user_id FROM task_archive a WHERE a.task_id = ? ORDER BY a.archived_at DESC");
 $stmt->bind_param("i", $taskId);
 $stmt->execute();
@@ -51,7 +51,6 @@ foreach ($auth0_users as $u) {
 
 // CSV Export
 if (isset($_GET['export']) && $_GET['export'] == 1) {
-    // Get task subject safely
     $stmtName = $conn->prepare("SELECT subject FROM tasks WHERE id = ?");
     $stmtName->bind_param("i", $taskId);
     $stmtName->execute();
