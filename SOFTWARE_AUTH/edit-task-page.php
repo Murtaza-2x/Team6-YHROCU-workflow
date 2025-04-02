@@ -47,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
         echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
     } else {
         // Archive before updating
-        $stmtArchive = $conn->prepare("INSERT INTO task_archive (task_id, subject, status, priority, due_date, description, edited_by, created_at)
-        SELECT id, subject, status, priority, due_date, description, ?, created_at
+        $stmtArchive = $conn->prepare("INSERT INTO task_archive (task_id, subject, status, priority, description, edited_by, created_at)
+        SELECT id, subject, status, priority, description, ?, created_at
         FROM tasks
         WHERE id = ?");        
         $stmtArchive->bind_param("si", $edited_by, $taskId);

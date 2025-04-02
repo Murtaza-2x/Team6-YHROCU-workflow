@@ -72,11 +72,24 @@ $result = $stmt->get_result();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result->fetch_assoc()): ?>
-                            <?php
-                            // Build pills for Status
-                            $status = $row["status"];
-                            switch ($status) {
+                        <?php
+                        $activeTasks = [];
+                        $completedTasks = [];
+
+                        while ($row = $result->fetch_assoc()) {
+                            if (!is_staff() && $row["status"] === 'Complete') {
+                                $completedTasks[] = $row;
+                            } else {
+                                $activeTasks[] = $row;
+                            }
+                        }
+
+                        foreach (array_merge($activeTasks, $completedTasks) as $row):
+                            $isCompleted = !is_staff() && $row["status"] === 'Complete';
+                            $rowStyle = $isCompleted ? 'style="opacity:0.5;"' : '';
+
+                            // status pill
+                            switch ($row["status"]) {
                                 case 'New':
                                     $statusPill = "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>";
                                     break;
@@ -87,13 +100,12 @@ $result = $stmt->get_result();
                                     $statusPill = "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>";
                                     break;
                                 default:
-                                    $statusPill = "<button class='PILL-INACTIVE'>" . htmlspecialchars($status) . "</button>";
+                                    $statusPill = "<button class='PILL-INACTIVE'>" . htmlspecialchars($row["status"]) . "</button>";
                                     break;
                             }
 
-                            // Build pills for Priority
-                            $priority = $row["priority"];
-                            switch ($priority) {
+                            // priority pill
+                            switch ($row["priority"]) {
                                 case 'Urgent':
                                     $priorityPill = "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>";
                                     break;
@@ -104,44 +116,30 @@ $result = $stmt->get_result();
                                     $priorityPill = "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>";
                                     break;
                                 default:
-                                    $priorityPill = "<button class='PILL-INACTIVE'>" . htmlspecialchars($priority) . "</button>";
+                                    $priorityPill = "<button class='PILL-INACTIVE'>" . htmlspecialchars($row["priority"]) . "</button>";
                                     break;
                             }
 
+                            // Creator
                             $createdById = $row["created_by"];
                             $creatorName = "Unknown";
-
-                            // Loop through our $auth0_users and match user_id
                             foreach ($auth0_users as $auth0User) {
                                 if (isset($auth0User['user_id']) && $auth0User['user_id'] === $createdById) {
-                                    // Choose what to display: name, nickname, email, etc.
-                                    $creatorName = $auth0User['name']
-                                        ?? $auth0User['nickname']
-                                        ?? $auth0User['email']
-                                        ?? "Unknown";
+                                    $creatorName = $auth0User['name'] ?? $auth0User['nickname'] ?? $auth0User['email'] ?? "Unknown";
                                     break;
                                 }
                             }
-                            ?>
-                            <tr>
-                                <td>
-                                    <a href='view-task-page.php?id=<?php echo urlencode($row["id"]); ?>'>
-                                        <?php echo htmlspecialchars($row["subject"]); ?>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href='view-project-page.php?id=<?php echo urlencode($row["project_id"]); ?>'>
-                                        <?php echo htmlspecialchars($row["project_name"]) ?: "N/A"; ?>
-                                    </a>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($creatorName); ?>
-                                </td>
+                        ?>
+                            <tr <?php echo $rowStyle; ?>>
+                                <td><a href='view-task-page.php?id=<?php echo urlencode($row["id"]); ?>'><?php echo htmlspecialchars($row["subject"]); ?></a></td>
+                                <td><a href='view-project-page.php?id=<?php echo urlencode($row["project_id"]); ?>'><?php echo htmlspecialchars($row["project_name"]) ?: "N/A"; ?></a></td>
+                                <td><?php echo htmlspecialchars($creatorName); ?></td>
                                 <td><?php echo $statusPill; ?></td>
                                 <td><?php echo $priorityPill; ?></td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
+
                 </table>
             <?php else: ?>
                 <h1 class='USER-MESSAGE'>No tasks found.</h1>
