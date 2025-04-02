@@ -3,9 +3,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 USE PHPMailer\PHPMailer\Exception;
 
-require_once __DIR__.'/../../libs/PHPMailer/src/PHPMailer.php';
-require_once __DIR__.'/../../libs/PHPMailer/src/SMTP.php';
-require_once __DIR__.'/../../libs/PHPMailer/src/Exception.php';
+require_once __DIR__.'/../libs/PHPMailer/src/PHPMailer.php';
+require_once __DIR__.'/../libs/PHPMailer/src/SMTP.php';
+require_once __DIR__.'/../libs/PHPMailer/src/Exception.php';
 
 
 function sendTaskEmail ($toEmail) {
