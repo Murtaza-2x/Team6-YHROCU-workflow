@@ -57,15 +57,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
         // Update task
         $stmt = $conn->prepare("UPDATE tasks SET subject=?, project_id=?, status=?, priority=?, description=? WHERE id=?");
         $stmt->bind_param("sisssi", $subject, $project_id, $status, $priority, $description, $taskId);
+
         if ($stmt->execute()) {
+            // Remove existing assigned users and reassign the new ones
             $conn->query("DELETE FROM task_assigned_users WHERE task_id = $taskId");
             if (!empty($assigned)) {
                 $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
                 foreach ($assigned as $uid) {
                     $stmtAssign->bind_param("is", $taskId, $uid);
                     $stmtAssign->execute();
+                    
+                    // Fetch assigned user's email address from Auth0 and send the task update email
+                    $assignedUser = array_filter($auth0_users, fn($user) => $user['user_id'] === $uid);
+                    $assignedUser = reset($assignedUser);
+                    $userEmail = $assignedUser['email'] ?? ''; // Ensure email exists
+        
+                    if ($userEmail) {
+                        $subject = 'Task Update Notification';
+                        $messageBody = "<p>Hi,</p><p>The task '{$subject}' you were assigned to has been updated.</p>";
+                        sendTaskEmail($userEmail, $subject, $messageBody); // Send email
+                    }
                 }
             }
+        
             echo "<p class='SUCCESS-MESSAGE'>Task updated and archived. Redirecting...</p>";
             echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($taskId) . "'; }, 1500);</script>";
             exit;

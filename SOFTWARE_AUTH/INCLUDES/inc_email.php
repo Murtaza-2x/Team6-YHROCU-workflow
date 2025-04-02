@@ -1,32 +1,30 @@
 <?php
 /*
 -------------------------------------------------------------
-Function: sendTaskCreateEmail
+Function: inc_email.php
 Description:
 - Sends an email notification to the provided email address.
-- Notifies the recipient about a new task assignment.
+- Can be used for both task creation and task updates.
 - Uses PHPMailer's SMTP configuration for Mailtrap.
 -------------------------------------------------------------
 */
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
-USE PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\Exception;
 
-require_once __DIR__.'/../libs/PHPMailer/src/PHPMailer.php';
-require_once __DIR__.'/../libs/PHPMailer/src/SMTP.php';
-require_once __DIR__.'/../libs/PHPMailer/src/Exception.php';
-
-function sendTaskCreateEmail ($toEmail) {
+function sendTaskEmail($toEmail, $subject, $messageBody) {
     $mail = new PHPMailer(true);
 
     try {
         // SMTP configuration
         $mail->isSMTP();
-        $mail->Host = 'sandbox.smtp.mailtrap.io';
+        $mail->Host = 'sandbox.smtp.mailtrap.io'; // Use SMTP server
         $mail->SMTPAuth = true;
         $mail->Port = 2525;
-        $mail->Username = '15ae02232bf29d';
-        $mail->Password = '68f352cc509c23';
+        $mail->Username = '15ae02232bf29d'; // Mailtrap SMTP username
+        $mail->Password = '68f352cc509c23'; // Mailtrap SMTP password
 
         // Email details
         $mail->setFrom('yhrocunotifications@gmail.com', 'Task Notification');
@@ -34,15 +32,16 @@ function sendTaskCreateEmail ($toEmail) {
 
         // Email body
         $mail->isHTML(true);
-        $mail->Subject = 'A new task has been assigned';
-        $mail->Body = '<p>Hi,</p><p>A new task has been assigned to you</p>';
+        $mail->Subject = $subject;
+        $mail->Body = $messageBody;
 
         // Send email
         $mail->send();
-    
+        echo "<p class='SUCCESS-MESSAGE'>Message has been sent successfully.</p>";
     } catch (Exception $e) {
         // Log any errors
         error_log("Mailtrap email failed: {$mail->ErrorInfo}");
     }
 }
+
 ?>

@@ -19,6 +19,7 @@ require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
+require_once __DIR__ . '/INCLUDES/inc_email.php';
 
 if (!is_logged_in() || !is_staff()) {
     echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
@@ -54,6 +55,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 foreach ($assigned as $uid) {
                     $stmtAssign->bind_param("is", $newTaskId, $uid);
                     $stmtAssign->execute();
+
+                    // Fetch assigned user's email address from Auth0 and send the task creation email
+                    $assignedUser = array_filter($auth0_users, fn($user) => $user['user_id'] === $uid);
+                    $assignedUser = reset($assignedUser);
+                    $userEmail = $assignedUser['email'] ?? ''; // Ensure email exists
+
+                    if ($userEmail) {
+                        $subject = 'A New Task Has Been Assigned to You';
+                        $messageBody = "<p>Hi,</p><p>You have been assigned a new task: <strong>{$subject}</strong>.</p>";
+                        sendTaskEmail($userEmail, $subject, $messageBody); // Send email
+                    }
                 }
             }
 
