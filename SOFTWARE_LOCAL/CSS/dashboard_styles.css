@@ -1,7 +1,7 @@
 /* Main dashboard container */
 .DASH-CONTENT {
   width: 100%;
-  padding-bottom: 60px; /* Increased for clearer gap before task list */
+  padding-bottom: 60px;
   background-color: var(--light-grey);
 }
 
@@ -42,7 +42,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 30px; /* Slightly more vertical spacing between form and chart row */
+  gap: 30px;
 }
 
 /* Manager charts container */
@@ -51,13 +51,13 @@
   flex-direction: column;
   gap: 30px;
   width: 100%;
-  margin-bottom: 30px; /* Additional spacing before task list begins */
+  margin-bottom: 30px;
 }
 
-/* Container for bar + pie chart side-by-side */
+/* Three-column layout */
 .CHARTS-ROW {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: space-between;
   align-items: stretch;
   gap: 30px;
@@ -66,30 +66,96 @@
 
 /* Bar chart area */
 .DASH-CHART-BOX {
-  flex: 1 1 60%;
-  min-width: 320px;
-  max-width: 60%;
+  flex: 1 1 45%;
+  min-width: 300px;
   height: 400px;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Pie chart area (manager) */
+/* Middle summary box */
+.DASH-MIDDLE-CHART-BOX {
+  flex: 0 1 20%;
+  min-width: 200px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Task status summary styling */
+.TASK-STATUS-LIST {
+  width: 100%;
+  font-family: "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+}
+
+.TASK-STATUS-LIST h3 {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.TASK-STATUS-LIST ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.TASK-STATUS-LIST li {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.TASK-STATUS-LIST .status-new {
+  color: #e74c3c; /* Red */
+}
+
+.TASK-STATUS-LIST .status-inprogress {
+  color: #f39c12; /* Orange */
+}
+
+.TASK-STATUS-LIST .status-completed {
+  color: #27ae60; /* Green */
+}
+
+/* Pie chart area */
 .DASH-PIE-CHART-BOX {
-  flex: 1 1 30%;
+  flex: 1 1 35%;
   min-width: 250px;
-  max-width: 30%;
   height: 400px;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Pie chart area (staff) */
+/* Staff-only pie chart box */
 .USER-CHART-BOX {
   display: flex;
-  justify-content: flex-start;   /* Align chart to the left */
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 400px;
-  padding-left: 20px;            /* Same as manager view padding */
+  padding-left: 20px;
   box-sizing: border-box;
 }
 
@@ -100,7 +166,7 @@
   box-sizing: border-box;
 }
 
-/* Filter form styles */
+/* Filter form */
 .MANAGER-FILTER-FORM {
   display: flex;
   flex-wrap: wrap;
@@ -127,24 +193,26 @@
 }
 
 .MANAGER-FILTER-FORM button:hover {
-  background-color: #1e3a8a; 
+  background-color: #1e3a8a;
 }
 
-/* Responsive behavior */
+/* Mobile responsiveness */
 @media (max-width: 900px) {
   .CHARTS-ROW {
     flex-direction: column;
+    gap: 20px;
     align-items: center;
   }
 
   .DASH-CHART-BOX,
+  .DASH-MIDDLE-CHART-BOX,
   .DASH-PIE-CHART-BOX {
     max-width: 100%;
     height: auto;
   }
 
   .USER-CHART-BOX {
-    justify-content: center; /* Center on small screens */
+    justify-content: center;
     padding-left: 0;
   }
 
@@ -155,5 +223,9 @@
 
   .MANAGER-CHART-WRAPPER {
     margin-bottom: 40px;
+  }
+
+  .TASK-STATUS-LIST {
+    text-align: center;
   }
 }
