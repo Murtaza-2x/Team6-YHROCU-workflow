@@ -14,11 +14,13 @@
 
 <p class="MIDDLE-HERO-IMAGE"></p>
 
-<!-- EDIT TASK FORM -->
+<!-- EDIT PROJECT FORM -->
 <form action="edit-project-page.php?id=<?php echo $id; ?>" method="post">
-    <div class='VIEW-TASK-CONTAINER'>
-        <div class='VIEW-PROJECT-BOX'>
-            <div class='VIEW-HEAD'>
+    <div class="VIEW-TASK-CONTAINER">
+        <div class="VIEW-PROJECT-BOX">
+
+            <!-- HEADER -->
+            <div class="VIEW-HEAD">
                 <h1>Edit Project</h1>
                 <p>Edit Project Details below</p>
             </div>
@@ -26,10 +28,15 @@
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
                     <h1 class="TASK-LABEL">Project Title</h1>
-                    <div class='INPUT-GROUP'>
-                        <input type="text" id="project-title" name="project_name"
+                    <div class="INPUT-GROUP">
+                        <input
+                            type="text"
+                            id="project-title"
+                            name="project_name"
                             value="<?php echo htmlspecialchars($projectName); ?>"
-                            placeholder="Project Title" required />
+                            placeholder="Project Title"
+                            required
+                        />
                     </div>
                 </div>
             </div>
@@ -41,13 +48,28 @@
                     <div class="TASK-LABEL">Status</div>
                     <div class="TASK-PILL-CONTAINER" id="status-container">
                         <div class="PILL">
-                            <input type="hidden" name="status" id="status-input" value="<?php echo htmlspecialchars($status); ?>" required />
-                            <button type="button" class="PILL-NEW <?php echo ($status === 'New') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
-                                onclick="selectStatus('New')">New</button>
-                            <button type="button" class="PILL-IN-PROGRESS <?php echo ($status === 'In Progress') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
-                                onclick="selectStatus('In Progress')">In Progress</button>
-                            <button type="button" class="PILL-COMPLETE <?php echo ($status === 'Complete') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
-                                onclick="selectStatus('Complete')">Complete</button>
+                            <input
+                                type="hidden"
+                                name="status"
+                                id="status-input"
+                                value="<?php echo htmlspecialchars($status); ?>"
+                                required
+                            />
+                            <button
+                                type="button"
+                                class="PILL-NEW <?php echo ($status === 'New') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
+                                onclick="selectStatus('New')"
+                            >New</button>
+                            <button
+                                type="button"
+                                class="PILL-IN-PROGRESS <?php echo ($status === 'In Progress') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
+                                onclick="selectStatus('In Progress')"
+                            >In Progress</button>
+                            <button
+                                type="button"
+                                class="PILL-COMPLETE <?php echo ($status === 'Complete') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
+                                onclick="selectStatus('Complete')"
+                            >Complete</button>
                         </div>
                     </div>
                 </div>
@@ -56,18 +78,46 @@
                     <div class="TASK-LABEL">Priority</div>
                     <div class="TASK-PILL-CONTAINER" id="priority-container">
                         <div class="PILL">
-                            <input type="hidden" name="priority" id="priority-input" value="<?php echo htmlspecialchars($priority); ?>" required />
-                            <button type="button" class="PILL-URGENT <?php echo ($priority === 'Urgent') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
-                                onclick="selectPriority('Urgent')">Urgent</button>
-                            <button type="button" class="PILL-MODERATE <?php echo ($priority === 'Moderate') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
-                                onclick="selectPriority('Moderate')">Moderate</button>
-                            <button type="button" class="PILL-LOW <?php echo ($priority === 'Low') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
-                                onclick="selectPriority('Low')">Low</button>
+                            <input
+                                type="hidden"
+                                name="priority"
+                                id="priority-input"
+                                value="<?php echo htmlspecialchars($priority); ?>"
+                                required
+                            />
+                            <button
+                                type="button"
+                                class="PILL-URGENT <?php echo ($priority === 'Urgent') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
+                                onclick="selectPriority('Urgent')"
+                            >Urgent</button>
+                            <button
+                                type="button"
+                                class="PILL-MODERATE <?php echo ($priority === 'Moderate') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
+                                onclick="selectPriority('Moderate')"
+                            >Moderate</button>
+                            <button
+                                type="button"
+                                class="PILL-LOW <?php echo ($priority === 'Low') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>"
+                                onclick="selectPriority('Low')"
+                            >Low</button>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- PRIORITY & STATUS END -->
+
+            <!-- DUE DATE -->
+            <div class="PROJECT-SECTION">
+                <label for="due_date" class="PROJECT-LABEL">Due Date</label>
+                <input
+                    type="date"
+                    name="due_date"
+                    id="due_date"
+                    class="PROJECT-INPUT"
+                    value="<?php echo htmlspecialchars($due_date); ?>"
+                    required
+                >
+            </div>
 
             <!-- DESCRIPTION -->
             <div class="VIEW-ROW">
@@ -75,15 +125,26 @@
                     Description
                     <img class="INFO-ICON" src="ICONS/info.png" alt="Info" />
                 </label>
-                <textarea id="description" name="description" class="TASK-TEXT-AREA" rows="6" required><?php echo htmlspecialchars($description); ?></textarea>
+                <textarea
+                    id="description"
+                    name="description"
+                    class="TASK-TEXT-AREA"
+                    rows="6"
+                    required
+                ><?php echo htmlspecialchars($description); ?></textarea>
             </div>
 
             <!-- BUTTONS -->
             <div class="TASK-BUTTONS">
                 <button class="UPDATE-BUTTON" type="submit">Update Project</button>
-                <button class="CANCEL-BUTTON" type="button" onclick="window.location.href='view-project-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($id); ?>'">Cancel</button>
+                <button
+                    class="CANCEL-BUTTON"
+                    type="button"
+                    onclick="window.location.href='view-project-page.php?clearance=<?php echo urlencode($_SESSION['clearance']); ?>&id=<?php echo urlencode($id); ?>'"
+                >Cancel</button>
             </div>
             <!-- BUTTONS END -->
+
         </div>
     </div>
 </form>
