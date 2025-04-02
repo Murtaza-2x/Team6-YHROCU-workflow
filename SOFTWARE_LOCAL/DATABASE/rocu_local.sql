@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2025 at 07:20 PM
+-- Generation Time: Apr 02, 2025 at 12:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -62,7 +62,10 @@ INSERT INTO `archive` (`archive_id`, `task_id`, `subject`, `project_id`, `status
 (16, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'Crazy Gloss style', '2025-03-28 12:53:59', '2025-03-28 13:57:11', 1),
 (17, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'LISTEN TO ARCA ON SPOTIFY', '2025-03-28 12:53:59', '2025-03-28 14:26:42', 1),
 (18, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'LISTEN TO ARCA ON SPOTIFY T', '2025-03-28 12:53:59', '2025-03-28 14:30:31', 1),
-(19, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'LISTEN TO ARCA ON SPOTIFY TT', '2025-03-28 12:53:59', '2025-04-01 17:18:37', 1);
+(19, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'LISTEN TO ARCA ON SPOTIFY TT', '2025-03-28 12:53:59', '2025-04-01 17:18:37', 1),
+(20, 30, 'ORIGIN PLAT LINE 02', 4, 'In Progress', 'Urgent', 'LISTEN TO ARCA ON SPOTIFY TT', '2025-03-28 12:53:59', '2025-04-02 07:58:55', 2),
+(21, 30, 'ORIGIN PLAT LINE 02', 4, 'Complete', 'Urgent', 'LISTEN TO ARCA ON SPOTIFY TT', '2025-03-28 12:53:59', '2025-04-02 07:59:05', 2),
+(22, 32, 'TestTask', 1, 'New', 'Moderate', 'Test Task', '2025-04-02 10:32:12', '2025-04-02 10:32:46', 1);
 
 -- --------------------------------------------------------
 
@@ -95,7 +98,11 @@ INSERT INTO `comments` (`comment_id`, `task_id`, `user_id`, `comment`, `created_
 (10, 1, 1, 'well yes', '2025-04-01 17:17:32'),
 (11, 1, 1, 'well yes', '2025-04-01 17:18:17'),
 (12, 24, 1, 'yes', '2025-04-01 17:18:22'),
-(13, 30, 1, 'come to my party', '2025-04-01 17:18:31');
+(13, 30, 1, 'come to my party', '2025-04-01 17:18:31'),
+(14, 30, 3, '123', '2025-04-02 07:14:14'),
+(15, 29, 3, '123', '2025-04-02 07:14:34'),
+(16, 28, 2, '123', '2025-04-02 07:58:15'),
+(17, 32, 1, '123', '2025-04-02 10:32:18');
 
 -- --------------------------------------------------------
 
@@ -108,20 +115,50 @@ CREATE TABLE `projects` (
   `project_name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `status` enum('New','In Progress','Complete') DEFAULT 'New',
-  `priority` enum('Low','Moderate','Urgent') DEFAULT 'Low'
+  `priority` enum('Low','Moderate','Urgent') DEFAULT 'Low',
+  `DUE_DATE` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `projects`
 --
 
-INSERT INTO `projects` (`id`, `project_name`, `description`, `status`, `priority`) VALUES
-(1, 'Project One', 'Test123', 'New', 'Low'),
-(2, 'Project Two', 'I DONT NEED YOUR DRUGS, I\'D RATHER GET, RATHER GET...HIGH FASHION\r\n\r\nI DON\'T NEED YOU', 'In Progress', 'Moderate'),
-(3, 'Project Three', 'I\'VE GOT NOTHING ON BUT THE RADIO', 'New', 'Moderate'),
-(4, 'Project Four', 'listen to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify', 'New', 'Low'),
-(5, 'Project Five', 'its Charli baby', 'New', 'Moderate'),
-(6, 'Project Six', 'AR1', 'New', 'Moderate');
+INSERT INTO `projects` (`id`, `project_name`, `description`, `status`, `priority`, `DUE_DATE`) VALUES
+(1, 'Project One', 'Test123 23', 'New', 'Urgent', '2025-04-24'),
+(2, 'Project Two', 'I DONT NEED YOUR DRUGS, I\'D RATHER GET, RATHER GET...HIGH FASHION\r\n\r\nI DON\'T NEED YOU 43 ds98 ', 'Complete', 'Moderate', '2025-05-02'),
+(3, 'Project Three', 'I\'VE GOT NOTHING ON BUT THE RADIO', 'In Progress', 'Moderate', '2025-04-30'),
+(4, 'Project Four', 'listen to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify', 'New', 'Low', '2025-05-23'),
+(5, 'Project Five', 'its Charli baby', 'New', 'Moderate', '2026-04-30'),
+(6, 'Project Six', 'AR1', 'New', 'Moderate', '2026-04-30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_archive`
+--
+
+CREATE TABLE `project_archive` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `edited_by` int(11) NOT NULL,
+  `archived_at` datetime DEFAULT current_timestamp(),
+  `project_name` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `priority` varchar(50) DEFAULT NULL,
+  `due_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `project_archive`
+--
+
+INSERT INTO `project_archive` (`id`, `project_id`, `edited_by`, `archived_at`, `project_name`, `description`, `status`, `priority`, `due_date`) VALUES
+(1, 2, 2, '2025-04-02 09:09:50', 'Project Two', 'I DONT NEED YOUR DRUGS, I\'D RATHER GET, RATHER GET...HIGH FASHION\r\n\r\nI DON\'T NEED YOU 43 ds98 ', 'Complete', 'Moderate', '2025-05-02'),
+(2, 2, 2, '2025-04-02 09:09:53', 'Project Two', 'I DONT NEED YOUR DRUGS, I\'D RATHER GET, RATHER GET...HIGH FASHION\r\n\r\nI DON\'T NEED YOU 43 ds98 ', 'Complete', 'Moderate', '2025-05-02'),
+(3, 3, 2, '2025-04-02 09:35:05', 'Project Three', 'I\'VE GOT NOTHING ON BUT THE RADIO', 'In Progress', 'Moderate', '2025-04-30'),
+(4, 1, 2, '2025-04-02 10:10:04', 'Project One', 'Test123 23', 'New', 'Urgent', '2025-04-24'),
+(5, 4, 1, '2025-04-02 11:04:31', 'Project Four', 'listen to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify\r\nlisten to amore on spotify', 'New', 'Low', '2025-05-23');
 
 -- --------------------------------------------------------
 
@@ -151,8 +188,9 @@ INSERT INTO `tasks` (`id`, `subject`, `status`, `priority`, `created_by`, `descr
 (25, 'Third', 'New', 'Moderate', 1, 'Aquamarine Dive into Me IM A RAY OF LIGHT', 3, '2025-03-26 14:10:17', '2025-03-28 13:46:22'),
 (28, 'The boy is mine', 'New', 'Low', 1, 'rgrsgsegsegf', 1, '2025-03-27 20:31:45', '2025-03-27 20:31:45'),
 (29, 'Yessssss', 'Complete', 'Urgent', 1, 'drgirshogserpoihgseg', 2, '2025-03-27 20:32:43', '2025-03-27 20:33:13'),
-(30, 'ORIGIN PLAT LINE 02', 'In Progress', 'Urgent', 1, 'LISTEN TO ARCA ON SPOTIFY TT', 4, '2025-03-28 12:53:59', '2025-03-28 14:30:31'),
-(31, 'A & W', 'In Progress', 'Moderate', 1, 'XCX WORLD', 2, '2025-03-28 13:34:57', '2025-03-28 13:34:57');
+(30, 'ORIGIN PLAT LINE 02', 'New', 'Urgent', 1, 'LISTEN TO ARCA ON SPOTIFY TT', 4, '2025-03-28 12:53:59', '2025-04-02 07:59:05'),
+(31, 'A & W', 'In Progress', 'Moderate', 1, 'XCX WORLD', 2, '2025-03-28 13:34:57', '2025-03-28 13:34:57'),
+(32, 'TestTask', 'New', 'Moderate', 1, 'Test Task test', 1, '2025-04-02 10:32:12', '2025-04-02 10:32:46');
 
 -- --------------------------------------------------------
 
@@ -178,7 +216,8 @@ INSERT INTO `task_assigned_users` (`task_id`, `user_id`) VALUES
 (29, 2),
 (29, 3),
 (30, 3),
-(31, 2);
+(31, 2),
+(32, 2);
 
 -- --------------------------------------------------------
 
@@ -231,6 +270,14 @@ ALTER TABLE `projects`
   ADD UNIQUE KEY `project_name` (`project_name`);
 
 --
+-- Indexes for table `project_archive`
+--
+ALTER TABLE `project_archive`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `edited_by` (`edited_by`);
+
+--
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
@@ -259,13 +306,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `archive`
 --
 ALTER TABLE `archive`
-  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -274,10 +321,16 @@ ALTER TABLE `projects`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `project_archive`
+--
+ALTER TABLE `project_archive`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -301,6 +354,13 @@ ALTER TABLE `archive`
 ALTER TABLE `comments`
   ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `project_archive`
+--
+ALTER TABLE `project_archive`
+  ADD CONSTRAINT `project_archive_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
+  ADD CONSTRAINT `project_archive_ibfk_2` FOREIGN KEY (`edited_by`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `tasks`
