@@ -53,15 +53,19 @@ Dashboard page shown after login. Displays different content based on the user's
     if (has_role('User')) {
       // Staff view - tasks by priority
       $sql = "SELECT priority, COUNT(*) AS total 
-                FROM tasks 
-                JOIN task_assigned_users tau ON tasks.id = tau.task_id
-                WHERE tau.user_id = $userId AND status IN ('New', 'In Progress')
-                GROUP BY priority";
-      $result = $conn->query($sql);
+              FROM tasks 
+              JOIN task_assigned_users tau ON tasks.id = tau.task_id
+              WHERE tau.user_id = ? AND status IN ('New', 'In Progress')
+              GROUP BY priority";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("s", $userId);
+      $stmt->execute();
+      $result = $stmt->get_result();
       while ($row = $result->fetch_assoc()) {
-        $userPriorityBreakdown[] = $row;
+          $userPriorityBreakdown[] = $row;
       }
-    } elseif (has_role('Manager') || has_role('Admin')) {
+  }
+   elseif (has_role('Manager') || has_role('Admin')) {
       // Bar chart data for project status
       $sql = "SELECT status, COUNT(*) AS total FROM projects WHERE 1";
       if ($filterPriority !== 'All') {
