@@ -31,6 +31,7 @@ class Auth0UserFetcher
 
         // If the token is not available, return an empty array
         if (!$mgmtToken) {
+            error_log('Auth0 token not available.');
             return [];
         }
 
@@ -48,15 +49,29 @@ class Auth0UserFetcher
         // Create the context for the request
         $context = stream_context_create($opts);
 
-        // Send the request and capture the response
-        $response = file_get_contents($url, false, $context);
+        try {
+            // Send the request and capture the response
+            $response = file_get_contents($url, false, $context);
 
-        // If the request fails, return an empty array
-        if ($response === false) {
+            // If the response is false, throw an exception
+            if ($response === false) {
+                throw new Exception('Failed to retrieve users from Auth0.');
+            }
+
+            // Decode the response and return the result
+            $users = json_decode($response, true);
+
+            // Check if the response is valid
+            if (!is_array($users)) {
+                throw new Exception('Invalid response format from Auth0 API.');
+            }
+
+            return $users;
+
+        } catch (Exception $e) {
+            // Log the error message
+            error_log('Error fetching users from Auth0: ' . $e->getMessage());
             return [];
         }
-
-        // Decode the response and return the result
-        return json_decode($response, true) ?? [];
     }
 }

@@ -10,6 +10,7 @@ Description:
 - Shows success or error messages and redirects.
 - Also stores `created_by` = the current Auth0 user_id.
 -------------------------------------------------------------
+
 */
 
 $title = "ROCU: Create Task";
@@ -19,6 +20,8 @@ require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
+require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
+
 require_once __DIR__ . '/INCLUDES/inc_email.php';
 
 if (!is_logged_in() || !is_staff()) {
@@ -56,15 +59,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtAssign->bind_param("is", $newTaskId, $uid);
                     $stmtAssign->execute();
 
-                    // Fetch assigned user's email address from Auth0 and send the task creation email
-                    $assignedUser = array_filter($auth0_users, fn($user) => $user['user_id'] === $uid);
-                    $assignedUser = reset($assignedUser);
-                    $userEmail = $assignedUser['email'] ?? ''; // Ensure email exists
+                    // Fetch user details for email
+                    $user = Auth0UserManager::getUser($uid);  // Fetch the user by their ID
+                    $userEmail = $user['email'];  // Get user's email
 
-                    if ($userEmail) {
-                        $subject = 'A New Task Has Been Assigned to You';
-                        $messageBody = "<p>Hi,</p><p>You have been assigned a new task: <strong>{$subject}</strong>.</p>";
-                        sendTaskEmail($userEmail, $subject, $messageBody); // Send email
+                    // Prepare email details
+                    $subject = 'New Task Assigned';
+                    $messageBody = "You have been assigned a new task: {$subject}\n\nDetails:\nDescription: {$description}";
+
+                    // Send the task creation email
+                    $emailSent = sendTaskEmail($userEmail, $subject, $messageBody, [
+                        'subject' => $subject,
+                        'project_name' => $project_id,  // Assuming you have the project name in $project_id
+                        'status' => $status,
+                        'priority' => $priority,
+                        'description' => $description,
+                        'due_date' => $due_date,  // Include due date if applicable
+                        'assigned_users' => implode(', ', $assigned)  // Convert assigned users array to string
+                    ]);
+
+                    if ($emailSent) {
+                        // Optionally log or display confirmation
+                        echo "<p class='SUCCESS-MESSAGE'>Email sent to {$userEmail} successfully.</p>";
+                    } else {
+                        // Log failure or handle error
+                        echo "<p class='ERROR-MESSAGE'>Failed to send email to {$userEmail}.</p>";
                     }
                 }
             }
@@ -96,3 +115,5 @@ foreach ($auth0_users as $u) {
 include 'INCLUDES/inc_taskcreate.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
+
+?>

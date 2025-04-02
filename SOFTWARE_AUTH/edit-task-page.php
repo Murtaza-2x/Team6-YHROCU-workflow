@@ -9,6 +9,7 @@ Description:
 - Shows assigned Auth0 users.
 - Allows editing subject, project, status, priority, description, assignees.
 -------------------------------------------------------------
+
 */
 
 $title = "ROCU: Edit Task";
@@ -18,6 +19,9 @@ require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
+require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
+
+require_once __DIR__ . '/INCLUDES/inc_email.php';
 
 if (!is_logged_in() || !is_staff()) {
     echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
@@ -57,30 +61,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
         // Update task
         $stmt = $conn->prepare("UPDATE tasks SET subject=?, project_id=?, status=?, priority=?, description=? WHERE id=?");
         $stmt->bind_param("sisssi", $subject, $project_id, $status, $priority, $description, $taskId);
-
         if ($stmt->execute()) {
-            // Remove existing assigned users and reassign the new ones
             $conn->query("DELETE FROM task_assigned_users WHERE task_id = $taskId");
             if (!empty($assigned)) {
                 $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
                 foreach ($assigned as $uid) {
                     $stmtAssign->bind_param("is", $taskId, $uid);
                     $stmtAssign->execute();
-                    
-                    // Fetch assigned user's email address from Auth0 and send the task update email
-                    $assignedUser = array_filter($auth0_users, fn($user) => $user['user_id'] === $uid);
-                    $assignedUser = reset($assignedUser);
-                    $userEmail = $assignedUser['email'] ?? ''; // Ensure email exists
-        
-                    if ($userEmail) {
-                        $subject = 'Task Update Notification';
-                        $messageBody = "<p>Hi,</p><p>The task '{$subject}' you were assigned to has been updated.</p>";
-                        sendTaskEmail($userEmail, $subject, $messageBody); // Send email
+
+                    // Fetch user details for email
+                    $user = Auth0UserManager::getUser($uid);  // Fetch the user by their ID
+                    $userEmail = $user['email'];  // Get user's email
+
+                    // Prepare email details
+                    $subject = 'Task Updated';
+                    $messageBody = "The task '{$subject}' has been updated. Here are the details:\n\nDescription: {$description}";
+
+                    // Send the task update email
+                    $emailSent = sendTaskEmail($userEmail, $subject, $messageBody, [
+                        'subject' => $subject,
+                        'project_name' => $project_id,  // Assuming you have the project name in $project_id
+                        'status' => $status,
+                        'priority' => $priority,
+                        'description' => $description,
+                        'assigned_users' => implode(', ', $assigned)  // Convert assigned users array to string
+                    ]);
+
+                    if ($emailSent) {
+                        // Optionally log or display confirmation
+                        echo "<p class='SUCCESS-MESSAGE'>Email sent to {$userEmail} successfully.</p>";
+                    } else {
+                        // Log failure or handle error
+                        echo "<p class='ERROR-MESSAGE'>Failed to send email to {$userEmail}.</p>";
                     }
                 }
             }
-        
-            echo "<p class='SUCCESS-MESSAGE'>Task updated and archived. Redirecting...</p>";
+
+            echo "<p class='SUCCESS-MESSAGE'>Task updated successfully. Redirecting...</p>";
             echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($taskId) . "'; }, 1500);</script>";
             exit;
         } else {
@@ -135,3 +152,5 @@ while ($p = $res_proj->fetch_assoc()) {
 include 'INCLUDES/inc_taskedit.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
+
+?>
