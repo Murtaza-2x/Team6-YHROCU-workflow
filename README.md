@@ -2,8 +2,7 @@
 
 A simple PHP web application that allows admins to create and manage tasks and projects, with user assignment using Auth0 for authentication and user management.
 
-   **For now for demonstration purposes ALL Configuration is done. You do not need to do anything with 0Auth but 
-   requires YHROCU-CLONE/[GITHUB CLONE IN THIS FOLDER] folder in htdocs folder**
+   **For now for demonstration purposes ALL Configuration is done. You do not need to do anything with 0Auth.**
 
 ## Table of Contents
 
@@ -42,23 +41,24 @@ This application enables users (admin or normal roles) to:
 
 ## Installation
 
-1. **Install dependencies**:
+1. **Clone Main Repository**:
 
+   Create YHROCU-CLONE for 0Auth to work.
+   Clone the repository into your htdocs/YHROCU-CLONE folder.
+
+3. **Install dependencies**:
+
+   Install/Use composer and change directory into the SOFTWARE_AUTH folder and run this command:
+   
    composer install
 
-2. **Set up your database**:
+5. **Set up your database**:
 
    Create a new MySQL database (e.g., rocu).
 
-   Run any provided SQL migrations or create tables manually.
+   Run rocu.sql file inside DATABASE folder.
 
-3. **Configure environment variables**:
-
-   Use .env provided or create a new .env file if not.
-
-   Add your database credentials, Auth0 credentials, and any other sensitive info.
-
-4. **Set up your web server if not using XAMPP**:
+6. **Set up your web server if not using XAMPP**:
 
   Configure your Apache/nginx document root to point to the project folder (or a public subdirectory if you have one).
 
