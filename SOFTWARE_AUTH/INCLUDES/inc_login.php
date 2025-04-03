@@ -38,11 +38,6 @@
       </div>
       <!-- PASSWORD INPUT END -->
 
-      <!-- PASSWORD RESET LINK -->
-      <a class="RESET-LINK">Forgot Password?</a>
-      <a class="RESET-LINK-2">(contact admin for reset)</a>
-      <!-- PASSWORD RESET LINK END -->
-
       <!-- LOGIN BUTTON -->
       <button class="LOGIN-BUTTON" href="auth0_login.php">Login with Auth0</button>
       <!-- LOGIN BUTTON END -->
