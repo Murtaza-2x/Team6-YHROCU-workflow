@@ -158,7 +158,8 @@ $result = $stmt->get_result();
             <?php else: ?>
                 <h1 class='USER-MESSAGE'>No tasks found.</h1>
             <?php endif; ?>
-
+        </div>
+        <div class="TASK-LIST">
             <?php if (is_admin()): ?>
                 <button class='CREATE-TASK-BUTTON' onclick="location.href='create-task-page.php'">Create Task</button>
                 <button class='CREATE-PROJECT-BUTTON' onclick="location.href='create-project-page.php'">Create Project</button>

@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $project_name = $projectData['project_name'] ?? 'Unknown Project';
 
                     // Prepare email content
-                    $emailSubject = "Task Updated: {$subject}";
+                    $emailSubject = "Task Created: {$subject}";
                     $messageBody = "The task '{$subject}' has been created. Here are the details:";
 
                     // Send the task update email

@@ -40,6 +40,9 @@
 
 .TASK-LIST {
   text-align: center;
+  max-height: 300px;
+  overflow-y: auto;
+  display: block;
 }
 
 .TASK-LIST table {
