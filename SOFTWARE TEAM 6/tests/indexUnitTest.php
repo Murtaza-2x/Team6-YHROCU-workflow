@@ -1,7 +1,6 @@
 <?php
-use PHPUnit\Framework\TestCase;
 
-class UserLoginTest extends TestCase
+class indexUnitTest extends PHPUnit\Framework\TestCase
 {
     /**@test */
     protected $connMock;
