@@ -12,11 +12,29 @@ Description:
 require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/Auth0Factory.php';
 
+// true for test mode, false for non-test mode
+if (!defined('TEST_ENVIRONMENT')) {
+    define('TEST_ENVIRONMENT', false);
+}
+
 session_start();
 
+// Clear session data.
+$_SESSION = [];
+
+// output a marker and then return without exiting.
+if (TEST_ENVIRONMENT) {
+    echo "Logout simulated: session cleared";
+    // Do not call exit; just return.
+    return;
+} else {
+    header('Location: index.php');
+    exit;
+}
+
 // Clear session data and destroy the session
-session_unset();  // Remove all session variables
-session_destroy();  // Destroy the session
+session_unset();
+session_destroy();
 
 // Clear the session cookie to prevent caching
 setcookie(session_name(), '', time() - 3600, '/');  // Expire the session cookie

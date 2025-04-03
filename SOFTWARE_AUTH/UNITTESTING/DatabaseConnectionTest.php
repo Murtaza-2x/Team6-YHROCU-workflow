@@ -1,42 +1,41 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../INCLUDES/inc_database.php';
+require_once __DIR__ . '/traits/DatabaseTestTrait.php';
 
 class DatabaseConnectionTest extends TestCase
 {
-    private $db;
+    use DatabaseTestTrait;
 
     protected function setUp(): void
     {
-        // Create a new instance of DatabaseConnection before each test
-        $this->db = new DatabaseConnection();
+        parent::setUp();
+        $this->setUpDatabase();
     }
 
-    public function testConnect()
+    protected function tearDown(): void
     {
-        // Test the connect method
-        $conn = $this->db->connect();
-        
-        // Assert that the connection is not null
-        $this->assertNotNull($conn, "Connection should not be null");
-        
-        // You can also check the connection status if needed
-        $this->assertTrue($conn->ping(), "Connection should be live");
+        $this->tearDownDatabase();
     }
 
-    public function testDisconnect()
+    public function testConnectionIsValid()
     {
-        // First connect
-        $conn = $this->db->connect();
-        $this->assertNotNull($conn, "Connection should not be null");
-        
-        // Now disconnect
-        $this->db->disconnect();
-        
-        // You cannot check the connection after disconnecting, 
-        // but you can simulate by checking if the disconnect method works correctly
-        // Note: We cannot directly test for "disconnection", but we assume the method works if no error occurs.
-        $this->assertTrue(true);
+        // Asserts that the connection is a valid mysqli instance.
+        $this->assertInstanceOf(mysqli::class, $this->conn, "The database connection is not valid.");
+    }
+
+    public function testInsertAndFetch()
+    {
+        // Insert a dummy row into a test table.
+        $query = "INSERT INTO test_table (name) VALUES (?)";
+        $dummyName = "PHPUnitTest";
+        $result = $this->insertDummy($query, [$dummyName], "s");
+        $this->assertTrue($result, "Failed to insert dummy row.");
+
+        // Fetch the inserted row.
+        $fetchQuery = "SELECT * FROM test_table WHERE name = '$dummyName' LIMIT 1";
+        $row = $this->fetchSingle($fetchQuery);
+        $this->assertNotNull($row, "No row was fetched.");
+        $this->assertEquals($dummyName, $row['name'], "Fetched row does not match inserted value.");
     }
 }

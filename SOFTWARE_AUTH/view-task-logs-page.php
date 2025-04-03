@@ -85,7 +85,6 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
             $subject,
             $status,
             $priority,
-            $dueDate,
             $description
         ]);
     }
