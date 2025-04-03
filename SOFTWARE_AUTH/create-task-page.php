@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $userEmail = $user['email'];  // Get user's email
 
                     // Prepare email details
-                    $subject = 'New Task Assigned';
+                    $subject = "There's a new task assigned to you";
                     $messageBody = "You have been assigned a new task: {$subject}\n\nDetails:\nDescription: {$description}";
 
                     // Send the task creation email
