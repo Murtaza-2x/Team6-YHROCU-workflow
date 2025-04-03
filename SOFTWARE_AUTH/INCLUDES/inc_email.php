@@ -9,7 +9,8 @@ Description:
 -------------------------------------------------------------
 */
 
-require_once __DIR__. '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -32,13 +33,12 @@ function sendTaskEmail($toEmail, $subject, $messageBody, $taskDetails)
 
         // Prepare task details
         $taskData = "
-            <p><strong>Task Subject:</strong> {$taskDetails['subject']}</p>
-            <p><strong>Project:</strong> {$taskDetails['project_name']}</p>
-            <p><strong>Status:</strong> {$taskDetails['status']}</p>
-            <p><strong>Priority:</strong> {$taskDetails['priority']}</p>
-            <p><strong>Description:</strong> {$taskDetails['description']}</p>
-            <p><strong>Assigned Users:</strong> {$taskDetails['assigned_users']}</p>
-        ";
+                <p><strong>Subject:</strong> {$taskDetails['subject']}</p>
+                <p><strong>Project:</strong> {$taskDetails['project_name']}</p>
+                <p><strong>Status:</strong> {$taskDetails['status']}</p>
+                <p><strong>Priority:</strong> {$taskDetails['priority']}</p>
+                <p><strong>Description:</strong> {$taskDetails['description']}</p>
+                ";
 
         // Email body
         $mail->isHTML(true);

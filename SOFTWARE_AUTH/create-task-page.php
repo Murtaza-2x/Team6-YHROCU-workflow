@@ -63,19 +63,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $user = Auth0UserManager::getUser($uid);  // Fetch the user by their ID
                     $userEmail = $user['email'];  // Get user's email
 
-                    // Prepare email details
-                    $subject = "There's a new task assigned to you";
-                    $messageBody = "You have been assigned a new task: {$subject}\n\nDetails:\nDescription: {$description}";
+                    // Fetch project name using project_id
+                    $stmtProj = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
+                    $stmtProj->bind_param("i", $project_id);
+                    $stmtProj->execute();
+                    $resProj = $stmtProj->get_result();
+                    $projectData = $resProj->fetch_assoc();
+                    $project_name = $projectData['project_name'] ?? 'Unknown Project';
 
-                    // Send the task creation email
-                    $emailSent = sendTaskEmail($userEmail, $subject, $messageBody, [
+                    // Prepare email content
+                    $emailSubject = "Task Updated: {$subject}";
+                    $messageBody = "The task '{$subject}' has been created. Here are the details:";
+
+                    // Send the task update email
+                    $emailSent = sendTaskEmail($userEmail, $emailSubject, $messageBody, [
                         'subject' => $subject,
-                        'project_name' => $project_id,  // Assuming you have the project name in $project_id
+                        'project_name' => $project_name,
                         'status' => $status,
                         'priority' => $priority,
                         'description' => $description,
-                        'due_date' => $due_date,  // Include due date if applicable
-                        'assigned_users' => implode(', ', $assigned)  // Convert assigned users array to string
                     ]);
 
                     if ($emailSent) {
@@ -115,5 +121,3 @@ foreach ($auth0_users as $u) {
 include 'INCLUDES/inc_taskcreate.php';
 include 'INCLUDES/inc_footer.php';
 include 'INCLUDES/inc_disconnect.php';
-
-?>
