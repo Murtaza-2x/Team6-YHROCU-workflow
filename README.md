@@ -24,7 +24,7 @@ This application enables users (admin or normal roles) to:
 - View project details and tasks.
 - Track status and priority (e.g., New, In Progress, Complete, Urgent, etc.).
 
-  **EMAIL NOTIFICATION Mailtrap.io ACCOUNT DETAILS:**
+  **EMAIL NOTIFICATION Mailtrap.io ACCOUNT DETAILS (SIGN IN WITH GOOGLE):**
   Yhrocunotifications@gmail.com 
   YHROCUPass1
 
