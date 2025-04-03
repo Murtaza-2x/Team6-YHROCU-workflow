@@ -13,16 +13,14 @@ require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/Auth0Factory.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
 
-session_start(); // Start session to store user data
-
-// Clear any previous session data
-session_unset();
-session_regenerate_id(true);
-
 // Prevent the browser from caching the page
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
 header("Expires: 0");
+
+session_start(); // Start session to store user data
+session_unset();
+session_regenerate_id(true);
 
 // Create Auth0 instance and exchange the code for tokens
 $auth0 = Auth0Factory::create();
@@ -43,15 +41,27 @@ $fullUser = Auth0UserManager::getUser($rawUser['sub']);
 // Assign role to user, defaulting to 'User' if not found
 $fullUser['role'] = ucfirst(strtolower($fullUser['app_metadata']['role'] ?? 'User'));
 
-// // Check the user's status in app_metadata
-// $status = $fullUser['app_metadata']['status'] ?? 'active';
+// Check the user's status in app_metadata
+$status = $fullUser['app_metadata']['status'] ?? 'active';
 
-// // If the status is 'inactive', stop the login and show an error message
-// if ($status === 'inactive') {
-//     // Redirect back to login page with error
-//     header('Location: index.php?error=1&msg=Your account is inactive. Please contact Administrator');
-//     exit;
-// }
+if ($status === 'inactive') {
+    $_SESSION = [];
+    session_destroy();
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
+    header('Location: index.php?error=1&msg=Your%20account%20is%20disabled.%20Please%20contact%20an%20administrator.');
+    exit;
+}
 
 // Save user details to session
 $_SESSION['user'] = $fullUser;
