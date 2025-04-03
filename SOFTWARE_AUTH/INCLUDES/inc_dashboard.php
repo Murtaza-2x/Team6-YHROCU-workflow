@@ -13,6 +13,7 @@ Dashboard page shown after login. Displays different content based on the user's
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <title><?php echo $title; ?></title>
 
+  <link href="CSS/filter_styles.css" rel="stylesheet">
   <link href="CSS/dashboard_styles.css" rel="stylesheet">
   <link href="CSS/tasklist_styles.css" rel="stylesheet">
 </head>

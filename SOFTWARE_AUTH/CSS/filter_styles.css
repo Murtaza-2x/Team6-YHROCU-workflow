@@ -1,0 +1,29 @@
+.TASK-FILTER {
+    margin-right: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .TASK-FILTER input {
+    color: var(--white);
+    padding: 8px;
+    margin-right: 5px;
+    border-radius: 5px;
+    border: white;
+    outline: none;
+    background-color: #222222;
+  }
+  
+  .TASK-FILTER button {
+    padding: 8px 12px;
+    border: none;
+    background-color: var(--blue);
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .TASK-FILTER button:hover {
+    background-color: var(--dark-grey);
+  }
