@@ -1,0 +1,149 @@
+/* TASK SECTION */
+.TASK-CONTENT {
+  width: 100%;
+  height: 487px;
+  color: var(--dark-grey);
+}
+
+.TASK-AREA {
+  height: 100%;
+  background-color: var(--light-grey);
+  padding: 16px;
+  padding-left: 0%;
+  padding-right: 0%;
+}
+
+.TASK-HEADER {
+  height: 40px;
+  display: flex;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--off-white);
+  padding-top: 2px;
+  padding-left: 15px;
+  padding-bottom: 0px;
+}
+
+.TASK-HEADER-1 {
+  font-family: "Helvetica Neue Medium";
+  font-size: 1rem;
+  color: var(--black);
+}
+
+.TASK-HEADER-2 {
+  font-family: "Helvetica Neue Light";
+  font-size: 1rem;
+  color: var(--dark-grey);
+  padding-left: 7px;
+  opacity: 0.6;
+}
+
+.TASK-FILTER {
+  margin-right: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.TASK-FILTER input {
+  color: var(--white);
+  padding: 8px;
+  margin-right: 5px;
+  border-radius: 5px;
+  border: white;
+  outline: none;
+  background-color: #222222;
+}
+
+.TASK-FILTER button {
+  padding: 8px 12px;
+  border: none;
+  background-color: var(--blue);
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.TASK-FILTER button:hover {
+  background-color: var(--dark-grey);
+}
+
+.TASK-LIST {
+  text-align: center;
+}
+
+.TASK-LIST table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--white);
+  text-align: center;
+}
+
+.TASK-LIST th,
+.TASK-LIST td {
+  border: 1px solid var(--off-white);
+  padding: 8px;
+  text-decoration: none;
+}
+
+.TASK-LIST th img {
+  width:10px;
+  height:10px;
+  opacity: 0.5;
+}
+
+.TASK-LIST a {
+  color: var(--dark-grey);
+  text-decoration: none;
+  font-family: "Helvetica Neue Medium";
+  cursor: pointer;
+}
+
+.TASK-LIST a:hover {
+  color: var(--blue);
+}
+
+.TASK-LIST th {
+  background-color: var(--off-white);
+}
+
+.TASK-LIST button {
+  padding: 10px 45px;
+  border: none;
+  color: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.TASK-LIST button:hover {
+  background-color: var(--dark-grey);
+}
+
+.CREATE-TASK-BUTTON {
+  display: inline;
+  justify-content: center;
+  margin: 0 10px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  background-color: var(--blue);
+}
+
+.CREATE-PROJECT-BUTTON {
+  display: inline;
+  justify-content: center;
+  margin: 0 10px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  background-color: var(--green);
+}
+
+.USER-MESSAGE {
+  display: block;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 30px;
+  font-size: 1.5rem;
+  color: var(--black);
+}
+
+/* TASK SECTION END */
+/* MIDDLE SECTION END */

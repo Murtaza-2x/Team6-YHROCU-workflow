@@ -1,0 +1,150 @@
+/* MIDDLE SECTION */
+.MIDDLE-SECTION {
+  width: 100%;
+  height: 100%;
+  top: 75px;
+  bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MIDDLE-SECTION {
+  position: absolute;
+  background-color: var(--white);
+  z-index: 1;
+}
+
+.MIDDLE-HERO-IMAGE {
+  position: fixed;
+  background-image: url(../IMAGES/BG.jpg);
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: brightness(50%);
+}
+
+/* VIEW LOG BOX */
+.VIEW-LOG-CONTAINER {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.VIEW-LOG-BOX {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 800px;
+  height: 650px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.VIEW-HEAD h1 {
+  text-align: center;
+  margin: 0;
+  font-size: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--dark-grey);
+}
+
+.VIEW-HEAD p {
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+  color: var(--dark-grey);
+  opacity: 0.8;
+}
+
+.LOG-LIST {
+  text-align: center;
+}
+
+.LOG-LIST table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--white);
+  text-align: center;
+}
+
+.LOG-LIST th,
+.LOG-LIST td,
+.LOG-LIST h2 {
+  padding: 8px;
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.LOG-HEAD {
+  font-size: 0.8rem;
+}
+
+.LOG-DESC {
+  font-size: 0.7rem;
+}
+
+.LOG-LIST th img {
+  width:10px;
+  height:10px;
+  opacity: 0.5;
+}
+
+.LOG-LIST a {
+  color: var(--dark-grey);
+  text-decoration: none;
+  font-family: "Helvetica Neue Medium";
+}
+
+.LOG-LIST a:hover {
+  color: var(--blue);
+}
+
+.LOG-LIST th {
+  background-color: var(--off-white);
+}
+
+.LOG-LIST button {
+  padding: 10px 45px;
+  border: none;
+  color: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.LOG-LIST button:hover {
+  background-color: var(--dark-grey);
+}
+
+.BACK-BUTTON, .EXPORT-BUTTON {
+  display: inline;
+  justify-content: center;
+  margin: 0 10px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.BACK-BUTTON {
+  background-color: var(--light-grey);
+}
+
+.EXPORT-BUTTON {
+  background-color: var(--green);
+}
+
+.USER-MESSAGE {
+  display: block;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 30px;
+  font-size: 1.5rem;
+  color: var(--black);
+}
+
+/* TASK SECTION END */
+/* MIDDLE SECTION END */
