@@ -1,0 +1,4 @@
+﻿"Edited By","Archived At","Created At",Subject,Status,Priority,"Due Date",Description
+<br />
+<b>Warning</b>:  Undefined variable $dueDate in <b>C:\xampp\htdocs\YHROCU-CLONE\Team6-YHROCU-workflow\SOFTWARE_AUTH\view-task-logs-page.php</b> on line <b>88</b><br />
+fizananjum5,"2025-04-03 13:12:56","2025-04-03 13:12:17","Example Task",New,Urgent,,Example
