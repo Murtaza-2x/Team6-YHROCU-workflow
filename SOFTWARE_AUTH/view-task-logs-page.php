@@ -76,7 +76,6 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
         $subject     = $log['subject'];
         $status      = $log['status'];
         $priority    = $log['priority'];
-        $dueDate     = $log['due_date'] ?? '';
         $description = str_replace(["\r\n", "\r", "\n"], " ", $log['description']);
 
         fputcsv($out, [

@@ -22,6 +22,7 @@
                 <table class="LOG-TABLE">
                     <thead>
                         <tr class="LOG-HEAD">
+                            <th>Created By</th>
                             <th>Edited By</th>
                             <th>Archived At</th>
                             <th>Created At</th>
@@ -34,8 +35,10 @@
                     </thead>
                     <tbody>
                         <?php foreach ($projectLogs as $log):
+                            $creatorId = $log['created_by'] ?? 'unknown';
                             $logEditorId = $log['edited_by'] ?? 'unknown';
                             $logEditor   = htmlspecialchars($user_map[$logEditorId] ?? $logEditorId);
+                            $creator   = htmlspecialchars($user_map[$creatorId] ?? $creatorId);
                             $archivedAt  = $log['archived_at'] ?? '-';
                             $createdAt   = $log['created_at'] ?? '-';
                             $name        = htmlspecialchars($log['project_name'] ?? '');
@@ -45,14 +48,14 @@
                             $dueDate = htmlspecialchars($log['due_date'] ?? '-');
 
                             // Pills
-                            $statusPill = match($status) {
+                            $statusPill = match ($status) {
                                 'New'         => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
                                 'In Progress' => "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>",
                                 'Complete'    => "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>",
                                 default       => "<button class='PILL-INACTIVE'>$status</button>",
                             };
 
-                            $priorityPill = match($priority) {
+                            $priorityPill = match ($priority) {
                                 'Urgent'   => "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>",
                                 'Moderate' => "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>",
                                 'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
@@ -60,6 +63,7 @@
                             };
                         ?>
                             <tr>
+                                <td><?php echo $creator; ?></td>
                                 <td><?php echo $logEditor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>
                                 <td><?php echo $createdAt; ?></td>
@@ -104,14 +108,14 @@
                             $description = nl2br(htmlspecialchars($log['description'] ?? ''));
 
                             // Pills
-                            $statusPill = match($status) {
+                            $statusPill = match ($status) {
                                 'New'         => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
                                 'In Progress' => "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>",
                                 'Complete'    => "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>",
                                 default       => "<button class='PILL-INACTIVE'>$status</button>",
                             };
 
-                            $priorityPill = match($priority) {
+                            $priorityPill = match ($priority) {
                                 'Urgent'   => "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>",
                                 'Moderate' => "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>",
                                 'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",

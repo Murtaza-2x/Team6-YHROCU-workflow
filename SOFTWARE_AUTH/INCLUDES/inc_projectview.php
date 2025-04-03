@@ -24,10 +24,10 @@
         </div>
         <!-- HEADER END -->
 
-        <!-- STATUS -->
+        <!-- PRIORITY & STATUS -->
         <div class="VIEW-ROW">
             <div class="VIEW-COLUMN">
-                <h1 class="TASK-LABEL">Status</h1>
+                <div class="TASK-LABEL">Status</div>
                 <div class="TASK-PILL-CONTAINER">
                     <div class="PILL">
                         <button class="PILL-NEW <?php echo ($project['status'] === 'New') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">New</button>
@@ -36,13 +36,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- STATUS END -->
 
-        <!-- PRIORITY -->
-        <div class="VIEW-ROW">
             <div class="VIEW-COLUMN">
-                <h1 class="TASK-LABEL">Priority</h1>
+                <div class="TASK-LABEL">Priority</div>
                 <div class="TASK-PILL-CONTAINER">
                     <div class="PILL">
                         <button class="PILL-URGENT <?php echo ($project['priority'] === 'Urgent') ? 'PILL-ACTIVE' : 'PILL-INACTIVE'; ?>">Urgent</button>
@@ -52,7 +48,6 @@
                 </div>
             </div>
         </div>
-        <!-- PRIORITY END -->
 
         <!-- DESCRIPTION -->
         <div class="VIEW-ROW">

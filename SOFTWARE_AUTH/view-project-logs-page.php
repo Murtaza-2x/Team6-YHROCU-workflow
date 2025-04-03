@@ -115,7 +115,6 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
             $log['subject'],
             $log['status'],
             $log['priority'],
-            $log['due_date'] ?? '',
             $log['description']
         ]);
     }
