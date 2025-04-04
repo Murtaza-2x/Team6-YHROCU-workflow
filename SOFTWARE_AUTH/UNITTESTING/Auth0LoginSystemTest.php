@@ -7,7 +7,7 @@ class Auth0LoginSystemTest extends TestCase
 {
     /**
      * setUp() is called before each test method.
-     * Here, we ensure the session is started and cleared.
+     * Here, ensure the session is started and cleared.
      */
     protected function setUp(): void
     {

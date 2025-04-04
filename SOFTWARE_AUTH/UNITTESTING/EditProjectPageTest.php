@@ -1,14 +1,10 @@
 <?php
 /*
 -------------------------------------------------------------
-File: Auth0EditProjectPageTest.php
+File: EditProjectPageTest.php
 Description:
-- PHPUnit tests for edit-project-page.php in test mode (JSON).
-- Tests:
-   * Invalid project ID => {"error":"Invalid project ID"}
-   * Nonexistent project => {"error":"Project not found"}
-   * Missing fields => {"error":"All fields are required"}
-   * Successful update => {"success":"Project updated successfully"}
+- PHPUnit tests for edit-project-page.php in test (JSON) mode.
+- Adds extra role-based & archiving tests.
 -------------------------------------------------------------
 */
 
@@ -16,8 +12,9 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
+require_once __DIR__ . '/traits/DatabaseTestTrait.php';
 
-class EditProjectPageTest extends TestCase
+class Auth0EditProjectPageTest extends TestCase
 {
     use Auth0SessionTrait;
     use BufferedPageTestTrait;
@@ -25,50 +22,68 @@ class EditProjectPageTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Possibly login as admin if is_staff() is relevant
-        // $this->fakeAuth0User(['role'=>'Admin']);
     }
 
-    public function testInvalidProjectIdShowsError()
+    public function testInvalidProjectId()
     {
-        $_GET['id'] = ''; // empty => invalid
+        // ?id= empty => "Invalid project ID"
+        $_GET['id'] = ''; 
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         ob_start();
         include __DIR__ . '/../edit-project-page.php';
         $output = ob_get_clean();
 
-        $json = json_decode($output,true);
+        $json = json_decode($output, true);
         $this->assertNotNull($json, "Output not valid JSON");
-        $this->assertEquals("Invalid project ID",$json['error']);
+        $this->assertEquals("Invalid project ID", $json['error']);
     }
 
     public function testNonexistentProjectShowsError()
     {
-        $_GET['id'] = '99999'; // => "Project not found"
+        // ?id=99999 => "Project not found"
+        $_GET['id'] = '99999'; 
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         ob_start();
         include __DIR__ . '/../edit-project-page.php';
         $output = ob_get_clean();
 
-        $json = json_decode($output,true);
+        $json = json_decode($output, true);
         $this->assertNotNull($json);
-        $this->assertEquals("Project not found",$json['error']);
+        $this->assertEquals("Project not found", $json['error']);
+    }
+
+    public function testUnauthorizedUser()
+    {
+        $_SESSION['user'] = ['role'=>'user','nickname'=>'UserTest'];
+
+        $_GET['id'] = '1'; // valid ID
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
+        ob_start();
+        include __DIR__ . '/../edit-project-page.php';
+        $output = ob_get_clean();
+
+        $json = json_decode($output, true);
+        $this->assertNotNull($json);
+        $this->assertEquals("You are not authorized",$json['error']);
     }
 
     public function testEditProjectAllFieldsRequired()
     {
-        $_GET['id'] = '1'; // valid ID for test mode
+        // Staff user => manager or admin
+        $_SESSION['user'] = ['role'=>'manager','nickname'=>'ManagerTest'];
+
+        $_GET['id'] = '1';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST = [
             'update_project'=> true,
-            // missing some fields => triggers "All fields are required"
-            'project_name'=>'', // empty
-            'status'=>'Active'
-            // priority => missing
-            // description => missing
-            // due_date => missing
+            'project_name'  => '',  // missing required name
+            'status'        => 'Active',
+            'priority'      => 'Low',
+            'description'   => '',  // missing
+            'due_date'      => '2025-12-31'
         ];
 
         ob_start();
@@ -80,17 +95,43 @@ class EditProjectPageTest extends TestCase
         $this->assertEquals("All fields are required",$json['error']);
     }
 
-    public function testEditProjectSuccess()
+    public function testEditProjectSuccessAsManager()
     {
-        $_GET['id'] = '1'; // valid ID => success path
+        // manager => staff => success
+        $_SESSION['user'] = ['role'=>'manager','nickname'=>'ManagerTest'];
+
+        $_GET['id'] = '1';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST = [
-            'update_project'=> true,
-            'project_name'  => 'New Project Name',
-            'status'        => 'Active',
-            'priority'      => 'Low',
-            'description'   => 'Updated Desc',
-            'due_date'      => '2025-12-31'
+            'update_project' => true,
+            'project_name'   => 'New Project Name',
+            'status'         => 'On Hold',
+            'priority'       => 'High',
+            'description'    => 'New Desc',
+            'due_date'       => '2025-08-01'
+        ];
+
+        $output = $this->captureOutput(__DIR__ . '/../edit-project-page.php');
+        $json = json_decode($output,true);
+
+        $this->assertNotNull($json);
+        $this->assertEquals("Project updated successfully",$json['success']);
+    }
+
+    public function testEditProjectSuccessAsAdmin()
+    {
+        // admin => staff => success
+        $_SESSION['user'] = ['role'=>'admin','nickname'=>'AdminTest'];
+
+        $_GET['id'] = '1';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST = [
+            'update_project' => true,
+            'project_name'   => 'Admin Project Name',
+            'status'         => 'Closed',
+            'priority'       => 'Medium',
+            'description'    => 'Admin Desc',
+            'due_date'       => '2026-01-01'
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../edit-project-page.php');

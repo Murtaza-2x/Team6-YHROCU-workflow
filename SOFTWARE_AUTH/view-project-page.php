@@ -43,7 +43,6 @@ if ($isTesting) {
     }
 
     // Otherwise, simulate a valid project record
-    // (In real test, you'd load from DB or do partial mock.)
     $proj = [
       "project_name"=>"Test Project Name",
       "description"=>"Test project description",
@@ -93,7 +92,6 @@ if (!$project) {
 // Render project details
 echo "<h1>Project: " . htmlspecialchars($project['project_name']) . "</h1>";
 echo "<p>Description: " . htmlspecialchars($project['description'] ?? '') . "</p>";
-// Additional fields as needed...
 
 include __DIR__ . '/INCLUDES/inc_footer.php';
 include __DIR__ . '/INCLUDES/inc_disconnect.php';

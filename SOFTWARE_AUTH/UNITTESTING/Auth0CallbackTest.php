@@ -44,7 +44,7 @@ class Auth0CallbackTest extends TestCase
 
     /**
      * setUp() is executed before each test method.
-     * Here, we:
+     * Here:
      * - Ensure a session is started and cleared.
      * - Set up GET parameters and session data to simulate an Auth0 callback.
      * - Inject our FakeAuth0 instance and a mocked Auth0UserManager into the global scope.

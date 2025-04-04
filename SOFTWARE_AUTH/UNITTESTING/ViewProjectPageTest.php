@@ -23,9 +23,7 @@ class ViewProjectPageTest extends TestCase
 
     protected function setUp(): void
     {
-        // We can start or clear the session, if needed
         parent::setUp();
-        // e.g. $this->fakeAuth0User(); or not, if user check is not tested
     }
 
     public function testInvalidProjectIdShowsError()
@@ -65,9 +63,9 @@ class ViewProjectPageTest extends TestCase
         $json = json_decode($output,true);
 
         $this->assertNotNull($json);
-        // We expect "projectId" => "1"
+        // expect "projectId" => "1"
         $this->assertEquals("1", $json['projectId']);
-        // We expect "project" => { "project_name"=>"Test Project Name", ... }
+        // expect "project" => { "project_name"=>"Test Project Name", ... }
         $this->assertStringContainsString("Test Project Name",$json['project']['project_name']);
         $this->assertStringContainsString("Test project description",$json['project']['description']);
     }
