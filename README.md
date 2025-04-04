@@ -56,7 +56,7 @@ This application enables users (admin or normal roles) to:
 
    Create a new MySQL database (e.g., rocu).
 
-   Run rocu.sql file inside DATABASE folder.
+   Run rocu.sql file which can be found inside DATABASE folder.
 
 6. **Set up your web server if not using XAMPP**:
 
