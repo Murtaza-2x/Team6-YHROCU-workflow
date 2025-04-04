@@ -11,9 +11,7 @@ Description:
 
 use PHPUnit\Framework\TestCase;
 
-// Include the Auth0UserManager class for mocking.
 require_once __DIR__ . '/../INCLUDES/Auth0UserManager.php';
-// Include traits for session simulation and output buffering.
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 

@@ -11,7 +11,8 @@ trait DatabaseTestTrait
     protected function setUpDatabase(): void
     {
         require_once __DIR__ . '/../../INCLUDES/inc_database.php';
-
+        
+        // Create a fresh database connection.
         $db = new DatabaseConnection();
         $this->conn = $db->connect();
 
@@ -19,7 +20,15 @@ trait DatabaseTestTrait
             throw new Exception("Database connection not available in test.");
         }
 
-        $GLOBALS['conn'] = $this->conn;
+        // Reset primary keys for the tests if needed
+        $this->resetAutoIncrement('tasks');
+        $this->resetAutoIncrement('projects');
+    }
+
+    // Method to reset AUTO_INCREMENT for a table to avoid key collisions
+    protected function resetAutoIncrement(string $table): void
+    {
+        $this->conn->query("ALTER TABLE `$table` AUTO_INCREMENT = 1");
     }
 
     protected function tearDownDatabase(): void
@@ -27,8 +36,7 @@ trait DatabaseTestTrait
         if (isset($this->conn) && $this->conn instanceof mysqli) {
             $this->conn->close();
         }
-        unset($GLOBALS['conn']);
-    }    
+    }
 
     // Helper method to insert a dummy row.
     protected function insertDummy(string $query, array $params, string $types): bool
