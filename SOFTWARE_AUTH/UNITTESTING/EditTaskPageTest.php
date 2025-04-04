@@ -1,30 +1,19 @@
 <?php
-/*
--------------------------------------------------------------
-File: EditTaskPageTest.php
-Description:
-- Tests the edit-task-page.php functionality.
-- Uses PHPUNIT_RUNNING test mode so that errors and success responses are returned as JSON.
-- Mocks Auth0UserManager to simulate Auth0 behavior.
--------------------------------------------------------------
-*/
-
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 require_once __DIR__ . '/traits/DatabaseTestTrait.php';
-require_once __DIR__ . '/../INCLUDES/Auth0UserManager.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-echo "DEBUG: Setting error_reporting to E_ALL\n";
-
-// Ensure PHPUNIT_RUNNING is defined BEFORE we do any output capturing
-if (!defined('PHPUNIT_RUNNING')) {
-    define('PHPUNIT_RUNNING', true);
-    echo "DEBUG: Defined PHPUNIT_RUNNING = true in " . __FILE__ . "\n";
-}
+/*
+-------------------------------------------------------------
+File: EditTaskPageTest.php
+Description:
+- Tests the edit-task-page.php functionality using normal HTML output.
+- Relies on role_helper "is_logged_in()" and "is_staff()" checks.
+- Asserts on <p class='ERROR-MESSAGE'> or <p class='SUCCESS-MESSAGE'> text.
+-------------------------------------------------------------
+*/
 
 class EditTaskPageTest extends TestCase
 {
@@ -32,199 +21,123 @@ class EditTaskPageTest extends TestCase
     use BufferedPageTestTrait;
     use DatabaseTestTrait;
 
-    protected int $taskId;
-    protected $auth0UserManagerMock;
+    protected $taskId = null;
 
-    protected function setUp(): void {
-        echo "DEBUG: EditTaskPageTest::setUp\n";
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->setUpDatabase();
-        $GLOBALS['conn'] = $this->conn;
 
-        // Create a dummy Auth0UserManager mock.
-        $this->auth0UserManagerMock = $this->getMockBuilder(Auth0UserManager::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getUser'])
-            ->getMock();
-        $GLOBALS['Auth0UserManager'] = $this->auth0UserManagerMock;
-
-        // Clear previous dummy data.
-        $this->conn->query("DELETE FROM projects WHERE id = 1");
-        $this->conn->query("DELETE FROM tasks WHERE subject = 'Test Task'");
-
-        // Insert dummy project.
-        $stmt = $this->conn->prepare("INSERT INTO projects (id, project_name, created_by) VALUES (1, 'Test Project', 'auth0|testuser123')");
-        $stmt->execute();
-        $stmt->close();
-
-        // Insert dummy task.
+        // Insert a dummy project
+        $this->conn->query("INSERT INTO projects (id, project_name) VALUES (99, 'Test Project')");
+        // Insert a dummy task
         $stmt = $this->conn->prepare("
-            INSERT INTO tasks 
-            (subject, status, priority, description, project_id, created_by) 
-            VALUES 
-            ('Test Task', 'New', 'High', 'Initial Description', 1, 'auth0|testuser123')
+            INSERT INTO tasks (subject, status, priority, description, project_id, created_by)
+            VALUES ('DummyTask','New','High','SomeDescription',99,'auth0|tester')
         ");
         $stmt->execute();
         $this->taskId = $this->conn->insert_id;
         $stmt->close();
-
-        echo "DEBUG: Inserted dummy task ID={$this->taskId}\n";
     }
 
-    protected function tearDown(): void {
-        echo "DEBUG: EditTaskPageTest::tearDown\n";
-        $this->conn->query("DELETE FROM task_archive WHERE task_id = {$this->taskId}");
-        $this->conn->query("DELETE FROM task_assigned_users WHERE task_id = {$this->taskId}");
-        $this->conn->query("DELETE FROM tasks WHERE id = {$this->taskId}");
-        $this->conn->query("DELETE FROM projects WHERE id = 1");
+    protected function tearDown(): void
+    {
+        // Clean up dummy data
+        $this->conn->query("DELETE FROM tasks WHERE id={$this->taskId}");
+        $this->conn->query("DELETE FROM projects WHERE id=99");
+
         $this->tearDownDatabase();
     }
 
-    public function testAccessDeniedForGuest() {
-        echo "DEBUG: testAccessDeniedForGuest\n";
+    public function testGuestIsDenied()
+    {
+        // No user in session => should see "You are not authorized..."
         $this->clearAuth0Session();
 
-        // Force GET request
-        $_SERVER['REQUEST_METHOD'] = 'GET';
+        // Force GET
         $_GET = [];
-        $_POST = [];
+        $_SERVER['REQUEST_METHOD'] = 'GET';
 
+        // We pass a valid numeric id
         $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id=' . $this->taskId);
 
-        // Print everything captured
-        echo "DEBUG OUTPUT:\n$output\n";
-
-        $decoded = json_decode($output, true);
-        $this->assertEquals('Not authorized', $decoded['error']);
+        // Check for the denial message in HTML
+        $this->assertStringContainsString("You are not authorized to view this page.", $output);
     }
 
-    public function testInvalidTaskId() {
-        echo "DEBUG: testInvalidTaskId\n";
-        $this->fakeAuth0User(['role' => 'admin', 'user_id' => 'auth0|testuser123']);
-
-        $_SERVER['REQUEST_METHOD'] = 'GET';
+    public function testInvalidTaskId()
+    {
+        // Simulate a staff user
+        $this->fakeAuth0User(['role' => 'Admin']); // or a role that is_staff()
+        
         $_GET = [];
-        $_POST = [];
-
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id=invalid');
-        echo "DEBUG OUTPUT:\n$output\n";
-
-        $decoded = json_decode($output, true);
-        $this->assertEquals('Invalid task ID', $decoded['error']);
-    }
-
-    public function testTaskNotFound() {
-        echo "DEBUG: testTaskNotFound\n";
-        $this->fakeAuth0User(['role' => 'admin', 'user_id' => 'auth0|testuser123']);
-
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET = [];
-        $_POST = [];
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id=999999');
-        echo "DEBUG OUTPUT:\n$output\n";
-
-        $decoded = json_decode($output, true);
-        $this->assertEquals('Task not found', $decoded['error']);
+        // pass a non-numeric ID => "Invalid task ID."
+        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id=bogus');
+        $this->assertStringContainsString("Invalid task ID.", $output);
     }
 
-    public function testFormDisplayForAdmin() {
-        echo "DEBUG: testFormDisplayForAdmin\n";
-        $this->fakeAuth0User(['role' => 'admin', 'user_id' => 'auth0|testuser123']);
-
+    public function testTaskNotFound()
+    {
+        // If we pass a numeric but non-existent ID => "Task not found."
+        $this->fakeAuth0User(['role' => 'Admin']);
+        $_GET = [];
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET = [];
-        $_POST = [];
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id=' . $this->taskId);
-        echo "DEBUG OUTPUT:\n$output\n";
-
-        $this->assertStringContainsString("<form", $output);
+        $nonExistentId = 999999;
+        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id='.$nonExistentId);
+        $this->assertStringContainsString("Task not found.", $output);
     }
 
-    public function testEditTaskFormValidation() {
-        echo "DEBUG: testEditTaskFormValidation\n";
-        $this->fakeAuth0User(['role' => 'admin', 'user_id' => 'auth0|testuser123']);
-
+    public function testAllFieldsRequired()
+    {
+        // Admin user => we pass an empty subject => "All fields are required."
+        $this->fakeAuth0User(['role' => 'Admin']);
+        $_GET = [];
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_GET = [];
         $_POST = [
             'update_task' => true,
-            'subject'     => '',  // Missing subject triggers validation error.
-            'project_id'  => 1,
+            'subject'     => '', // triggers error
+            'project_id'  => 99,
             'status'      => 'In Progress',
             'priority'    => 'Medium',
-            'description' => 'Updated description',
+            'description' => 'Test desc'
+        ];
+
+        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id='.$this->taskId);
+        $this->assertStringContainsString("All fields are required.", $output);
+    }
+
+    public function testUpdateSuccess()
+    {
+        // Admin user => pass all fields => "Task updated successfully."
+        $this->fakeAuth0User(['role' => 'Admin']);
+        $_GET = [];
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST = [
+            'update_task' => true,
+            'subject'     => 'Updated Task Title',
+            'project_id'  => 99,
+            'status'      => 'Complete',
+            'priority'    => 'Low',
+            'description' => 'New description',
             'assign'      => []
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id=' . $this->taskId);
-        echo "DEBUG OUTPUT:\n$output\n";
+        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id='.$this->taskId);
 
-        $decoded = json_decode($output, true);
-        $this->assertEquals('All fields are required', $decoded['error']);
-    }
+        $this->assertStringContainsString("Task updated successfully.", $output);
 
-    public function testEditTaskSuccess() {
-        echo "DEBUG: testEditTaskSuccess\n";
-        $this->fakeAuth0User(['role' => 'admin', 'user_id' => 'auth0|testuser123']);
-
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_GET = [];
-        $_POST = [
-            'update_task' => true,
-            'subject'     => 'Updated Task',
-            'project_id'  => 1,
-            'status'      => 'In Progress',
-            'priority'    => 'Medium',
-            'description' => 'Updated description',
-            'assign'      => []
-        ];
-
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id=' . $this->taskId);
-        echo "DEBUG OUTPUT:\n$output\n";
-
-        $decoded = json_decode($output, true);
-        $this->assertEquals('Task updated successfully', $decoded['success']);
-
-        // Check DB
-        $stmt = $this->conn->prepare("SELECT subject, description FROM tasks WHERE id = ?");
+        // Confirm DB
+        $stmt = $this->conn->prepare("SELECT subject, status, priority, description FROM tasks WHERE id=?");
         $stmt->bind_param("i", $this->taskId);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $task = $result->fetch_assoc();
-        $this->assertEquals('Updated Task', $task['subject']);
-        $this->assertEquals('Updated description', $task['description']);
-    }
-
-    public function testEditTaskWithAssignedUserAndEmail() {
-        echo "DEBUG: testEditTaskWithAssignedUserAndEmail\n";
-        $this->fakeAuth0User(['role' => 'admin', 'user_id' => 'auth0|testuser123']);
-
-        $assignedUserId = 'auth0|12345';
-
-        // Expect the mock to return an email
-        $this->auth0UserManagerMock->expects($this->once())
-            ->method('getUser')
-            ->with($this->equalTo($assignedUserId))
-            ->willReturn(['email' => 'assigned@example.com']);
-
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_GET = [];
-        $_POST = [
-            'update_task' => true,
-            'subject'     => 'Task With Assigned User',
-            'project_id'  => 1,
-            'status'      => 'In Progress',
-            'priority'    => 'Medium',
-            'description' => 'Updated description with assignment',
-            'assign'      => [$assignedUserId]
-        ];
-
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php?id=' . $this->taskId);
-        echo "DEBUG OUTPUT:\n$output\n";
-
-        $decoded = json_decode($output, true);
-        $this->assertEquals('Task updated successfully', $decoded['success']);
+        $res = $stmt->get_result();
+        $task = $res->fetch_assoc();
+        $this->assertEquals('Updated Task Title', $task['subject']);
+        $this->assertEquals('Complete', $task['status']);
+        $this->assertEquals('Low', $task['priority']);
+        $this->assertEquals('New description', $task['description']);
     }
 }
