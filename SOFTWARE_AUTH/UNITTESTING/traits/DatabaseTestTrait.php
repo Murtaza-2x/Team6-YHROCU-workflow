@@ -11,14 +11,15 @@ trait DatabaseTestTrait
     protected function setUpDatabase(): void
     {
         require_once __DIR__ . '/../../INCLUDES/inc_database.php';
-        
-        // Create a fresh database connection.
+
         $db = new DatabaseConnection();
         $this->conn = $db->connect();
 
         if (!$this->conn instanceof mysqli) {
             throw new Exception("Database connection not available in test.");
         }
+
+        $GLOBALS['conn'] = $this->conn;
     }
 
     protected function tearDownDatabase(): void
@@ -26,8 +27,9 @@ trait DatabaseTestTrait
         if (isset($this->conn) && $this->conn instanceof mysqli) {
             $this->conn->close();
         }
-    }
-    
+        unset($GLOBALS['conn']);
+    }    
+
     // Helper method to insert a dummy row.
     protected function insertDummy(string $query, array $params, string $types): bool
     {
@@ -40,7 +42,7 @@ trait DatabaseTestTrait
         $stmt->close();
         return $result;
     }
-    
+
     // Helper method to fetch a single row.
     protected function fetchSingle(string $query): ?array
     {

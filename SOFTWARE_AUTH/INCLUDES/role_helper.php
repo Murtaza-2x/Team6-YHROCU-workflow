@@ -12,17 +12,20 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 // Get the current user's role, default to 'User' if not set
-function get_role(): string {
+function get_role(): string
+{
     return $_SESSION['user']['role'] ?? 'User';
 }
 
 // Check if the current user has the specified role
-function has_role(string $requiredRole): bool {
+function has_role(string $requiredRole): bool
+{
     return get_role() === $requiredRole;
 }
 
 // Require the specified role for access, otherwise redirect
-function require_role(string $requiredRole): void {
+function require_role(string $requiredRole): void
+{
     if (!has_role($requiredRole)) {
         header('Location: index.php?error=clearance_required');
         exit;
@@ -30,12 +33,14 @@ function require_role(string $requiredRole): void {
 }
 
 // Check if the user is logged in by checking the session
-function is_logged_in(): bool {
-    return isset($_SESSION['user']);
+function is_logged_in(): bool
+{
+    return isset($_SESSION['user']) && !empty($_SESSION['user']);
 }
 
 // Require login for access, otherwise redirect
-function require_login(): void {
+function require_login(): void
+{
     if (!is_logged_in()) {
         header('Location: index.php?error=login_required');
         exit;
@@ -49,17 +54,20 @@ function is_admin(): bool
 }
 
 // Check if the user is a manager
-function is_manager() {
+function is_manager()
+{
     return get_role() === 'Manager';
 }
 
 // Check if the user is either an admin or a manager
-function is_staff() {
-    return is_admin() || is_manager();
+function is_staff(): bool {
+    $user = get_session_user();
+    return in_array(strtolower($user['role'] ?? ''), ['admin', 'manager']);
 }
 
 // Get the list of assigned users for a specific task
-function getAssignedUsers(int $taskId, mysqli $conn): array {
+function getAssignedUsers(int $taskId, mysqli $conn): array
+{
     $assigned = [];
     $stmt = $conn->prepare("SELECT auth0_user_id FROM task_assigned_users WHERE task_id = ?");
     $stmt->bind_param('i', $taskId);
@@ -72,6 +80,15 @@ function getAssignedUsers(int $taskId, mysqli $conn): array {
 }
 
 // Get users session role
-function get_session_user(): ?array {
+function get_session_user()
+{
+    if (defined('PHPUNIT_RUNNING') && PHPUNIT_RUNNING === true) {
+        return $_SESSION['user'] ?? null;
+    }
+
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+
     return $_SESSION['user'] ?? null;
 }

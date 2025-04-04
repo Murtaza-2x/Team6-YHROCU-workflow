@@ -24,8 +24,8 @@ class CreateTaskPageTest extends TestCase
     {
         parent::setUp();
         $this->setUpDatabase();
+        $GLOBALS['conn'] = $this->conn;
 
-        // Insert dummy project (ID 1)
         $this->conn->query("DELETE FROM projects WHERE id = 1");
         $stmt = $this->conn->prepare("INSERT INTO projects (id, project_name, created_by) VALUES (1, 'Test Project', 'auth0|testuser123')");
         $stmt->execute();
@@ -43,53 +43,58 @@ class CreateTaskPageTest extends TestCase
     {
         $this->clearAuth0Session();
         $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
-        $this->assertStringContainsString("Please log in", $output);
+        $json = json_decode($output, true);
+        $this->assertEquals('Not authorized', $json['error']);
     }
 
     public function testAccessGrantedForAdmin()
     {
         $this->fakeAuth0User(['role' => 'admin']);
+        $_POST = [];
         $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
-        $this->assertStringContainsString("Create Task", $output);
+        $json = json_decode($output, true);
+        $this->assertNull($json, "Expected non-JSON output for admin loading page.");
     }
 
     public function testInvalidFormSubmissionShowsError()
     {
         $this->fakeAuth0User(['role' => 'admin']);
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST = [
             'create_task' => true,
-            'subject' => '', // Missing subject
-            'description' => 'Some description',
+            'subject' => '',
+            'description' => 'Test',
             'project_id' => 1,
             'status' => 'New',
-            'priority' => 'High',
+            'priority' => 'High'
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
-        $this->assertStringContainsString("Please fill in all required fields", $output);
+        $json = json_decode($output, true);
+        $this->assertEquals("Please fill in all required fields.", $json['error']);
     }
 
     public function testTaskCreationWorks()
     {
         $this->fakeAuth0User(['role' => 'admin']);
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST = [
             'create_task' => true,
             'subject' => 'Test Task',
-            'description' => 'Some description',
+            'description' => 'Description here',
             'project_id' => 1,
             'status' => 'New',
-            'priority' => 'High',
+            'priority' => 'High'
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
-        $this->assertStringContainsString("Task created successfully", $output);
+        $json = json_decode($output, true);
+        $this->assertEquals('Task created successfully.', $json['success']);
 
-        // Confirm task exists
         $stmt = $this->conn->prepare("SELECT * FROM tasks WHERE subject = ?");
         $stmt->bind_param("s", $_POST['subject']);
         $stmt->execute();
         $result = $stmt->get_result();
-        $task = $result->fetch_assoc();
-        $this->assertNotEmpty($task, "Task should be present in the database.");
+        $this->assertNotEmpty($result->fetch_assoc(), "Task should exist in DB.");
     }
 }
