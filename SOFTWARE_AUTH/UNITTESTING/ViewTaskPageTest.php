@@ -1,7 +1,7 @@
 <?php
 /*
 -------------------------------------------------------------
-File: Auth0ViewTaskPageTest.php
+File: ViewTaskPageTest.php
 Description:
 - PHPUnit tests for view-task-page.php.
 - Tests that:

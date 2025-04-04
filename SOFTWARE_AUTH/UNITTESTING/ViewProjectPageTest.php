@@ -1,7 +1,7 @@
 <?php
 /*
 -------------------------------------------------------------
-File: Auth0ViewProjectPageTest.php
+File: ViewProjectPageTest.php
 Description:
 - PHPUnit tests for view-project-page.php, in test mode
 - Tests that:
