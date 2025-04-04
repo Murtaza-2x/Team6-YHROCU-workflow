@@ -23,7 +23,7 @@ if ($isTesting && session_status() !== PHP_SESSION_ACTIVE) {
 
 $user = $_SESSION['user'] ?? null;
 
-// Early exit for unauthorized test mode
+// Early exit for unauthorized test
 if ($isTesting && (!$user || strtolower($user['role'] ?? '') !== 'admin')) {
     echo json_encode(['error' => 'Not authorized']);
     return;
