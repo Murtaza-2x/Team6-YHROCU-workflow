@@ -8,7 +8,7 @@ Description:
 */
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start(); // Start the session if it's not already started
+    session_start();
 }
 
 // Get the current user's role, default to 'User' if not set
@@ -69,4 +69,9 @@ function getAssignedUsers(int $taskId, mysqli $conn): array {
         $assigned[] = $row['auth0_user_id']; // Collect assigned user IDs
     }
     return $assigned;
+}
+
+// Get users session role
+function get_session_user(): ?array {
+    return $_SESSION['user'] ?? null;
 }

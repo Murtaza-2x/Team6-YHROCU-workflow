@@ -9,28 +9,25 @@ Description:
 -------------------------------------------------------------
 */
 
+$isTesting = defined('PHPUNIT_RUNNING') && PHPUNIT_RUNNING === true;
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+$_SESSION = [];
+
+// During PHPUnit, don't redirect. Output confirmation for test.
+if ($isTesting) {
+    echo "Logout simulated: session cleared";
+    return;
+}
+
 require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/Auth0Factory.php';
 
-// true for test mode, false for non-test mode
-if (!defined('TEST_ENVIRONMENT')) {
-    define('TEST_ENVIRONMENT', false);
-}
-
-session_start();
-
 // Clear session data.
 $_SESSION = [];
-
-// output a marker and then return without exiting.
-if (TEST_ENVIRONMENT) {
-    echo "Logout simulated: session cleared";
-    // Do not call exit; just return.
-    return;
-} else {
-    header('Location: index.php');
-    exit;
-}
 
 // Clear session data and destroy the session
 session_unset();

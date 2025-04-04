@@ -18,12 +18,18 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
 header("Expires: 0");
 
-session_start(); // Start session to store user data
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 session_unset();
 session_regenerate_id(true);
 
+// Detect if running in PHPUnit
+$isTesting = defined('PHPUNIT_RUNNING') && PHPUNIT_RUNNING === true;
+
 // Create Auth0 instance and exchange the code for tokens
-$auth0 = Auth0Factory::create();
+$auth0 = $GLOBALS['auth0'] ?? Auth0Factory::create();
 $auth0->exchange();
 
 // Get user information from Auth0
@@ -36,9 +42,8 @@ if (!$rawUser || !isset($rawUser['sub'])) {
 }
 
 // Fetch additional user details from Auth0
-$fullUser = Auth0UserManager::getUser($rawUser['sub']);
-
-// Assign role to user, defaulting to 'User' if not found
+$userManager = $GLOBALS['Auth0UserManager'] ?? new Auth0UserManager();
+$fullUser = $userManager->getUser($rawUser['sub']);
 $fullUser['role'] = ucfirst(strtolower($fullUser['app_metadata']['role'] ?? 'User'));
 
 // Check the user's status in app_metadata
@@ -65,6 +70,16 @@ if ($status === 'inactive') {
 
 // Save user details to session
 $_SESSION['user'] = $fullUser;
+
+if ($isTesting) {
+    echo "[TEST MODE] Auth0 callback ran.\n";
+    echo json_encode([
+        'rawUser' => $rawUser,
+        'fullUser' => $fullUser,
+    ], JSON_PRETTY_PRINT);
+    return;
+}
+
 
 // Redirect to the task list page or the dashboard
 header('Location: list-task-page.php');

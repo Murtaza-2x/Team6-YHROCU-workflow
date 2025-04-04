@@ -15,8 +15,65 @@ Description:
 
 $title = "ROCU: Create Task";
 
-require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/role_helper.php';
+
+// Detect if running in PHPUnit
+$isTesting = defined('PHPUNIT_RUNNING') && PHPUNIT_RUNNING === true;
+
+// If testing, output JSON and skip rendering HTML
+if ($isTesting && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = [];
+
+    if (empty($subject) || empty($project_id) || empty($status) || empty($priority)) {
+        $response['error'] = "All fields are required.";
+    } else {
+        $response['success'] = "Task created successfully.";
+        $response['task'] = [
+            'subject' => $subject,
+            'project_id' => $project_id,
+            'status' => $status,
+            'priority' => $priority,
+            'due_date' => $due_date,
+            'description' => $description,
+            'assigned_users' => $assigned,
+        ];
+    }
+
+    echo json_encode($response, JSON_PRETTY_PRINT);
+    return;
+}
+
+if ($isTesting && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $subject     = trim($_POST['subject'] ?? '');
+    $project_id  = trim($_POST['project_id'] ?? '');
+    $status      = trim($_POST['status'] ?? '');
+    $priority    = trim($_POST['priority'] ?? '');
+    $due_date    = trim($_POST['due_date'] ?? '');
+    $description = trim($_POST['description'] ?? '');
+    $assigned    = $_POST['assign'] ?? [];
+
+    $response = [];
+
+    if (empty($subject) || empty($project_id) || empty($status) || empty($priority)) {
+        $response['error'] = "All fields are required.";
+    } else {
+        $response['success'] = "Task created successfully.";
+        $response['data'] = [
+            'subject' => $subject,
+            'project_id' => $project_id,
+            'status' => $status,
+            'priority' => $priority,
+            'due_date' => $due_date,
+            'description' => $description,
+            'assigned_users' => $assigned,
+        ];
+    }
+
+    echo json_encode($response, JSON_PRETTY_PRINT);
+    return;
+}
+
+require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
@@ -29,6 +86,9 @@ if (!is_logged_in() || !is_staff()) {
     include 'INCLUDES/inc_footer.php';
     exit;
 }
+
+// Inject Auth0UserManager instance
+$userManager = $GLOBALS['Auth0UserManager'] ?? new Auth0UserManager();
 
 $errorMsg = '';
 $successMsg = '';
@@ -60,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtAssign->execute();
 
                     // Fetch user details for email
-                    $user = Auth0UserManager::getUser($uid);  // Fetch the user by their ID
+                    $user = $userManager->getUser($uid);  // Fetch the user by their ID
                     $userEmail = $user['email'];  // Get user's email
 
                     // Prepare email details

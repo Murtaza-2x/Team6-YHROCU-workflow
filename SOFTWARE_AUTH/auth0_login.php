@@ -12,7 +12,9 @@ Description:
 require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/Auth0Factory.php';
  
-session_start(); // Start the session to access login_email
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
  
 // Capture login email from URL param or session (before destroying session)
 $email = $_GET['email'] ?? ($_SESSION['login_email'] ?? null);

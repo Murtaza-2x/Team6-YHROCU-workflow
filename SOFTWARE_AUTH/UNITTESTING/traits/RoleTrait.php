@@ -33,11 +33,19 @@ trait RoleTrait
         ]);
     }
 
-    protected function loginAsModerator(): array
+    protected function loginAsManager(): array
     {
         return $this->loginAs([
-            'role' => 'moderator',
-            'nickname' => 'ModUser'
+            'role' => 'manager',
+            'nickname' => 'managerUser'
+        ]);
+    }
+
+    protected function loginAsUser(): array
+    {
+        return $this->loginAs([
+            'role' => 'user',
+            'nickname' => 'defaultUser'
         ]);
     }
 

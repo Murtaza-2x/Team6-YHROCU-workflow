@@ -1,4 +1,16 @@
 <?php
+/*
+-------------------------------------------------------------
+File: Auth0ViewTaskPageTest.php
+Description:
+- PHPUnit tests for view-task-page.php.
+- Tests that:
+    > An invalid task ID returns a JSON error message "Invalid task ID".
+    > A nonexistent task ID returns a JSON error message "Task not found".
+    > A valid task ID returns the correct task details.
+-------------------------------------------------------------
+*/
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
@@ -14,17 +26,17 @@ class Auth0ViewTaskPageTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Create a fresh DB connection.
+        // Set up a fresh database connection.
         $this->setUpDatabase();
         // Clear GET parameters and simulate a logged-in user.
         $_GET = [];
         $this->fakeAuth0User();
         
-        // Clean up any previous dummy records to avoid duplicate key errors.
+        // Clean up previous dummy records.
         $this->conn->query("DELETE FROM tasks WHERE id = 1");
         $this->conn->query("DELETE FROM projects WHERE id = 1");
         
-        // Insert dummy project first to satisfy the foreign key.
+        // Insert a dummy project.
         $projectName = "Test Project";
         $queryProject = "INSERT INTO projects (id, project_name) VALUES (1, ?)";
         $stmtProject = $this->conn->prepare($queryProject);
@@ -32,7 +44,7 @@ class Auth0ViewTaskPageTest extends TestCase
         $stmtProject->execute();
         $stmtProject->close();
         
-        // Insert dummy task record (id = 1) referencing the project.
+        // Insert a dummy task (id = 1) referencing the project.
         $dummySubject     = "Test Task Subject";
         $dummyDescription = "Test task description.";
         $dummyProjectId   = 1;
@@ -56,43 +68,45 @@ class Auth0ViewTaskPageTest extends TestCase
 
     public function testInvalidTaskIdShowsError()
     {
-        try {
-            $_GET['id'] = "";
-            $output = $this->captureOutput(__DIR__ . '/../view-task-page.php');
-            $this->assertStringContainsString("Invalid task ID", $output);
-            echo "testInvalidTaskIdShowsError passed\n";
-        } catch (\Throwable $e) {
-            echo "testInvalidTaskIdShowsError failed: " . $e->getMessage() . "\n";
-            throw $e;
-        }
+        $_GET['id'] = '';  // Invalid task ID (empty)
+        
+        // Capture the output.
+        ob_start();
+        include __DIR__ . '/../view-task-page.php';
+        $output = ob_get_clean();
+        
+        // Parse JSON output.
+        $jsonOutput = json_decode($output, true);
+        $this->assertNotNull($jsonOutput, "Output is not valid JSON.");
+        $this->assertArrayHasKey('error', $jsonOutput, "Error key is missing in output.");
+        $this->assertEquals('Invalid task ID', $jsonOutput['error']);
     }
-
+    
     public function testNonexistentTaskShowsError()
     {
-        try {
-            $_GET['id'] = "99999";
-            $output = $this->captureOutput(__DIR__ . '/../view-task-page.php');
-            $this->assertStringContainsString("Task not found", $output);
-            echo "testNonexistentTaskShowsError passed\n";
-        } catch (\Throwable $e) {
-            echo "testNonexistentTaskShowsError failed: " . $e->getMessage() . "\n";
-            throw $e;
-        }
+        $_GET['id'] = "99999";  // Nonexistent task ID
+        
+        // Capture the output.
+        ob_start();
+        include __DIR__ . '/../view-task-page.php';
+        $output = ob_get_clean();
+        
+        // Parse JSON output.
+        $jsonOutput = json_decode($output, true);
+        $this->assertNotNull($jsonOutput, "Output is not valid JSON.");
+        $this->assertArrayHasKey('error', $jsonOutput, "Error key is missing in output.");
+        $this->assertEquals('Task not found', $jsonOutput['error']);
     }
-
+    
     public function testViewTaskPageDisplaysTask()
     {
-        try {
-            $_GET['id'] = "1";
-            $output = $this->captureOutput(__DIR__ . '/../view-task-page.php');
-            $this->assertStringContainsString("View Task", $output);
-            $this->assertStringContainsString("Test Task Subject", $output);
-            $this->assertStringContainsString("Test task description.", $output);
-            $this->assertStringContainsString("Test Project", $output);
-            echo "testViewTaskPageDisplaysTask passed\n";
-        } catch (\Throwable $e) {
-            echo "testViewTaskPageDisplaysTask failed: " . $e->getMessage() . "\n";
-            throw $e;
-        }
+        $_GET['id'] = "1";  // Valid task ID
+        
+        // Capture the output.
+        $output = $this->captureOutput(__DIR__ . '/../view-task-page.php');
+        $outputData = json_decode($output, true);
+        $this->assertEquals("1", $outputData['taskId']);
+        $this->assertStringContainsString("Test Task Subject", $outputData['task']['subject']);
+        $this->assertStringContainsString("Test task description.", $outputData['task']['description']);
     }
 }

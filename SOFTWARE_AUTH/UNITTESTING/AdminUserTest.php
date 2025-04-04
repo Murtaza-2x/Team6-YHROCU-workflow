@@ -1,92 +1,184 @@
 <?php
-// Import the PHPUnit TestCase class.
+/*
+-------------------------------------------------------------
+File: AdminUserTest.php
+Description:
+- Tests admin-page.php access control and behavior.
+- Simulates Auth0 sessions for guest, regular user, and admin roles.
+- Includes a mocked test to simulate user creation using Auth0UserManager.
+-------------------------------------------------------------
+*/
+
 use PHPUnit\Framework\TestCase;
 
-// Include our traits for simulating Auth0 sessions and capturing output.
-// These traits provide methods to set up or clear a fake user session,
-// and to capture the output of an included PHP file into a variable.
+// Include the Auth0UserManager class for mocking.
+require_once __DIR__ . '/../INCLUDES/Auth0UserManager.php';
+// Include traits for session simulation and output buffering.
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 
 class AdminUserTest extends TestCase
 {
-    // Use the Auth0SessionTrait for simulating user sessions,
-    // and BufferedPageTestTrait for capturing output.
     use Auth0SessionTrait;
     use BufferedPageTestTrait;
 
     /**
-     * Test that a guest (i.e. when no user is in session) is denied access.
-     * In test mode, the admin page should output "Access Denied" instead of performing a redirect.
+     * setUp() is called before each test.
+     * Ensures the session is started and cleared.
      */
-    public function testAccessDeniedForGuest()
+    protected function setUp(): void
     {
-        try {
-            // Clear the session so that no user is logged in.
-            $this->clearAuth0Session();
-            
-            // Capture the output of the admin page.
-            $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
-            
-            // Assert that the captured output contains "Access Denied".
-            $this->assertStringContainsString("Access Denied", $output, "Guest should be denied access.");
-            
-            // Echo a message indicating this test passed.
-            echo "testAccessDeniedForGuest passed\n";
-        } catch (\Throwable $e) {
-            // If an exception occurs, echo the failure message and rethrow the exception.
-            echo "testAccessDeniedForGuest failed: " . $e->getMessage() . "\n";
-            throw $e;
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
         }
+        $_SESSION = [];
     }
 
     /**
-     * Test that a non-admin user is denied access.
-     * The admin page should output "Access Denied" if a user with a role other than "admin" is logged in.
+     * tearDown() is called after each test.
+     * Clears global variables and superglobals to prevent cross-test interference.
      */
-    public function testAccessDeniedForNonAdmin()
+    protected function tearDown(): void
     {
-        try {
-            // Simulate a non-admin user by setting role to 'user' and a sample nickname.
-            $this->fakeAuth0User(['role' => 'user', 'nickname' => 'RegularUser']);
-            
-            // Capture the output of the admin page.
-            $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
-            
-            // Assert that the output contains "Access Denied".
-            $this->assertStringContainsString("Access Denied", $output, "Non-admin should be denied access.");
-            
-            // Echo a message indicating this test passed.
-            echo "testAccessDeniedForNonAdmin passed\n";
-        } catch (\Throwable $e) {
-            // Echo the error message if the test fails and rethrow the exception.
-            echo "testAccessDeniedForNonAdmin failed: " . $e->getMessage() . "\n";
-            throw $e;
-        }
+        unset($GLOBALS['Auth0UserManager']);
+        $_POST = [];
+        $_GET = [];
+        $_SESSION = [];
     }
 
     /**
-     * Test that an admin user is granted access.
-     * When a user with the "admin" role is logged in, the admin page should output a welcome message.
+     * Test: Access Denied for Guest
+     * Verifies that a guest (with no session) is denied access.
+     * Expected output should include "Access Denied".
      */
-    public function testAdminGetsAccess()
+    public function testAccessDeniedForGuest(): void
     {
-        try {
-            // Simulate an admin user with role "admin" and a custom nickname.
-            $this->fakeAuth0User(['role' => 'admin', 'nickname' => 'CaptainAdmin']);
-            
-            // Capture the output of the admin page.
-            $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
-            
-            // Assert that the output contains the expected welcome message.
-            $this->assertStringContainsString("Welcome Admin CaptainAdmin", $output, "Admin should see a welcome message.");
-            
-            // Echo a message indicating this test passed.
-            echo "testAdminGetsAccess passed\n";
-        } catch (\Throwable $e) {
-            // If the test fails, echo the error message and rethrow the exception.
-            echo "testAdminGetsAccess failed: " . $e->getMessage() . "\n";
-            throw $e;
-        }
+        $this->clearAuth0Session();
+        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $this->assertStringContainsString("Access Denied", $output);
+    }
+
+    /**
+     * Test: Access Denied for Non-Admin User
+     * Verifies that a user with role "user" cannot access the admin page.
+     */
+    public function testAccessDeniedForNonAdmin(): void
+    {
+        // Simulate login as a regular user by setting 'role' explicitly.
+        $this->fakeAuth0User([
+            'nickname' => 'RegularUser',
+            'role' => 'user',
+            'app_metadata' => ['role' => 'user']
+        ]);
+        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $this->assertStringContainsString("Access Denied", $output);
+    }
+
+    /**
+     * Test: Admin Gets Access
+     * Verifies that an admin sees the welcome message when accessing the admin page.
+     */
+    public function testAdminGetsAccess(): void
+    {
+        // Simulate login as an admin by explicitly setting 'role' to 'admin'.
+        $this->fakeAuth0User([
+            'nickname' => 'CaptainAdmin',
+            'role' => 'admin',
+            'app_metadata' => ['role' => 'admin']
+        ]);
+        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $this->assertStringContainsString("Welcome Admin CaptainAdmin", $output);
+    }
+
+    /**
+     * Test: Admin Can Create User With Mocked Manager
+     * Mocks Auth0UserManager to simulate successful user creation.
+     * Injects the mock into the global space and verifies that a success message appears.
+     */
+    public function testAdminCanCreateUserWithMockedManager(): void
+    {
+        // Create a mock Auth0UserManager with expectations.
+        $mock = $this->createMock(Auth0UserManager::class);
+        $mock->expects($this->once())
+            ->method('createUser')
+            ->with(
+                $this->equalTo('newuser@example.com'),
+                $this->equalTo('TestPass123!'),
+                $this->equalTo('User')
+            );
+        $mock->method('getUsers')->willReturn([]); // Simulate empty user list.
+
+        // Inject the mock into the global scope.
+        $GLOBALS['Auth0UserManager'] = $mock;
+
+        // Simulate admin login with 'role' explicitly set.
+        $this->fakeAuth0User([
+            'nickname' => 'CaptainAdmin',
+            'role' => 'admin',
+            'app_metadata' => ['role' => 'admin']
+        ]);
+
+        // Simulate POST submission for user creation.
+        $_POST['create_user']   = true;
+        $_POST['new_email']     = 'newuser@example.com';
+        $_POST['new_password']  = 'TestPass123!';
+        $_POST['new_role']      = 'User';
+
+        // Capture the admin page output.
+        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+
+        // Assert that the success message appears.
+        $this->assertStringContainsString('User created successfully', $output);
+
+        // Clean up the global mock.
+        unset($GLOBALS['Auth0UserManager']);
+    }
+
+    /**
+     * Test: Access Denied for Manager
+     * Verifies that a user with role "manager" is denied admin access.
+     */
+    public function testAccessDeniedForManager(): void
+    {
+        // Simulate login as a manager by explicitly setting 'role' to 'manager'.
+        $this->fakeAuth0User([
+            'nickname' => 'ManagerGuy',
+            'role' => 'manager',
+            'app_metadata' => ['role' => 'manager']
+        ]);
+        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $this->assertStringContainsString("Access Denied", $output);
+    }
+
+    /**
+     * Test: Access Denied for Unknown Role
+     * Verifies that a user with an unknown or invalid role is denied access.
+     */
+    public function testAccessDeniedForUnknownRole(): void
+    {
+        // Simulate login with an unrecognized role.
+        $this->fakeAuth0User([
+            'nickname' => 'WeirdUser',
+            'role' => 'hacker',
+            'app_metadata' => ['role' => 'hacker']
+        ]);
+        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $this->assertStringContainsString("Access Denied", $output);
+    }
+
+    /**
+     * Test: Access Denied When Role Is Missing
+     * Verifies that a user with no role set is denied access.
+     */
+    public function testAccessDeniedWhenRoleIsMissing(): void
+    {
+        // Simulate login with no role provided.
+        $this->fakeAuth0User([
+            'nickname' => 'NoRoleGuy',
+            // No 'role' key is set.
+            'app_metadata' => []
+        ]);
+        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $this->assertStringContainsString("Access Denied", $output);
     }
 }

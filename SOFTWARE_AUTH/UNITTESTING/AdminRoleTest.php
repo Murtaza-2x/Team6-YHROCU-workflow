@@ -6,6 +6,7 @@ require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 require_once __DIR__ . '/traits/DatabaseTestTrait.php';
 require_once __DIR__ . '/traits/RolePolicyTrait.php';
+require_once __DIR__ . '/traits/RoleTrait.php';
 
 class AdminRoleTest extends TestCase
 {
@@ -14,6 +15,7 @@ class AdminRoleTest extends TestCase
     use BufferedPageTestTrait;
     use DatabaseTestTrait;
     use RolePolicyTrait;
+    use RoleTrait;
 
     /**
      * setUp() is called before each test.
@@ -82,23 +84,23 @@ class AdminRoleTest extends TestCase
     }
 
     /**
-     * Test that a moderator user can edit tasks but cannot manage users.
+     * Test that a manager user can edit tasks but cannot manage users.
      */
-    public function testModeratorCanEditTasks()
+    public function testManagerCanEditTasks()
     {
         try {
-            // Log in as a moderator.
-            $this->loginAsModerator(['nickname' => 'ModUser']);
+            // Log in as a manager.
+            $this->loginAsManager(['nickname' => 'ManagerUser']);
             
             // Assert that a moderator has permission to edit tasks but not to manage users.
-            $this->assertTrue($this->can('edit_tasks'), "Moderator should be able to edit tasks.");
-            $this->assertFalse($this->can('manage_users'), "Moderator should not be able to manage users.");
+            $this->assertTrue($this->can('edit_tasks'), "Manager should be able to edit tasks.");
+            $this->assertFalse($this->can('manage_users'), "Manager should not be able to manage users.");
             
             // Echo a success message.
-            echo "testModeratorCanEditTasks passed\n";
+            echo "testManagerCanEditTasks passed\n";
         } catch (\Throwable $e) {
             // Echo error message and rethrow exception.
-            echo "testModeratorCanEditTasks failed: " . $e->getMessage() . "\n";
+            echo "testManagerCanEditTasks failed: " . $e->getMessage() . "\n";
             throw $e;
         }
     }

@@ -1,8 +1,6 @@
 <?php
-// Import PHPUnit's TestCase class.
 use PHPUnit\Framework\TestCase;
 
-// Include the Auth0Factory, which is responsible for creating an Auth0 instance.
 require_once __DIR__ . '/../INCLUDES/Auth0Factory.php';
 
 class Auth0LoginSystemTest extends TestCase

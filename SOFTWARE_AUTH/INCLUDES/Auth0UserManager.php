@@ -3,12 +3,13 @@
 -------------------------------------------------------------
 File: Auth0UserManager.php
 Description:
-- Provides Auth0 Management API functionalities:
+- Provides Auth0 Management API functionalities using instance methods:
     > Get all users
     > Get single user
-    > Create user (newer signature)
+    > Create user
     > Update user role
     > Send password reset link
+    > Disable / re-enable / delete users
 -------------------------------------------------------------
 */
 
@@ -20,14 +21,16 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 
 class Auth0UserManager
 {
+    private Management $mgmt;
+
     /*
     -------------------------------------------------------------
-    Method: management
+    Constructor
     Description:
-    - Returns an instance of the Management API client with the proper configuration and authentication token.
+    - Initializes the Auth0 Management API client.
     -------------------------------------------------------------
     */
-    public static function management(): Management
+    public function __construct()
     {
         $token = Auth0TokenManager::getToken();
         $config = new SdkConfiguration([
@@ -40,7 +43,7 @@ class Auth0UserManager
             'useState'        => false,
         ]);
 
-        return new Management($config);
+        $this->mgmt = new Management($config);
     }
 
     /*
@@ -50,10 +53,9 @@ class Auth0UserManager
     - Fetches all users from the Auth0 Management API.
     -------------------------------------------------------------
     */
-    public static function getUsers()
+    public function getUsers(): array
     {
-        $mgmt = self::management();
-        $response = $mgmt->users()->getAll();
+        $response = $this->mgmt->users()->getAll();
         return json_decode((string)$response->getBody(), true);
     }
 
@@ -64,11 +66,9 @@ class Auth0UserManager
     - Creates a new user in Auth0 with the specified email, password, and role.
     -------------------------------------------------------------
     */
-    public static function createUser(string $email, string $password, string $role): void
+    public function createUser(string $email, string $password, string $role): void
     {
-        $mgmt = self::management();
-
-        $response = $mgmt->users()->create(
+        $response = $this->mgmt->users()->create(
             'Username-Password-Authentication',
             [
                 'email'          => $email,
@@ -93,26 +93,22 @@ class Auth0UserManager
     -------------------------------------------------------------
     Method: updateUserRole
     Description:
-    - Updates the role of a user in their app_metadata.
+    - Updates the role and status of a user in app_metadata.
     -------------------------------------------------------------
     */
-    public static function updateUserRole(string $userId, string $role, string $status = 'active'): void
+    public function updateUserRole(string $userId, string $role, string $status = 'active'): void
     {
-        $mgmt = self::management();
-        
-        // Update both role and status
-        $resp = $mgmt->users()->update($userId, [
+        $resp = $this->mgmt->users()->update($userId, [
             'app_metadata' => [
                 'role'   => $role,
-                'status' => $status  // Set the status to "active" or "inactive"
+                'status' => $status
             ]
         ]);
-    
+
         if ($resp->getStatusCode() !== 200) {
             throw new \Exception('Failed to update user role and status: ' . (string)$resp->getBody());
         }
     }
-    
 
     /*
     -------------------------------------------------------------
@@ -121,10 +117,9 @@ class Auth0UserManager
     - Fetches a single user by their user ID.
     -------------------------------------------------------------
     */
-    public static function getUser($userId)
+    public function getUser(string $userId): array
     {
-        $mgmt = self::management();
-        $resp = $mgmt->users()->get($userId);
+        $resp = $this->mgmt->users()->get($userId);
         return json_decode((string)$resp->getBody(), true);
     }
 
@@ -135,41 +130,35 @@ class Auth0UserManager
     - Fetches a user by their email address from Auth0.
     -------------------------------------------------------------
     */
-    public static function getUserByEmail(string $email): array
+    public function getUserByEmail(string $email): array
     {
-        $mgmt = self::management();
         $params = [
             'q'             => 'email:"' . $email . '"',
             'search_engine' => 'v3'
         ];
 
-        $response = $mgmt->users()->getAll($params);
-        $body = json_decode((string) $response->getBody(), true);
-        return $body;
+        $response = $this->mgmt->users()->getAll($params);
+        return json_decode((string) $response->getBody(), true);
     }
 
     /*
     -------------------------------------------------------------
     Method: generatePasswordResetLink
     Description:
-    - Generates and sends a password reset link for a user.
+    - Generates and returns a password reset link for a user.
     -------------------------------------------------------------
     */
-    public static function generatePasswordResetLink(string $userId)
+    public function generatePasswordResetLink(string $userId): string
     {
-        $mgmt = self::management();
-        if (!$mgmt) {
-            throw new Exception('Auth0 Management API client is not available.');
-        }
-
-        $resUser = $mgmt->users()->get($userId);
+        $resUser = $this->mgmt->users()->get($userId);
         $userData = json_decode((string)$resUser->getBody(), true);
         $email = $userData['email'] ?? null;
+
         if (!$email) {
             throw new Exception('User does not have an email.');
         }
 
-        $resTicket = $mgmt->tickets()->createPasswordChange([
+        $resTicket = $this->mgmt->tickets()->createPasswordChange([
             'user_id' => $userId,
             'result_url' => 'http://localhost/YOUR_APP/password-reset-success.php'
         ]);
@@ -178,25 +167,24 @@ class Auth0UserManager
 
         if ($resTicket->getStatusCode() === 201 && !empty($body['ticket'])) {
             return $body['ticket'];
-        } else {
-            throw new Exception('Failed to create reset link: ' . (string)$resTicket->getBody());
         }
+
+        throw new Exception('Failed to create reset link: ' . (string)$resTicket->getBody());
     }
 
     /*
     -------------------------------------------------------------
     Method: disableUser
     Description:
-    - Disables a user by updating their app_metadata (or status) to 'inactive'.
+    - Disables a user by setting app_metadata > status to 'inactive'.
     -------------------------------------------------------------
     */
-    public static function disableUser(string $userId): void
+    public function disableUser(string $userId): void
     {
-        $mgmt = self::management();
-        $resp = $mgmt->users()->update($userId, [
+        $resp = $this->mgmt->users()->update($userId, [
             'app_metadata' => ['status' => 'inactive']
         ]);
-    
+
         if ($resp->getStatusCode() !== 200) {
             throw new \Exception('Failed to disable user: ' . (string)$resp->getBody());
         }
@@ -206,14 +194,12 @@ class Auth0UserManager
     -------------------------------------------------------------
     Method: reenableUser
     Description:
-    - Re-enables a user by updating their app_metadata (or status) to 'inactive'.
+    - Re-enables a user by setting app_metadata > status to 'active'.
     -------------------------------------------------------------
     */
-
-    public static function reenableUser(string $userId): void
+    public function reenableUser(string $userId): void
     {
-        $mgmt = self::management();
-        $resp = $mgmt->users()->update($userId, [
+        $resp = $this->mgmt->users()->update($userId, [
             'app_metadata' => ['status' => 'active']
         ]);
 
@@ -226,15 +212,13 @@ class Auth0UserManager
     -------------------------------------------------------------
     Method: deleteUser
     Description:
-    - Deletes a user from Auth0.
+    - Deletes a user from Auth0 by user ID.
     -------------------------------------------------------------
     */
-    public static function deleteUser(string $userId)
+    public function deleteUser(string $userId): void
     {
-        $mgmt = self::management();
         try {
-            $resp = $mgmt->users()->delete($userId);
-
+            $resp = $this->mgmt->users()->delete($userId);
             if ($resp->getStatusCode() !== 204) {
                 throw new \Exception('Failed to delete user: ' . (string)$resp->getBody());
             }

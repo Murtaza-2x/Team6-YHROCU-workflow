@@ -14,7 +14,7 @@ $title = "ROCU: Dashboard";
 require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
-require_once __DIR__ . '/INCLUDES/Auth0UserManager.php'; // Ensure we include Auth0 manager
+require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/inc_dashboard.php';
 
@@ -23,8 +23,11 @@ if (!is_logged_in()) {
     exit;
 }
 
-// Fetch the Auth0 user list for mapping IDs to usernames
-$auth0_users = Auth0UserManager::getUsers();
+// Replace static usage with instance-compatible injection
+$userManager = $GLOBALS['Auth0UserManager'] ?? new Auth0UserManager();
+
+// Call getUsers() using the instance
+$auth0_users = $userManager->getUsers();
 
 $user      = $_SESSION['user'];
 $clearance = $user['role'] ?? 'User';

@@ -29,6 +29,9 @@ if (!is_logged_in() || !is_staff()) {
     exit;
 }
 
+// Inject Auth0UserManager instance (testable)
+$userManager = $GLOBALS['Auth0UserManager'] ?? new Auth0UserManager();
+
 $taskId = $_GET['id'] ?? null;
 
 if (!$taskId || !is_numeric($taskId)) {
@@ -70,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
                     $stmtAssign->execute();
 
                     // Fetch user details for email
-                    $user = Auth0UserManager::getUser($uid);  // Fetch the user by their ID
+                    $user = $userManager->getUser($uid);  // Fetch the user by their ID
                     $userEmail = $user['email'];  // Get user's email
 
                     // Prepare email details

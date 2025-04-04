@@ -14,7 +14,7 @@ trait RolePolicyTrait
         $permissions = [
             'guest' => [],
             'user' => ['view_dashboard'],
-            'moderator' => ['view_dashboard', 'edit_tasks'],
+            'manager' => ['view_dashboard', 'edit_tasks'],
             'admin' => ['view_dashboard', 'edit_tasks', 'manage_users', 'view_logs'],
         ];
 
