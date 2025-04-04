@@ -36,7 +36,6 @@ function sendTaskEmail($toEmail, $subject, $messageBody, $taskDetails)
             <p><strong>Status:</strong> {$taskDetails['status']}</p>
             <p><strong>Priority:</strong> {$taskDetails['priority']}</p>
             <p><strong>Description:</strong> {$taskDetails['description']}</p>
-            <p><strong>Assigned Users:</strong> {$taskDetails['assigned_users']}</p>
         ";
 
         // Email body
