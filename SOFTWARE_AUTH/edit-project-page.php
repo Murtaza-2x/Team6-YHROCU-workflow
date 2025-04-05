@@ -103,6 +103,6 @@ $priority     = $project['priority'] ?? '';
 $description  = $project['description'] ?? '';
 $due_date     = $project['due_date'] ?? '';
 
-include 'INCLUDES/inc_projectedit.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+include __DIR__ . '/INCLUDES/inc_projectedit.php';
+include __DIR__ . '/INCLUDES/inc_footer.php';
+include __DIR__ . '/INCLUDES/inc_disconnect.php';

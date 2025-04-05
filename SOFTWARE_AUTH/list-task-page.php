@@ -14,7 +14,7 @@ $title = "ROCU: Dashboard";
 require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
-require_once __DIR__ . '/INCLUDES/Auth0UserManager.php'; // Ensure we include Auth0 manager
+require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/inc_dashboard.php';
 
@@ -173,8 +173,8 @@ $result = $stmt->get_result();
 </div>
 <!-- TASK SECTION END -->
 
-<?php include 'INCLUDES/inc_footer.php'; ?>
-<?php include 'INCLUDES/inc_disconnect.php'; ?>
+<?php include __DIR__ . '/INCLUDES/inc_footer.php'; ?>
+<?php include __DIR__ . '/INCLUDES/inc_disconnect.php'; ?>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="JS/SEARCH-TABLE.js"></script>

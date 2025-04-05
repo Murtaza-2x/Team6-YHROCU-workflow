@@ -123,9 +123,8 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     exit;
 }
 
-// Render the project logs page
-include 'INCLUDES/inc_header.php';
-include 'INCLUDES/inc_projectlogsview.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+include __DIR__ .  '/INCLUDES/inc_header.php';
+include __DIR__ .  '/INCLUDES/inc_projectlogsview.php';
+include __DIR__ .  '/INCLUDES/inc_footer.php';
+include __DIR__ .  '/INCLUDES/inc_disconnect.php';
 ?>

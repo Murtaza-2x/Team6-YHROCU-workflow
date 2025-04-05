@@ -50,6 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include 'INCLUDES/inc_projectcreate.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+include __DIR__ . '/INCLUDES/inc_projectcreate.php';
+include __DIR__ . '/INCLUDES/inc_footer.php';
+include __DIR__ . '/INCLUDES/inc_disconnect.php';

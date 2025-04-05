@@ -77,8 +77,7 @@ while ($row = $assignedResult->fetch_assoc()) {
     $assignedUsers[] = $row['user_id'];
 }
 
-// Render project view page
-include 'INCLUDES/inc_projectview.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+include __DIR__ . '/INCLUDES/inc_projectview.php';
+include __DIR__ . '/INCLUDES/inc_footer.php';
+include __DIR__ . '/INCLUDES/inc_disconnect.php';
 ?>

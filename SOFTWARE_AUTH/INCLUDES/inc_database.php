@@ -19,17 +19,23 @@ class DatabaseConnection
     */
     public function connect()
     {
-        // Create a new mysqli connection
-        $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+        try {
+            $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 
-        // Check the connection
-        if ($this->conn->connect_error) {
-            // Log error and terminate the script in case of connection failure
-            error_log("Connection failed: " . $this->conn->connect_error);
-            die("Connection failed: " . $this->conn->connect_error);
+            // Check connection (redundant in PHP 8.1+, but good for logs)
+            if ($this->conn->connect_error) {
+                throw new Exception("Connection failed: " . $this->conn->connect_error);
+            }
+
+            return $this->conn;
+        } catch (mysqli_sql_exception $e) {
+            // Handle connection errors gracefully
+            error_log("MySQLi Connection Error: " . $e->getMessage());
+            return null; // Signal failure
+        } catch (Exception $e) {
+            error_log("General DB Error: " . $e->getMessage());
+            return null;
         }
-
-        return $this->conn;
     }
 
     /*
