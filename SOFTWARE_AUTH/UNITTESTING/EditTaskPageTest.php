@@ -1,4 +1,5 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/BaseTestCase.php';
@@ -29,30 +30,42 @@ class EditTaskPageTest extends BaseTestCase
         ];
     }
 
+    /**
+     * Test: Invalid Task ID
+     * Test that "Invalid task ID" JSON error returns when Task ID is invalid.
+     */
     public function testInvalidTaskId()
     {
         $_GET['id'] = '';  // => "Invalid task ID"
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
-        $json   = json_decode($output,true);
+        $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
         $this->assertEquals("Invalid task ID", $json['error']);
     }
 
+    /**
+     * Test: Nonexistent Task
+     * Test that "Task not found" JSON error returns when Task not found.
+     */
     public function testNonexistentTask()
     {
         $_GET['id'] = '99999'; // => "Task not found"
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
-        $json   = json_decode($output,true);
+        $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
         $this->assertEquals("Task not found", $json['error']);
     }
 
+    /**
+     * Test: Unauthorized User
+     * Test that when user is not authorized to see page expect JSON error.
+     */
     public function testUnauthorizedUser()
     {
         // role=user => not staff => "You are not authorized"
@@ -61,12 +74,16 @@ class EditTaskPageTest extends BaseTestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
-        $json   = json_decode($output,true);
+        $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
-        $this->assertEquals("You are not authorized",$json['error']);
+        $this->assertEquals("You are not authorized", $json['error']);
     }
 
+    /**
+     * Test: All Fields Required
+     * Test that all fields are filled in before submitting form.
+     */
     public function testAllFieldsRequired()
     {
         // manager => staff => but missing fields => "All fields are required"
@@ -84,12 +101,16 @@ class EditTaskPageTest extends BaseTestCase
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
-        $json   = json_decode($output,true);
+        $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
-        $this->assertEquals("All fields are required",$json['error']);
+        $this->assertEquals("All fields are required", $json['error']);
     }
 
+    /**
+     * Test: Edit Task Success NO Assign
+     * Test that when no Assigned user email is not sent.
+     */
     public function testEditTaskSuccessNoAssign()
     {
         // manager => staff => success => no assigned => emailsSent=[]
@@ -98,17 +119,17 @@ class EditTaskPageTest extends BaseTestCase
         $_GET['id'] = '1';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST = [
-            'update_task'=> true,
+            'update_task' => true,
             'subject'    => 'Test Subject',
             'project_id' => '42',
             'status'     => 'Complete',
             'priority'   => 'Low',
-            'description'=> 'Some desc'
+            'description' => 'Some desc'
             // no "assign"
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
-        $json   = json_decode($output,true);
+        $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
         $this->assertEquals("Task updated successfully", $json['success']);
@@ -116,6 +137,10 @@ class EditTaskPageTest extends BaseTestCase
         $this->assertCount(0, $json['emailsSent']);
     }
 
+    /**
+     * Test: Edit Task Success with Assign
+     * Test that when user is Assigned email is sent.
+     */
     public function testEditTaskSuccessWithAssign()
     {
         // manager => staff => success => assigned => emails
@@ -124,17 +149,17 @@ class EditTaskPageTest extends BaseTestCase
         $_GET['id'] = '1';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST = [
-            'update_task'=> true,
+            'update_task' => true,
             'subject'    => 'EmailTest Subject',
             'project_id' => '10',
             'status'     => 'In Progress',
             'priority'   => 'Medium',
-            'description'=> 'Check email logic',
-            'assign'     => ['auth0|abc123','auth0|xyz789']
+            'description' => 'Check email logic',
+            'assign'     => ['auth0|abc123', 'auth0|xyz789']
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
-        $json   = json_decode($output,true);
+        $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
         $this->assertEquals("Task updated successfully", $json['success']);

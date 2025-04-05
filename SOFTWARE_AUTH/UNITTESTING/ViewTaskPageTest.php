@@ -30,11 +30,11 @@ class ViewTaskPageTest extends BaseTestCase
         $this->setUpDatabase();
         $_GET = [];
         $this->fakeAuth0User();
-        
+
         // Clean up previous dummy records.
         $this->conn->query("DELETE FROM tasks WHERE id = 1");
         $this->conn->query("DELETE FROM projects WHERE id = 1");
-        
+
         // Insert a dummy project.
         $projectName = "Test Project";
         $queryProject = "INSERT INTO projects (id, project_name) VALUES (1, ?)";
@@ -42,7 +42,7 @@ class ViewTaskPageTest extends BaseTestCase
         $stmtProject->bind_param("s", $projectName);
         $stmtProject->execute();
         $stmtProject->close();
-        
+
         // Insert a dummy task (id = 1) referencing the project.
         $dummySubject     = "Test Task Subject";
         $dummyDescription = "Test task description.";
@@ -65,42 +65,54 @@ class ViewTaskPageTest extends BaseTestCase
         $this->tearDownDatabase();
     }
 
+    /**
+     * Test: Invalid Task ID
+     * Test that an empty task ID returns a JSON error "Invalid task ID".
+     */
     public function testInvalidTaskIdShowsError()
     {
         $_GET['id'] = '';  // Invalid task ID (empty)
-        
+
         // Capture the output.
         ob_start();
         include __DIR__ . '/../view-task-page.php';
         $output = ob_get_clean();
-        
+
         // Parse JSON output.
         $jsonOutput = json_decode($output, true);
         $this->assertNotNull($jsonOutput, "Output is not valid JSON.");
         $this->assertArrayHasKey('error', $jsonOutput, "Error key is missing in output.");
         $this->assertEquals('Invalid task ID', $jsonOutput['error']);
     }
-    
+
+    /**
+     * Test: Nonexistent Task
+     * Test that a nonexistent task ID (e.g. 99999) returns "Task not found" error.
+     */
     public function testNonexistentTaskShowsError()
     {
         $_GET['id'] = "99999";  // Nonexistent task ID
-        
+
         // Capture the output.
         ob_start();
         include __DIR__ . '/../view-task-page.php';
         $output = ob_get_clean();
-        
+
         // Parse JSON output.
         $jsonOutput = json_decode($output, true);
         $this->assertNotNull($jsonOutput, "Output is not valid JSON.");
         $this->assertArrayHasKey('error', $jsonOutput, "Error key is missing in output.");
         $this->assertEquals('Task not found', $jsonOutput['error']);
     }
-    
+
+    /**
+     * Test: View Task Page Displays Task
+     * Test that a valid task ID returns correct task details in JSON.
+     */
     public function testViewTaskPageDisplaysTask()
     {
         $_GET['id'] = "1";  // Valid task ID
-        
+
         // Capture the output.
         $output = $this->captureOutput(__DIR__ . '/../view-task-page.php');
         $outputData = json_decode($output, true);

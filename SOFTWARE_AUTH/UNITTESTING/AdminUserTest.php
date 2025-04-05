@@ -26,7 +26,7 @@ class AdminUserTest extends BaseTestCase
      * Verifies that a guest (with no session) is denied access.
      * Expected output should include "Access Denied".
      */
-    public function testAccessDeniedForGuest(): void
+    public function testAccessDeniedForGuest()
     {
         $this->clearAuth0Session();
         $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
@@ -37,7 +37,7 @@ class AdminUserTest extends BaseTestCase
      * Test: Access Denied for Non-Admin User
      * Verifies that a user with role "user" cannot access the admin page.
      */
-    public function testAccessDeniedForNonAdmin(): void
+    public function testAccessDeniedForNonAdmin()
     {
         // Simulate login as a regular user by setting 'role' explicitly.
         $this->fakeAuth0User([
@@ -53,7 +53,7 @@ class AdminUserTest extends BaseTestCase
      * Test: Admin Gets Access
      * Verifies that an admin sees the welcome message when accessing the admin page.
      */
-    public function testAdminGetsAccess(): void
+    public function testAdminGetsAccess()
     {
         // Simulate login as an admin by explicitly setting 'role' to 'admin'.
         $this->fakeAuth0User([
@@ -70,7 +70,7 @@ class AdminUserTest extends BaseTestCase
      * Mocks Auth0UserManager to simulate successful user creation.
      * Injects the mock into the global space and verifies that a success message appears.
      */
-    public function testAdminCanCreateUserWithMockedManager(): void
+    public function testAdminCanCreateUserWithMockedManager()
     {
         // Create a mock Auth0UserManager with expectations.
         $mock = $this->createMock(Auth0UserManager::class);
@@ -113,7 +113,7 @@ class AdminUserTest extends BaseTestCase
      * Test: Access Denied for Manager
      * Verifies that a user with role "manager" is denied admin access.
      */
-    public function testAccessDeniedForManager(): void
+    public function testAccessDeniedForManager()
     {
         // Simulate login as a manager by explicitly setting 'role' to 'manager'.
         $this->fakeAuth0User([
@@ -129,7 +129,7 @@ class AdminUserTest extends BaseTestCase
      * Test: Access Denied for Unknown Role
      * Verifies that a user with an unknown or invalid role is denied access.
      */
-    public function testAccessDeniedForUnknownRole(): void
+    public function testAccessDeniedForUnknownRole()
     {
         // Simulate login with an unrecognized role.
         $this->fakeAuth0User([
@@ -145,7 +145,7 @@ class AdminUserTest extends BaseTestCase
      * Test: Access Denied When Role Is Missing
      * Verifies that a user with no role set is denied access.
      */
-    public function testAccessDeniedWhenRoleIsMissing(): void
+    public function testAccessDeniedWhenRoleIsMissing()
     {
         // Simulate login with no role provided.
         $this->fakeAuth0User([

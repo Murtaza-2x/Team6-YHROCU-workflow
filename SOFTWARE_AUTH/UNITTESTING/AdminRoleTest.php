@@ -1,4 +1,14 @@
 <?php
+/*
+-------------------------------------------------------------
+File: AdminRoleTest.php
+Description:
+- Tests that an admin user has all the expected permissions.
+- Tests that a regular user has only limited permissions.
+- Tests that a manager user can edit tasks but cannot manage users.
+-------------------------------------------------------------
+*/
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/BaseTestCase.php';

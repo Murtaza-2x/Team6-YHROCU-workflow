@@ -1,4 +1,16 @@
 <?php
+/*
+-------------------------------------------------------------
+File: Auth0LoginSystemTest.php
+Description:
+- Tests that the Auth0Factory returns a valid Auth0 instance.
+- Creates an Auth0 instance using the factory.
+- Tests that calling the login() method on the Auth0 instance does not crash.
+- Checks that the logout() method generates a valid logout URL.
+- Tests that the auth0_logout.php file clears the user session.
+-------------------------------------------------------------
+*/
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/BaseTestCase.php';

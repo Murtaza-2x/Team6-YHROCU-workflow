@@ -1,4 +1,13 @@
 <?php
+/*
+-------------------------------------------------------------
+File: Auth0LogoutFlowTest.php
+Description:
+- Sets a dummy user in the session.
+- Tests that logout clears session.
+-------------------------------------------------------------
+*/
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/BaseTestCase.php';

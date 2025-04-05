@@ -1,4 +1,13 @@
 <?php
+/*
+-------------------------------------------------------------
+File: Auth0SessionPersistenceTest.php
+Description:
+- Test that after simulating a login, the session contains the expected keys and values.
+- Simulates a login by faking an Auth0 user with specific data.
+-------------------------------------------------------------
+*/
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/BaseTestCase.php';
