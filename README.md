@@ -11,6 +11,7 @@ A simple PHP web application that allows admins to create and manage tasks and p
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
+- [Testing](#testing)
 
 ---
 
@@ -98,3 +99,16 @@ This application enables users (admin or normal roles) to:
    - Projects
     Create a new project via create-project-page.php.
     View project details at view-project-page.php?id=....
+
+   **Testing**
+
+   To run php tests:
+    -	Open a terminal inside C:\xampp\htdocs\YHROCU-CLONE\Team6-YHROCU-workflow\SOFTWARE_AUTH.
+    -	Make sure composer is installed on your computer and run “composer install”
+    -	Run “vendor\bin\phpunit” for all tests or append with UNITTESTING/[test file] to test a specific file.
+    -	
+  To run node.js tests:
+    -	Install Node.js & NPM with commands: “node -v” and “npm -v”
+    -	Install jest with commands: “npm init -y” and “npm install --save-dev jest”
+    -	Run “npm test” or “npx jest path/to/[test file].js”
+
