@@ -29,8 +29,7 @@ coverage/
 /storage/
 /bootstrap/cache/
 
-# Jest / JS testing
+# Jest / JS testing (only ignore configs, not actual tests)
 jest.config.js
 jest.setup.js
-*.test.js
 __tests__/
