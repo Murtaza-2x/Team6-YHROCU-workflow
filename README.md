@@ -67,7 +67,9 @@ This application enables users (admin or normal roles) to:
 
   If using XAMPP run Apache & MySQL.
 
-**Configuration (Not required currntly)**
+---
+
+## Configuration
 
    Auth0
    You’ll need valid Auth0 credentials:
@@ -77,7 +79,9 @@ This application enables users (admin or normal roles) to:
 
    Set these in .env or your environment variables so the app can authenticate and fetch user details.
 
-**Usage**
+---
+
+## Usage
 
    - Login
     Navigate to /index.php in your browser.
@@ -100,15 +104,20 @@ This application enables users (admin or normal roles) to:
     Create a new project via create-project-page.php.
     View project details at view-project-page.php?id=....
 
-   **Testing**
+## Testing
 
    To run php tests:
-    -	Open a terminal inside C:\xampp\htdocs\YHROCU-CLONE\Team6-YHROCU-workflow\SOFTWARE_AUTH.
-    -	Make sure composer is installed on your computer and run “composer install”
-    -	Run “vendor\bin\phpunit” for all tests or append with UNITTESTING/[test file] to test a specific file.
-    -	
-  To run node.js tests:
-    -	Install Node.js & NPM with commands: “node -v” and “npm -v”
-    -	Install jest with commands: “npm init -y” and “npm install --save-dev jest”
-    -	Run “npm test” or “npx jest path/to/[test file].js”
-
+   
+    Open a terminal inside C:\xampp\htdocs\YHROCU-CLONE\Team6-YHROCU-workflow\SOFTWARE_AUTH.
+    
+    Make sure composer is installed on your computer and run “composer install”
+    
+    Run “vendor\bin\phpunit” for all tests or append with UNITTESTING/[test file] to test a specific file.
+    
+   To run node.js tests:
+   
+    Install Node.js & NPM with commands: “node -v” and “npm -v”
+    
+    Install jest with commands: “npm init -y” and “npm install --save-dev jest”
+    
+    Run “npm test” or “npx jest path/to/[test file].js”
