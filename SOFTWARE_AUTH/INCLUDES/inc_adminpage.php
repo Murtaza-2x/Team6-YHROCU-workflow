@@ -2,8 +2,6 @@
     <title><?php echo $title; ?></title>
     <link href="CSS/admin_styles.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="JS/SEARCH-USERS.js"></script>
-    <script src="JS/ADMIN-ACTIONS.js"></script>
     <script src="JS/TOGGLE-DROPDOWN.js"></script>
     <script src="JS/PASSWORD-STRENGTH.js"></script>
     <script src="JS/RESET-LINK-COPY.js"></script>
