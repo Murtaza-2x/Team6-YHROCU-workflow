@@ -23,8 +23,11 @@ if (!is_logged_in()) {
     exit;
 }
 
-// Fetch the Auth0 user list for mapping IDs to usernames
-$auth0_users = Auth0UserManager::getUsers();
+// Replace static usage with instance-compatible injection
+$userManager = $GLOBALS['Auth0UserManager'] ?? new Auth0UserManager();
+ 
+// Call getUsers() using the instance
+$auth0_users = $userManager->getUsers();
 
 $user      = $_SESSION['user'];
 $clearance = $user['role'] ?? 'User';
