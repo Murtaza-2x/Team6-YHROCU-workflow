@@ -28,6 +28,7 @@ class CreateProjectPageTest extends TestCase
     {
         parent::setUp();
         $this->setUpDatabase();
+        $GLOBALS['conn'] = $this->conn;
     }
 
     /**
