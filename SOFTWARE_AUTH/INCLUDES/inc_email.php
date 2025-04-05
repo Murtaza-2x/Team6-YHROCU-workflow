@@ -9,6 +9,8 @@ Description:
 -------------------------------------------------------------
 */
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -22,21 +24,21 @@ function sendTaskEmail($toEmail, $subject, $messageBody, $taskDetails)
         $mail->Host = 'sandbox.smtp.mailtrap.io'; // Use SMTP server
         $mail->SMTPAuth = true;
         $mail->Port = 2525;
-        $mail->Username = '15ae02232bf29d'; // Mailtrap SMTP username
-        $mail->Password = '68f352cc509c23'; // Mailtrap SMTP password
+        $mail->Username = '435cea94b3e037'; // Mailtrap SMTP username
+        $mail->Password = '3f751ba4355c4e'; // Mailtrap SMTP password
 
         // Email details
-        $mail->setFrom('yhrocunotifications@gmail.com', 'Task Notification');
+        $mail->setFrom('notifications@yhrocu.com', 'Task Notification');
         $mail->addAddress($toEmail);
 
         // Prepare task details
         $taskData = "
-            <p><strong>Task Subject:</strong> {$taskDetails['subject']}</p>
-            <p><strong>Project:</strong> {$taskDetails['project_name']}</p>
-            <p><strong>Status:</strong> {$taskDetails['status']}</p>
-            <p><strong>Priority:</strong> {$taskDetails['priority']}</p>
-            <p><strong>Description:</strong> {$taskDetails['description']}</p>
-        ";
+                <p><strong>Subject:</strong> {$taskDetails['subject']}</p>
+                <p><strong>Project:</strong> {$taskDetails['project_name']}</p>
+                <p><strong>Status:</strong> {$taskDetails['status']}</p>
+                <p><strong>Priority:</strong> {$taskDetails['priority']}</p>
+                <p><strong>Description:</strong> {$taskDetails['description']}</p>
+                ";
 
         // Email body
         $mail->isHTML(true);
