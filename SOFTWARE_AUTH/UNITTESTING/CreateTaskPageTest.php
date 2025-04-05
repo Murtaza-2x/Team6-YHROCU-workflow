@@ -73,13 +73,17 @@ class CreateTaskPageTest extends TestCase
     public function testAccessGrantedForAdmin()
     {
         $this->fakeAuth0User(['role' => 'admin']);
-        $_POST = []; // not submitting yet
-        $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
 
-        // If it's just viewing the form, there's no JSON => $json is null.
+        // Ensure it's treated as a regular page load
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        unset($_POST);
+
+        $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
         $json = json_decode($output, true);
+
         $this->assertNull($json, "Expected non-JSON output for admin loading page.");
     }
+
 
     /**
      * Test: Invalid Form Submission
@@ -92,12 +96,12 @@ class CreateTaskPageTest extends TestCase
         $this->fakeAuth0User(['role' => 'admin']);
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST = [
-            'create_task'  => true,
-            'subject'      => '',
-            'description'  => 'Test',
-            'project_id'   => 1,
-            'status'       => 'New',
-            'priority'     => 'High'
+            'create_task' => true,
+            'subject' => '',
+            'description' => 'Test',
+            'project_id' => 1,
+            'status' => 'New',
+            'priority' => 'High'
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
@@ -121,12 +125,12 @@ class CreateTaskPageTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
         $_POST = [
-            'create_task'  => true,
-            'subject'      => 'Test Task',
-            'description'  => 'Description here',
-            'project_id'   => 1,
-            'status'       => 'New',
-            'priority'     => 'High'
+            'create_task' => true,
+            'subject' => 'Test Task',
+            'description' => 'Description here',
+            'project_id' => 1,
+            'status' => 'New',
+            'priority' => 'High'
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
