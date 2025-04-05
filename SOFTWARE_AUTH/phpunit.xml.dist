@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    bootstrap="vendor/autoload.php"
+    colors="true"
+    failOnWarning="true"
+    failOnRisky="true"
+    failOnDeprecation="true"
+    displayDetailsOnIncomplete="true"
+    executionOrder="random"
+    cacheResult="false"
+>
+    <testsuites>
+        <testsuite name="Auth0 Test Suite">
+            <directory>UNITTESTING</directory>
+        </testsuite>
+    </testsuites>
+
+<php>
+    <const name="TEST_ENVIRONMENT" value="true"/>
+    <env name="AUTH0_DOMAIN" value="test.auth0.com"/>
+    <env name="AUTH0_CLIENT_ID" value="testclientid"/>
+    <env name="AUTH0_CLIENT_SECRET" value="testsecret"/>
+    <env name="AUTH0_REDIRECT_URI" value="http://localhost/callback"/>
+    <env name="AUTH0_COOKIE_SECRET" value="testcookiesecret"/>
+    
+    <env name="DB_HOST" value="localhost"/>
+    <env name="DB_USER" value="root"/>
+    <env name="DB_PASS" value=""/>
+    <env name="DB_NAME" value="your_test_database"/>
+</php>
+
+
+</phpunit>

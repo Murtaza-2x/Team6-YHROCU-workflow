@@ -12,8 +12,11 @@ if (empty($email)) {
     exit;
 }
 
+// Initialize the manager
+$manager = new Auth0UserManager();
+
 // Fetch users by email from Auth0 using the user manager
-$users = Auth0UserManager::getUserByEmail($email);
+$users = $manager->getUserByEmail($email);
 
 // If no users are found, redirect with an error message
 if (empty($users)) {

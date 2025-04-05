@@ -68,9 +68,11 @@
                 <span class="ASSIGNED-LABEL">Assigned:</span>
                 <span class="ASSIGNED-LABEL-2">
                     <?php
-                    $displayNames = array_map(function ($uid) use ($user_map) {
-                        return $user_map[$uid] ?? $uid;
-                    }, $assignedUsers);
+                    $displayNames = array_map(
+                        function ($uid) use ($user_map) {
+                            return $user_map[$uid] ?? $uid;
+                        }, $assignedUsers
+                    );
                     echo htmlspecialchars(implode(', ', $displayNames)) ?: 'None';
                     ?>
                 </span>
@@ -78,7 +80,7 @@
         </div>
 
         <!-- LAST EDITED -->
-        <?php if (!empty($lastEditor) && !empty($lastEditTime)): ?>
+        <?php if (!empty($lastEditor) && !empty($lastEditTime)) : ?>
             <div class="TASK-ROW ASSIGNED-ROW">
                 <div class="ASSIGNED-INFO">
                     <div class="ASSIGNED-LABEL">
@@ -91,11 +93,11 @@
 
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
-            <?php if (has_role('Admin')): ?>
+            <?php if (has_role('Admin')) : ?>
                 <button class="UPDATE-BUTTON" onclick="window.location.href='edit-task-page.php?id=<?php echo urlencode($taskId); ?>'">Update Task</button>
             <?php endif; ?>
             <button class="CANCEL-BUTTON" onclick="window.location.href='list-task-page.php'">Cancel</button>
-            <?php if (is_admin()): ?>
+            <?php if (is_admin()) : ?>
                 <button class="VIEW-LOGS-BUTTON" onclick="window.location.href='view-task-logs-page.php?id=<?php echo urlencode($taskId); ?>'">
                     View Task Logs
                 </button>

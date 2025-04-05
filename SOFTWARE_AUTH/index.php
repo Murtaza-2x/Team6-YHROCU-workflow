@@ -21,16 +21,31 @@ require_once __DIR__ . '/INCLUDES/role_helper.php';
 $clearance = get_role();
 ?>
 
-<?php include 'INCLUDES/inc_connect.php'; ?>
-<?php include 'INCLUDES/inc_header.php'; ?>
-
 <?php
-$errorMsg = '';
-if (isset($_GET['error'])) {
-    $errorMsg = htmlspecialchars($_GET['msg'] ?? 'Unknown authentication error');
+require 'INCLUDES/inc_connect.php';
+
+// Check if DB connection failed
+if (!isset($conn) || !$conn instanceof mysqli || $conn->connect_error) {
+    $dbError = "Database connection failed. Please try again later.";
+    error_log("DB connection failed in index.php: " . ($conn->connect_error ?? 'Unknown error'));
 }
-include 'INCLUDES/inc_login.php';
 ?>
 
-<?php include 'INCLUDES/inc_footer.php'; ?>
-<?php include 'INCLUDES/inc_disconnect.php'; ?>
+<?php require 'INCLUDES/inc_header.php'; ?>
+
+<?php
+// Show DB error if connection failed
+if (isset($dbError)) {
+    echo "<p class='ERROR-MESSAGE'>{$dbError}</p>";
+} else {
+    // Normal login display
+    $errorMsg = '';
+    if (isset($_GET['error'])) {
+        $errorMsg = htmlspecialchars($_GET['msg'] ?? 'Unknown authentication error');
+    }
+    include 'INCLUDES/inc_login.php';
+}
+?>
+
+<?php require __DIR__ . '/INCLUDES/inc_footer.php'; ?>
+<?php require __DIR__ . '/INCLUDES/inc_disconnect.php'; ?>

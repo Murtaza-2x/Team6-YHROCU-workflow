@@ -46,3 +46,4 @@ function updateStrength() {
             break;
     }
 }
+module.exports = { updateStrength };

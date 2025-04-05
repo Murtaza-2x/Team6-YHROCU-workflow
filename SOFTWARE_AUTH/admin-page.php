@@ -22,6 +22,9 @@ require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserManager.php';
 
+// Dependency injection-compatible
+$userManager = $GLOBALS['Auth0UserManager'] ?? new Auth0UserManager();
+
 // Check if the user has Admin role
 if (!has_role('Admin')) {
     echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
@@ -45,7 +48,7 @@ if (isset($_POST['create_user'])) {
         $errorMsg = "Please fill all fields correctly.";
     } else {
         try {
-            Auth0UserManager::createUser($email, $password, $role);
+            $userManager->createUser($email, $password, $role);
             $successMsg = "User created successfully.";
         } catch (Exception $ex) {
             $errorMsg = "Error creating user: " . htmlspecialchars($ex->getMessage());
@@ -60,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_role'])) {
     if (!in_array($role, $allowed_roles)) {
         $errorMsg = "Invalid role selected.";
     } else {
-        Auth0UserManager::updateUserRole($userId, $role);
+        $userManager->updateUserRole($userId, $role);
         $successMsg = "Role updated successfully.";
     }
 }
@@ -69,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_role'])) {
 if (isset($_POST['reset_password'])) {
     $userId = $_POST['reset_password'];
     try {
-        $resetLink = Auth0UserManager::generatePasswordResetLink ($userId);
+        $resetLink = $userManager->generatePasswordResetLink($userId);
         $successMsg = "Password Reset Link:<br>
             <input class='INPUT-GROUP-3' type='text' id='reset-link' value='" . htmlspecialchars($resetLink) . "' readonly>
             <div class='TASK-BUTTONS'>
@@ -85,14 +88,14 @@ if (isset($_GET['disable_user'])) {
     $userId = $_GET['disable_user'];
     try {
         // Fetch the current status of the user
-        $user = Auth0UserManager::getUser($userId);
+        $user = $userManager->getUser($userId);
         $currentStatus = $user['app_metadata']['status'] ?? 'active'; // Default to 'active'
 
         // Toggle status between active and inactive
         $newStatus = ($currentStatus === 'active') ? 'inactive' : 'active';
 
         // Update user status
-        Auth0UserManager::updateUserRole($userId, $user['app_metadata']['role'], $newStatus);
+        $userManager->updateUserRole($userId, $user['app_metadata']['role'], $newStatus);
         $successMsg = "User status updated to " . ucfirst($newStatus) . " successfully.";
     } catch (Exception $e) {
         $errorMsg = "Error updating user status: " . htmlspecialchars($e->getMessage());
@@ -103,7 +106,7 @@ if (isset($_GET['disable_user'])) {
 if (isset($_GET['delete_user'])) {
     $userId = $_GET['delete_user'];
     try {
-        Auth0UserManager::deleteUser($userId);
+        $userManager->deleteUser($userId);
         $successMsg = "User deleted successfully.";
     } catch (Exception $e) {
         $errorMsg = "Error deleting user: " . htmlspecialchars($e->getMessage());
@@ -111,10 +114,10 @@ if (isset($_GET['delete_user'])) {
 }
 
 // Get Users functionality
-$auth0_users = Auth0UserManager::getUsers();
+$auth0_users = $userManager->getUsers();
 
-include 'INCLUDES/inc_adminpage.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+require __DIR__ . '/INCLUDES/inc_adminpage.php';
+require __DIR__ . '/INCLUDES/inc_footer.php';
+require __DIR__ . '/INCLUDES/inc_disconnect.php';
 
 ?>

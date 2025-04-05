@@ -60,8 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtAssign->execute();
 
                     // Fetch user details for email
-                    $user = Auth0UserManager::getUser($uid);  // Fetch the user by their ID
-                    $userEmail = $user['email'];  // Get user's email
+                    $manager = $GLOBALS['Auth0UserManager'] ?? new Auth0UserManager();
+                    $user = $manager->getUser($uid);
+                    $userEmail = $user['email'];
 
                     // Fetch project name using project_id
                     $stmtProj = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
@@ -76,13 +77,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $messageBody = "The task '{$subject}' has been created. Here are the details:";
 
                     // Send the task update email
-                    $emailSent = sendTaskEmail($userEmail, $emailSubject, $messageBody, [
+                    $emailSent = sendTaskEmail(
+                        $userEmail, $emailSubject, $messageBody, [
                         'subject' => $subject,
                         'project_name' => $project_name,
                         'status' => $status,
                         'priority' => $priority,
                         'description' => $description,
-                    ]);
+                        ]
+                    );
 
                     if ($emailSent) {
                         // Optionally log or display confirmation
@@ -118,6 +121,6 @@ foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'] ?? 'Unknown';
 }
 
-include 'INCLUDES/inc_taskcreate.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+require __DIR__ . '/INCLUDES/inc_taskcreate.php';
+require __DIR__ . '/INCLUDES/inc_footer.php';
+require __DIR__ . '/INCLUDES/inc_disconnect.php';

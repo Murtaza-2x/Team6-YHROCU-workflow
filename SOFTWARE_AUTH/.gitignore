@@ -2,13 +2,13 @@
 /vendor/
 composer.lock
 
-# Node Modules (if you're using Node for front-end build)
+# Node Modules
 node_modules/
 
-# # Environment & Sensitive Files
-# .env
-# .env.local
-# .env.*.local
+# Environment & Sensitive Files
+.env
+.env.local
+.env.*.local
 
 # IDE directories
 .idea/
@@ -24,7 +24,12 @@ coverage/
 # Log files
 *.log
 
-# Any compiled templates or caches (Symfony, Laravel, etc.)
+# Laravel / Symfony / Framework Caches
 /var/
 /storage/
 /bootstrap/cache/
+
+# Jest / JS testing (only ignore configs, not actual tests)
+jest.config.js
+jest.setup.js
+__tests__/

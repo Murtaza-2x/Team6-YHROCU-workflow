@@ -54,10 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
         echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
     } else {
         // Archive task before updating
-        $stmtArchive = $conn->prepare("INSERT INTO task_archive (task_id, subject, status, priority, description, edited_by, created_at)
+        $stmtArchive = $conn->prepare(
+            "INSERT INTO task_archive (task_id, subject, status, priority, description, edited_by, created_at)
         SELECT id, subject, status, priority, description, ?, created_at
         FROM tasks
-        WHERE id = ?");
+        WHERE id = ?"
+        );
         $stmtArchive->bind_param("si", $edited_by, $taskId);
         $stmtArchive->execute();
 
@@ -70,14 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
 
             // Assign users to the task
             if (!empty($assigned)) {
+                // Initialize the manager
+                $manager = new Auth0UserManager();
+                
                 $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
                 foreach ($assigned as $uid) {
                     $stmtAssign->bind_param("is", $taskId, $uid);
                     $stmtAssign->execute();
 
                     // Fetch user details for email
-                    $user = Auth0UserManager::getUser($uid);
-                    $userEmail = $user['email'];
+                    $userData = $manager->getUser($uid);
+                    $userEmail = $userData['email'] ?? null;
 
                     // Fetch project name using project_id
                     $stmtProj = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
@@ -92,13 +97,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
                     $messageBody = "The task '{$subject}' has been updated. Here are the details:";
 
                     // Send the task update email
-                    $emailSent = sendTaskEmail($userEmail, $emailSubject, $messageBody, [
+                    $emailSent = sendTaskEmail(
+                        $userEmail, $emailSubject, $messageBody, [
                         'subject' => $subject,
                         'project_name' => $project_name,
                         'status' => $status,
                         'priority' => $priority,
                         'description' => $description,
-                    ]);
+                        ]
+                    );
 
                     if ($emailSent) {
                         echo "<p class='SUCCESS-MESSAGE'>Email sent to {$userEmail} successfully.</p>";
@@ -160,6 +167,6 @@ while ($p = $res_proj->fetch_assoc()) {
     $projects[] = $p;
 }
 
-include 'INCLUDES/inc_taskedit.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+require __DIR__ . '/INCLUDES/inc_taskedit.php';
+require __DIR__ . '/INCLUDES/inc_footer.php';
+require __DIR__ . '/INCLUDES/inc_disconnect.php';

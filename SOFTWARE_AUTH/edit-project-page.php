@@ -59,10 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_project'])) {
         echo "<p class='ERROR-MESSAGE'>All fields are required.</p>";
     } else {
         // Archive previous project version
-        $stmtArchive = $conn->prepare("INSERT INTO project_archive (project_id, created_at, project_name, status, priority, due_date, description, edited_by, created_by)
+        $stmtArchive = $conn->prepare(
+            "INSERT INTO project_archive (project_id, created_at, project_name, status, priority, due_date, description, edited_by, created_by)
         SELECT id, created_at, project_name, status, priority, due_date, description, ?, created_by
         FROM projects
-        WHERE id = ?");
+        WHERE id = ?"
+        );
         $stmtArchive->bind_param("si", $editor, $projectId);
         $stmtArchive->execute();
 
@@ -103,6 +105,6 @@ $priority     = $project['priority'] ?? '';
 $description  = $project['description'] ?? '';
 $due_date     = $project['due_date'] ?? '';
 
-include 'INCLUDES/inc_projectedit.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+require __DIR__ . '/INCLUDES/inc_projectedit.php';
+require __DIR__ . '/INCLUDES/inc_footer.php';
+require __DIR__ . '/INCLUDES/inc_disconnect.php';

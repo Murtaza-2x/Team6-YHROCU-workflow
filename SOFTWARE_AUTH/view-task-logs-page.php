@@ -78,7 +78,8 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
         $priority    = $log['priority'];
         $description = str_replace(["\r\n", "\r", "\n"], " ", $log['description']);
 
-        fputcsv($out, [
+        fputcsv(
+            $out, [
             $editor,
             $archivedAt,
             $createdAt,
@@ -86,15 +87,15 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
             $status,
             $priority,
             $description
-        ]);
+            ]
+        );
     }
     fclose($out);
     exit;
 }
 
-// Render task logs page
 require_once __DIR__ . '/INCLUDES/inc_header.php';
-include 'INCLUDES/inc_tasklogsview.php';
-include 'INCLUDES/inc_footer.php';
-include 'INCLUDES/inc_disconnect.php';
+require __DIR__ . '/INCLUDES/inc_tasklogsview.php';
+require __DIR__ . '/INCLUDES/inc_footer.php';
+require __DIR__ . '/INCLUDES/inc_disconnect.php';
 ?>

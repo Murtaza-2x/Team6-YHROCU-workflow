@@ -1,5 +1,6 @@
 <?php
-if (!isset($title)) $title = "ROCU";
+if (!isset($title)) { $title = "ROCU";
+}
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -47,11 +48,11 @@ $role = $user['role'] ?? null;
         </div>
     </div>
 
-    <?php if ($user): ?>
+    <?php if ($user) : ?>
         <!-- BUTTONS SECTION -->
         <div class="BUTTON-CONTAINER">
             <button onclick="window.location.href='list-task-page.php'" class="HOME-BUTTON">Home</button>
-            <?php if (has_role('Admin')): ?>
+            <?php if (has_role('Admin')) : ?>
                 <button onclick="window.location.href='admin-page.php'" class="ADMIN-BUTTON">Admin Panel</button>
             <?php endif; ?>
             <button onclick="window.location.href='auth0_logout.php'" class="LOGOUT-BUTTON">Logout</button>

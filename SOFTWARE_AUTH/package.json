@@ -1,0 +1,16 @@
+{
+  "name": "software_auth",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test:js": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}

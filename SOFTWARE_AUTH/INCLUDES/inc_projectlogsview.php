@@ -18,7 +18,7 @@
 
             <!-- PROJECT LOGS -->
             <h2 class="VIEW-HEAD">Project Logs</h2>
-            <?php if (count($projectLogs) > 0): ?>
+            <?php if (count($projectLogs) > 0) : ?>
                 <table class="LOG-TABLE">
                     <thead>
                         <tr class="LOG-HEAD">
@@ -61,7 +61,7 @@
                                 'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
                                 default    => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
-                        ?>
+    ?>
                             <tr>
                                 <td><?php echo $creator; ?></td>
                                 <td><?php echo $logEditor; ?></td>
@@ -83,7 +83,7 @@
 
             <!-- TASK LOGS -->
             <h2 class="LOG-SECTION-TITLE">Task Logs</h2>
-            <?php if (count($taskLogs) > 0): ?>
+            <?php if (count($taskLogs) > 0) : ?>
                 <table class="LOG-TABLE">
                     <thead>
                         <tr class="LOG-HEAD">
@@ -121,7 +121,7 @@
                                 'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
                                 default    => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
-                        ?>
+    ?>
                             <tr>
                                 <td><?php echo $logEditor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>
