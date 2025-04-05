@@ -14,8 +14,15 @@ class DatabaseConnectionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Establish a fresh database connection.
         $this->setUpDatabase();
+
+        // Create test_table if it doesn't exist
+        $this->conn->query("
+        CREATE TABLE IF NOT EXISTS test_table (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL
+        )
+    ");
     }
 
     /**
@@ -45,7 +52,7 @@ class DatabaseConnectionTest extends TestCase
         // Define the insert query using a prepared statement for security.
         $query = "INSERT INTO test_table (name) VALUES (?)";
         $dummyName = "PHPUnitTest";
-        
+
         // Prepare the insert statement.
         $stmt = $this->conn->prepare($query);
         // Bind the dummy name parameter to the statement.
