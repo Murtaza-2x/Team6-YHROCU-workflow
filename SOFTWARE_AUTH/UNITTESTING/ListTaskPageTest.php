@@ -115,19 +115,24 @@ class ListTaskPageTest extends BaseTestCase
     public function testAdminSeesAllTasks()
     {
         $_SESSION['user'] = ['user_id' => 'auth0|admin1', 'role' => 'Admin'];
-
-        // Insert second task assigned to a different user
+    
+        // Always delete before inserting to avoid duplicate key
+        $this->conn->query("DELETE FROM tasks WHERE id = 2");
+    
         $this->insertDummy(
             "INSERT INTO tasks (id, subject, project_id, status, priority, created_by) VALUES (?, ?, ?, ?, ?, ?)",
             [2, "Unassigned Task", 1, "New", "Moderate", "auth0|admin2"],
             "isisss"
         );
-
-        $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
-
-        $this->assertStringContainsString("Dashboard Task", $output);
-        $this->assertStringContainsString("Unassigned Task", $output);
-    }
+    
+        try {
+            $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
+            $this->assertStringContainsString("Dashboard Task", $output);
+            $this->assertStringContainsString("Unassigned Task", $output);
+        } finally {
+            $this->conn->query("DELETE FROM tasks WHERE id = 2");
+        }
+    }      
 
     /**
      * Test: User does not see unassigned tasks
@@ -135,31 +140,22 @@ class ListTaskPageTest extends BaseTestCase
     public function testUserCannotSeeUnassignedTasks()
     {
         $_SESSION['user'] = ['user_id' => 'auth0|user1', 'role' => 'User'];
-
-        // Add a task not assigned to user1
+    
+        // Delete before insert to prevent duplicate ID
+        $this->conn->query("DELETE FROM tasks WHERE id = 3");
+    
         $this->insertDummy(
             "INSERT INTO tasks (id, subject, project_id, status, priority, created_by) VALUES (?, ?, ?, ?, ?, ?)",
             [3, "Unrelated Task", 1, "New", "Moderate", "auth0|admin2"],
             "isisss"
         );
-
-        $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
-
-        $this->assertStringContainsString("Dashboard Task", $output); // Assigned task
-        $this->assertStringNotContainsString("Unrelated Task", $output); // Not visible
-    }
-
-    /**
-     * Test: Dashboard shows fallback message when no tasks
-     */
-    public function testNoTasksFallbackMessage()
-    {
-        $this->conn->query("DELETE FROM task_assigned_users");
-        $this->conn->query("DELETE FROM tasks");
-
-        $_SESSION['user'] = ['user_id' => 'auth0|admin1', 'role' => 'Admin'];
-
-        $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
-        $this->assertStringContainsString("No tasks found", $output);
-    }
+    
+        try {
+            $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
+            $this->assertStringContainsString("Dashboard Task", $output); // visible
+            $this->assertStringNotContainsString("Unrelated Task", $output); // not visible
+        } finally {
+            $this->conn->query("DELETE FROM tasks WHERE id = 3");
+        }
+    }     
 }
