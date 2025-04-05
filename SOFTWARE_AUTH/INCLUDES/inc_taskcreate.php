@@ -16,7 +16,7 @@
         <h1>Create a New Task</h1>
         <p>Enter task details below</p>
 
-        <?php if (!empty($errorMsg)): ?>
+        <?php if (!empty($errorMsg)) : ?>
             <div class="ERROR-MESSAGE">
                 <?php echo $errorMsg; ?>
             </div>

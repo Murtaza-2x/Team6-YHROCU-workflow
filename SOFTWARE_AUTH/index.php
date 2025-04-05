@@ -22,7 +22,7 @@ $clearance = get_role();
 ?>
 
 <?php
-include 'INCLUDES/inc_connect.php';
+require 'INCLUDES/inc_connect.php';
 
 // Check if DB connection failed
 if (!isset($conn) || !$conn instanceof mysqli || $conn->connect_error) {
@@ -31,7 +31,7 @@ if (!isset($conn) || !$conn instanceof mysqli || $conn->connect_error) {
 }
 ?>
 
-<?php include 'INCLUDES/inc_header.php'; ?>
+<?php require 'INCLUDES/inc_header.php'; ?>
 
 <?php
 // Show DB error if connection failed
@@ -47,5 +47,5 @@ if (isset($dbError)) {
 }
 ?>
 
-<?php include __DIR__ . '/INCLUDES/inc_footer.php'; ?>
-<?php include __DIR__ . '/INCLUDES/inc_disconnect.php'; ?>
+<?php require __DIR__ . '/INCLUDES/inc_footer.php'; ?>
+<?php require __DIR__ . '/INCLUDES/inc_disconnect.php'; ?>

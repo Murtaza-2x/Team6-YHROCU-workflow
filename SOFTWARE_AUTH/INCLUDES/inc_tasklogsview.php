@@ -14,7 +14,7 @@
         </div>
 
         <div class="LOG-LIST">
-            <?php if ($logCount > 0): ?>
+            <?php if ($logCount > 0) : ?>
                 <table class="LOG-TABLE">
                     <thead>
                         <tr class="LOG-HEAD">
@@ -51,7 +51,7 @@
                                 'Low' => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
                                 default => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
-                        ?>
+    ?>
                             <tr>
                                 <td><?php echo $editor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>

@@ -24,7 +24,8 @@ $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 // Loop through each line in the file
 foreach ($lines as $line) {
     // Skip comment lines (lines starting with #)
-    if (strpos(trim($line), '#') === 0) continue;
+    if (strpos(trim($line), '#') === 0) { continue;
+    }
 
     // Split the line into a name-value pair
     list($name, $value) = explode('=', $line, 2);

@@ -77,13 +77,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $messageBody = "The task '{$subject}' has been created. Here are the details:";
 
                     // Send the task update email
-                    $emailSent = sendTaskEmail($userEmail, $emailSubject, $messageBody, [
+                    $emailSent = sendTaskEmail(
+                        $userEmail, $emailSubject, $messageBody, [
                         'subject' => $subject,
                         'project_name' => $project_name,
                         'status' => $status,
                         'priority' => $priority,
                         'description' => $description,
-                    ]);
+                        ]
+                    );
 
                     if ($emailSent) {
                         // Optionally log or display confirmation
@@ -119,6 +121,6 @@ foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'] ?? 'Unknown';
 }
 
-include __DIR__ . '/INCLUDES/inc_taskcreate.php';
-include __DIR__ . '/INCLUDES/inc_footer.php';
-include __DIR__ . '/INCLUDES/inc_disconnect.php';
+require __DIR__ . '/INCLUDES/inc_taskcreate.php';
+require __DIR__ . '/INCLUDES/inc_footer.php';
+require __DIR__ . '/INCLUDES/inc_disconnect.php';

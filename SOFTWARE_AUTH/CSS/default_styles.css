@@ -6,13 +6,13 @@ body {
 }
 
 @font-face {
-	font-family: "Helvetica Neue Light";
-	src: url("../FONTS/HELVETICANEUELTW1G-LT.OTF") format("opentype");
+    font-family: "Helvetica Neue Light";
+    src: url("../FONTS/HELVETICANEUELTW1G-LT.OTF") format("opentype");
 }
 
 @font-face {
-	font-family: "Helvetica Neue Medium";
-	src: url("../FONTS/HELVETICANEUELTW1G-MD.OTF") format("opentype");
+    font-family: "Helvetica Neue Medium";
+    src: url("../FONTS/HELVETICANEUELTW1G-MD.OTF") format("opentype");
 }
 
 /* Custom Scrollbar */

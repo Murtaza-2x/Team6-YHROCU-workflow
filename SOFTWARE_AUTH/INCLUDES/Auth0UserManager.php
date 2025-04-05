@@ -33,7 +33,8 @@ class Auth0UserManager
     public function __construct()
     {
         $token = Auth0TokenManager::getToken();
-        $config = new SdkConfiguration([
+        $config = new SdkConfiguration(
+            [
             'domain'          => $_ENV['AUTH0_DOMAIN'],
             'clientId'        => $_ENV['AUTH0_MGMT_CLIENT_ID'],
             'clientSecret'    => $_ENV['AUTH0_MGMT_CLIENT_SECRET'],
@@ -41,7 +42,8 @@ class Auth0UserManager
             'managementToken' => $token,
             'usePkce'         => false,
             'useState'        => false,
-        ]);
+            ]
+        );
 
         $this->mgmt = new Management($config);
     }
@@ -98,12 +100,14 @@ class Auth0UserManager
     */
     public function updateUserRole(string $userId, string $role, string $status = 'active'): void
     {
-        $resp = $this->mgmt->users()->update($userId, [
+        $resp = $this->mgmt->users()->update(
+            $userId, [
             'app_metadata' => [
                 'role'   => $role,
                 'status' => $status
             ]
-        ]);
+            ]
+        );
 
         if ($resp->getStatusCode() !== 200) {
             throw new \Exception('Failed to update user role and status: ' . (string)$resp->getBody());
@@ -158,10 +162,12 @@ class Auth0UserManager
             throw new Exception('User does not have an email.');
         }
 
-        $resTicket = $this->mgmt->tickets()->createPasswordChange([
+        $resTicket = $this->mgmt->tickets()->createPasswordChange(
+            [
             'user_id' => $userId,
             'result_url' => 'http://localhost/YOUR_APP/password-reset-success.php'
-        ]);
+            ]
+        );
 
         $body = json_decode((string)$resTicket->getBody(), true);
 
@@ -181,9 +187,11 @@ class Auth0UserManager
     */
     public function disableUser(string $userId): void
     {
-        $resp = $this->mgmt->users()->update($userId, [
+        $resp = $this->mgmt->users()->update(
+            $userId, [
             'app_metadata' => ['status' => 'inactive']
-        ]);
+            ]
+        );
 
         if ($resp->getStatusCode() !== 200) {
             throw new \Exception('Failed to disable user: ' . (string)$resp->getBody());
@@ -199,9 +207,11 @@ class Auth0UserManager
     */
     public function reenableUser(string $userId): void
     {
-        $resp = $this->mgmt->users()->update($userId, [
+        $resp = $this->mgmt->users()->update(
+            $userId, [
             'app_metadata' => ['status' => 'active']
-        ]);
+            ]
+        );
 
         if ($resp->getStatusCode() !== 200) {
             throw new \Exception('Failed to re-enable user: ' . (string)$resp->getBody());

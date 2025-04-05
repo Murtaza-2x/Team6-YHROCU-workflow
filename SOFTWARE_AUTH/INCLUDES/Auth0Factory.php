@@ -28,12 +28,14 @@ class Auth0Factory
     public static function create(): Auth0
     {
         // Return a new Auth0 instance with the necessary configuration
-        return new Auth0([
+        return new Auth0(
+            [
             'domain' => $_ENV['AUTH0_DOMAIN'] ?? 'test.auth0.com',
             'clientId' => $_ENV['AUTH0_CLIENT_ID'] ?? 'testclientid',
             'clientSecret' => $_ENV['AUTH0_CLIENT_SECRET'] ?? 'testsecret',
             'redirectUri' => $_ENV['AUTH0_REDIRECT_URI'] ?? 'http://localhost/callback',
             'cookieSecret' => $_ENV['AUTH0_COOKIE_SECRET'] ?? 'testcookiesecret',
-        ]);
+            ]
+        );
     }
 }

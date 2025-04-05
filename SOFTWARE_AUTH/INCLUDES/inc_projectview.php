@@ -68,9 +68,11 @@
                 <span class="ASSIGNED-LABEL-2">
                     <?php
                     // displays user nicknames from Auth0
-                    $displayNames = array_map(function ($uid) use ($user_map) {
-                        return $user_map[$uid] ?? $uid;
-                    }, $assignedUsers);
+                    $displayNames = array_map(
+                        function ($uid) use ($user_map) {
+                            return $user_map[$uid] ?? $uid;
+                        }, $assignedUsers
+                    );
                     echo htmlspecialchars(implode(', ', $displayNames)) ?: 'None';
                     ?>
                 </span>
@@ -91,11 +93,11 @@
 
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
-            <?php if (has_role('Admin')): ?>
+            <?php if (has_role('Admin')) : ?>
                 <button class="UPDATE-BUTTON" onclick="window.location.href='edit-project-page.php?id=<?php echo urlencode($projectId); ?>'">Update Project</button>
             <?php endif; ?>
             <button class="CANCEL-BUTTON" onclick="window.location.href='list-task-page.php'">Cancel</button>
-            <?php if (is_admin()): ?>
+            <?php if (is_admin()) : ?>
                 <button class="VIEW-LOGS-BUTTON" onclick="window.location.href='view-project-logs-page.php?id=<?php echo urlencode($projectId); ?>'">
                     View Project Logs
                 </button>

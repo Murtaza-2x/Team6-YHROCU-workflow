@@ -63,12 +63,14 @@ foreach ($auth0_users as $u) {
 }
 
 // Get all assigned users through tasks under this project
-$stmt = $conn->prepare("
+$stmt = $conn->prepare(
+    "
     SELECT DISTINCT tau.user_id 
     FROM tasks t 
     JOIN task_assigned_users tau ON t.id = tau.task_id 
     WHERE t.project_id = ?
-");
+"
+);
 $stmt->bind_param("i", $projectId);
 $stmt->execute();
 $assignedResult = $stmt->get_result();
@@ -77,7 +79,7 @@ while ($row = $assignedResult->fetch_assoc()) {
     $assignedUsers[] = $row['user_id'];
 }
 
-include __DIR__ . '/INCLUDES/inc_projectview.php';
-include __DIR__ . '/INCLUDES/inc_footer.php';
-include __DIR__ . '/INCLUDES/inc_disconnect.php';
+require __DIR__ . '/INCLUDES/inc_projectview.php';
+require __DIR__ . '/INCLUDES/inc_footer.php';
+require __DIR__ . '/INCLUDES/inc_disconnect.php';
 ?>

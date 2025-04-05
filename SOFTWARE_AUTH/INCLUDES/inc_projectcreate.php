@@ -11,7 +11,7 @@
         <h1>Create a New Project</h1>
         <p>Enter project details below</p>
 
-        <?php if (!empty($errorMsg)): ?>
+        <?php if (!empty($errorMsg)) : ?>
             <div class="ERROR-MESSAGE">
                 <?php echo $errorMsg; ?>
             </div>
@@ -20,9 +20,9 @@
         <form id="CREATE-PROJECT-FORM" action="create-project-page.php" method="post">
 
             <!-- ERROR/SUCCESS MESSAGES -->
-            <?php if (!empty($errorMsg)): ?>
+            <?php if (!empty($errorMsg)) : ?>
                 <div class="ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
-            <?php elseif (!empty($successMsg)): ?>
+            <?php elseif (!empty($successMsg)) : ?>
                 <div class="SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
             <?php endif; ?>
 

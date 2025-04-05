@@ -24,8 +24,8 @@ Dashboard page shown after login. Displays different content based on the user's
     <p class="DASH-HEADER-1">Dashboard -</p>
     <?php
     if (!is_logged_in()) {
-      header("Location: index.php?error=login_required");
-      exit;
+        header("Location: index.php?error=login_required");
+        exit;
     }
 
     $user = $_SESSION['user'];
@@ -34,9 +34,9 @@ Dashboard page shown after login. Displays different content based on the user's
     $displayName = $user['nickname'] ?? 'User';
 
     $clearanceLabel = match ($clearance) {
-      'Admin' => 'Admin',
-      'Manager' => 'Manager',
-      default => 'Staff',
+        'Admin' => 'Admin',
+        'Manager' => 'Manager',
+        default => 'Staff',
     };
 
     echo "<p class='DASH-HEADER-2'>Welcome {$clearanceLabel} {$displayName}</p>";
@@ -52,36 +52,36 @@ Dashboard page shown after login. Displays different content based on the user's
     $filterEnd = $_GET['end_date'] ?? '';
 
     if (has_role('User')) {
-      // Staff view - tasks by priority
-      $sql = "SELECT priority, COUNT(*) AS total 
+        // Staff view - tasks by priority
+        $sql = "SELECT priority, COUNT(*) AS total 
               FROM tasks 
               JOIN task_assigned_users tau ON tasks.id = tau.task_id
               WHERE tau.user_id = ? AND status IN ('New', 'In Progress')
               GROUP BY priority";
-      $stmt = $conn->prepare($sql);
-      $stmt->bind_param("s", $userId);
-      $stmt->execute();
-      $result = $stmt->get_result();
-      while ($row = $result->fetch_assoc()) {
-        $userPriorityBreakdown[] = $row;
-      }
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $userPriorityBreakdown[] = $row;
+        }
     } elseif (has_role('Manager') || has_role('Admin')) {
-      // Bar chart data for project status
-      $sql = "SELECT status, COUNT(*) AS total FROM projects WHERE 1";
-      if ($filterPriority !== 'All') {
-        $sql .= " AND priority = '" . $conn->real_escape_string($filterPriority) . "'";
-      }
-      if ($filterStart && $filterEnd) {
-        $sql .= " AND due_date BETWEEN '" . $conn->real_escape_string($filterStart) . "' AND '" . $conn->real_escape_string($filterEnd) . "'";
-      }
-      $sql .= " GROUP BY status";
-      $result = $conn->query($sql);
-      while ($row = $result->fetch_assoc()) {
-        $projectSummary[] = $row;
-      }
+        // Bar chart data for project status
+        $sql = "SELECT status, COUNT(*) AS total FROM projects WHERE 1";
+        if ($filterPriority !== 'All') {
+            $sql .= " AND priority = '" . $conn->real_escape_string($filterPriority) . "'";
+        }
+        if ($filterStart && $filterEnd) {
+            $sql .= " AND due_date BETWEEN '" . $conn->real_escape_string($filterStart) . "' AND '" . $conn->real_escape_string($filterEnd) . "'";
+        }
+        $sql .= " GROUP BY status";
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            $projectSummary[] = $row;
+        }
 
-      // Pie chart + summary counts for task status
-      $sqlActive = "SELECT 
+        // Pie chart + summary counts for task status
+        $sqlActive = "SELECT 
                         CASE 
                             WHEN TRIM(LOWER(status)) = 'new' THEN 'New'
                             WHEN TRIM(LOWER(status)) = 'in progress' THEN 'In Progress'
@@ -92,10 +92,10 @@ Dashboard page shown after login. Displays different content based on the user's
                       FROM tasks
                       WHERE TRIM(LOWER(status)) IN ('new', 'in progress', 'complete', 'completed')
                       GROUP BY status";
-      $resultActive = $conn->query($sqlActive);
-      while ($row = $resultActive->fetch_assoc()) {
-        $activeTaskStatusBreakdown[] = $row;
-      }
+        $resultActive = $conn->query($sqlActive);
+        while ($row = $resultActive->fetch_assoc()) {
+            $activeTaskStatusBreakdown[] = $row;
+        }
     }
     ?>
 
@@ -106,13 +106,13 @@ Dashboard page shown after login. Displays different content based on the user's
       <div class="DASH-SECTION-1">
 
         <!-- STAFF VIEW -->
-        <?php if (has_role('User')): ?>
+        <?php if (has_role('User')) : ?>
           <div class="USER-CHART-BOX">
             <canvas id="userPriorityChart"></canvas>
           </div>
 
           <script>
-            const userPriorityData = <?= json_encode($userPriorityBreakdown ?? []); ?>;
+            const userPriorityData = <?php echo json_encode($userPriorityBreakdown ?? []); ?>;
             const userLabels = userPriorityData.map(row => row.priority);
             const userCounts = userPriorityData.map(row => parseInt(row.total));
 
@@ -141,22 +141,22 @@ Dashboard page shown after login. Displays different content based on the user's
           </script>
 
           <!-- MANAGER / ADMIN VIEW -->
-        <?php elseif (is_staff()): ?>
+        <?php elseif (is_staff()) : ?>
           <div class="MANAGER-CHART-WRAPPER">
             <form method="GET" class="MANAGER-FILTER-FORM">
               <label for="priority">Priority:</label>
               <select name="priority" id="priority">
-                <option value="All" <?= $filterPriority === 'All' ? 'selected' : '' ?>>All</option>
-                <option value="Urgent" <?= $filterPriority === 'Urgent' ? 'selected' : '' ?>>Urgent</option>
-                <option value="Moderate" <?= $filterPriority === 'Moderate' ? 'selected' : '' ?>>Moderate</option>
-                <option value="Low" <?= $filterPriority === 'Low' ? 'selected' : '' ?>>Low</option>
+                <option value="All" <?php echo $filterPriority === 'All' ? 'selected' : '' ?>>All</option>
+                <option value="Urgent" <?php echo $filterPriority === 'Urgent' ? 'selected' : '' ?>>Urgent</option>
+                <option value="Moderate" <?php echo $filterPriority === 'Moderate' ? 'selected' : '' ?>>Moderate</option>
+                <option value="Low" <?php echo $filterPriority === 'Low' ? 'selected' : '' ?>>Low</option>
               </select>
 
               <label for="start_date">From:</label>
-              <input type="date" name="start_date" value="<?= htmlspecialchars($filterStart) ?>">
+              <input type="date" name="start_date" value="<?php echo htmlspecialchars($filterStart) ?>">
 
               <label for="end_date">To:</label>
-              <input type="date" name="end_date" value="<?= htmlspecialchars($filterEnd) ?>">
+              <input type="date" name="end_date" value="<?php echo htmlspecialchars($filterEnd) ?>">
 
               <button type="submit">Apply Filters</button>
             </form>
@@ -177,19 +177,19 @@ Dashboard page shown after login. Displays different content based on the user's
                       <?php foreach ($activeTaskStatusBreakdown as $statusRow): ?>
                         <!-- Dynamically setting the class based on status -->
                         <button class="PILL 
-                          <?php
-                          switch ($statusRow['status']) {
+                            <?php
+                            switch ($statusRow['status']) {
                             case 'New':
-                              echo 'PILL-NEW';
-                              break;
+                                echo 'PILL-NEW';
+                                break;
                             case 'In Progress':
-                              echo 'PILL-IN-PROGRESS';
-                              break;
+                                echo 'PILL-IN-PROGRESS';
+                                break;
                             case 'Completed':
-                              echo 'PILL-COMPLETE';
-                              break;
-                          }
-                          ?>">
+                                echo 'PILL-COMPLETE';
+                                break;
+                            }
+                            ?>">
                           <strong><?php echo $statusRow['status']; ?>:</strong> <?php echo $statusRow['total']; ?>
                         </button>
                       <?php endforeach; ?>
@@ -208,7 +208,7 @@ Dashboard page shown after login. Displays different content based on the user's
 
           <script>
             // Bar Chart
-            const filteredData = <?= json_encode($projectSummary ?? []); ?>;
+            const filteredData = <?php echo json_encode($projectSummary ?? []); ?>;
             const barLabels = filteredData.map(row => row.status);
             const barValues = filteredData.map(row => parseInt(row.total));
 
@@ -238,7 +238,7 @@ Dashboard page shown after login. Displays different content based on the user's
             });
 
             // Pie Chart
-            const pieData = <?= json_encode($activeTaskStatusBreakdown ?? []); ?>;
+            const pieData = <?php echo json_encode($activeTaskStatusBreakdown ?? []); ?>;
             const pieLabels = pieData.map(row => row.status);
             const pieValues = pieData.map(row => parseInt(row.total));
 

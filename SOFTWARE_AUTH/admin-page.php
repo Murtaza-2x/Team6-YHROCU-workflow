@@ -116,8 +116,8 @@ if (isset($_GET['delete_user'])) {
 // Get Users functionality
 $auth0_users = $userManager->getUsers();
 
-include __DIR__ . '/INCLUDES/inc_adminpage.php';
-include __DIR__ . '/INCLUDES/inc_footer.php';
-include __DIR__ . '/INCLUDES/inc_disconnect.php';
+require __DIR__ . '/INCLUDES/inc_adminpage.php';
+require __DIR__ . '/INCLUDES/inc_footer.php';
+require __DIR__ . '/INCLUDES/inc_disconnect.php';
 
 ?>

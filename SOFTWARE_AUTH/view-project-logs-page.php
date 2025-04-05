@@ -38,25 +38,31 @@ $res1 = $stmt->get_result();
 $projectLogs = ($res1) ? $res1->fetch_all(MYSQLI_ASSOC) : [];
 
 // Fetch task logs for tasks inside this project
-$stmt2 = $conn->prepare("
+$stmt2 = $conn->prepare(
+    "
     SELECT ta.*
     FROM task_archive ta
     INNER JOIN tasks t ON ta.task_id = t.id
     WHERE t.project_id = ?
-");
+"
+);
 $stmt2->bind_param("i", $project_id);
 $stmt2->execute();
 $res2 = $stmt2->get_result();
 $taskLogs = ($res2) ? $res2->fetch_all(MYSQLI_ASSOC) : [];
 
 // Sort logs by archived_at date
-usort($projectLogs, function ($a, $b) {
-    return strtotime($b['archived_at']) <=> strtotime($a['archived_at']);
-});
+usort(
+    $projectLogs, function ($a, $b) {
+        return strtotime($b['archived_at']) <=> strtotime($a['archived_at']);
+    }
+);
 
-usort($taskLogs, function ($a, $b) {
-    return strtotime($b['archived_at']) <=> strtotime($a['archived_at']);
-});
+usort(
+    $taskLogs, function ($a, $b) {
+        return strtotime($b['archived_at']) <=> strtotime($a['archived_at']);
+    }
+);
 
 // Map Auth0 users to their nicknames or emails
 $auth0_users = Auth0UserFetcher::getUsers();
@@ -87,7 +93,8 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     foreach ($projectLogs as $log) {
         $editor  = $user_map[$log['edited_by']] ?? $log['edited_by'];
         $creator = $user_map[$log['created_by']] ?? $log['created_by'];
-        fputcsv($out, [
+        fputcsv(
+            $out, [
             $editor,
             $creator,
             $log['archived_at'],
@@ -97,7 +104,8 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
             $log['priority'],
             $log['due_date'] ?? '',
             $log['description']
-        ]);
+            ]
+        );
     }
     
     // Empty row between sections
@@ -108,7 +116,8 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     fputcsv($out, ["Edited By", "Archived At", "Created At", "Subject", "Status", "Priority", "Due Date", "Description"]);
     foreach ($taskLogs as $log) {
         $editor = $user_map[$log['edited_by']] ?? $log['edited_by'];
-        fputcsv($out, [
+        fputcsv(
+            $out, [
             $editor,
             $log['archived_at'],
             $log['created_at'],
@@ -116,15 +125,16 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
             $log['status'],
             $log['priority'],
             $log['description']
-        ]);
+            ]
+        );
     }
 
     fclose($out);
     exit;
 }
 
-include __DIR__ .  '/INCLUDES/inc_header.php';
-include __DIR__ .  '/INCLUDES/inc_projectlogsview.php';
-include __DIR__ .  '/INCLUDES/inc_footer.php';
-include __DIR__ .  '/INCLUDES/inc_disconnect.php';
+require __DIR__ .  '/INCLUDES/inc_header.php';
+require __DIR__ .  '/INCLUDES/inc_projectlogsview.php';
+require __DIR__ .  '/INCLUDES/inc_footer.php';
+require __DIR__ .  '/INCLUDES/inc_disconnect.php';
 ?>

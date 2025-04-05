@@ -60,7 +60,8 @@ function is_manager()
 }
 
 // Check if the user is either an admin or a manager
-function is_staff(): bool {
+function is_staff(): bool
+{
     $user = get_session_user();
     return in_array(strtolower($user['role'] ?? ''), ['admin', 'manager']);
 }

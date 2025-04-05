@@ -14,7 +14,7 @@
     <p>Login to continue...</p>
 
     <!-- ERROR MESSAGE -->
-    <?php if ($errorMsg): ?>
+    <?php if ($errorMsg) : ?>
       <p class="LOGIN-ERROR-MESSAGE"><?php echo $errorMsg; ?></p>
     <?php endif; ?>
     <!-- ERROR MESSAGE END -->

@@ -9,7 +9,8 @@ Description:
 -------------------------------------------------------------
 */
 
-class Auth0TokenManager {
+class Auth0TokenManager
+{
     /*
     -------------------------------------------------------------
     Method: getToken
@@ -19,7 +20,8 @@ class Auth0TokenManager {
     - Returns the access token for further API calls.
     -------------------------------------------------------------
     */
-    public static function getToken(): string {
+    public static function getToken(): string
+    {
         // Get necessary environment variables for Auth0 configuration
         $domain       = $_ENV['AUTH0_DOMAIN'];
         $clientId     = $_ENV['AUTH0_MGMT_CLIENT_ID'];
@@ -38,13 +40,15 @@ class Auth0TokenManager {
         ];
 
         // Set up the request context
-        $context = stream_context_create([
+        $context = stream_context_create(
+            [
             'http' => [
                 'method'  => 'POST',
                 'header'  => "Content-Type: application/json\r\n",
                 'content' => json_encode($data)
             ]
-        ]);
+            ]
+        );
 
         // Send the request to Auth0's token endpoint
         $response = file_get_contents($url, false, $context);
