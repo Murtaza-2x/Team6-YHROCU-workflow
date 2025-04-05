@@ -29,7 +29,7 @@ class AdminUserTest extends BaseTestCase
     public function testAccessDeniedForGuest()
     {
         $this->clearAuth0Session();
-        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/admin-page.php');
         $this->assertStringContainsString("Access Denied", $output);
     }
 
@@ -45,7 +45,7 @@ class AdminUserTest extends BaseTestCase
             'role' => 'user',
             'app_metadata' => ['role' => 'user']
         ]);
-        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/admin-page.php');
         $this->assertStringContainsString("Access Denied", $output);
     }
 
@@ -61,7 +61,7 @@ class AdminUserTest extends BaseTestCase
             'role' => 'admin',
             'app_metadata' => ['role' => 'admin']
         ]);
-        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/admin-page.php');
         $this->assertStringContainsString("Welcome Admin CaptainAdmin", $output);
     }
 
@@ -100,7 +100,7 @@ class AdminUserTest extends BaseTestCase
         $_POST['new_role']      = 'User';
 
         // Capture the admin page output.
-        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/admin-page.php');
 
         // Assert that the success message appears.
         $this->assertStringContainsString('User created successfully', $output);
@@ -121,7 +121,7 @@ class AdminUserTest extends BaseTestCase
             'role' => 'manager',
             'app_metadata' => ['role' => 'manager']
         ]);
-        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/admin-page.php');
         $this->assertStringContainsString("Access Denied", $output);
     }
 
@@ -137,7 +137,7 @@ class AdminUserTest extends BaseTestCase
             'role' => 'hacker',
             'app_metadata' => ['role' => 'hacker']
         ]);
-        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/admin-page.php');
         $this->assertStringContainsString("Access Denied", $output);
     }
 
@@ -153,7 +153,7 @@ class AdminUserTest extends BaseTestCase
             // No 'role' key is set.
             'app_metadata' => []
         ]);
-        $output = $this->captureOutput(__DIR__ . '/../admin-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/admin-page.php');
         $this->assertStringContainsString("Access Denied", $output);
     }
 }

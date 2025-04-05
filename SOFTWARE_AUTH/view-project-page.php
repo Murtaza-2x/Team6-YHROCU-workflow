@@ -4,77 +4,15 @@
 File: view-project-page.php
 Description:
 - Displays a detailed view of a single project.
-- Shows project info, assigned users (from tasks), etc.
-- In test mode (PHPUnit), returns JSON for invalid or missing ID,
-  or simulates a valid project record if the ID is numeric.
+- Shows:
+    > Project information (Title, Status, Priority, Description, Due Date)
+    > Assigned Users aggregated from tasks linked to this project
+    > Admin-only button to edit
 -------------------------------------------------------------
 */
 
-// 1) Detect if we're in PHPUnit test mode
-$isTesting = defined('PHPUNIT_RUNNING') && PHPUNIT_RUNNING === true;
-
-/*
- |-------------------------------------------------------------------
- | Test Mode Block
- |-------------------------------------------------------------------
- | If $isTesting is true, we skip normal HTML logic and return JSON
- | for the PHPUnit tests. This block won't affect your production code.
-*/
-if ($isTesting) {
-
-    // Set JSON header
-    header('Content-Type: application/json; charset=utf-8');
-
-    // Check project ID from GET
-    $projectId = $_GET['id'] ?? null;
-
-    // If missing or non-numeric => invalid project ID
-    if (!$projectId || !is_numeric($projectId)) {
-        echo json_encode(["error" => "Invalid project ID"]);
-        return;
-    }
-
-    // If the ID is a special sentinel (e.g. 99999) => "Project not found"
-    if ($projectId == "99999") {
-        echo json_encode(["error" => "Project not found"]);
-        return;
-    }
-
-    // Otherwise, simulate a valid project
-    // (If you want to actually query the DB in test mode, you could do so,
-    // but we'll keep it simple.)
-    $mockProject = [
-        "project_name" => "Test Project Name",
-        "description"  => "Test project description",
-        "status"       => "Active",
-        "priority"     => "High",
-        "due_date"     => "2025-12-31"
-    ];
-
-    // If you want to simulate assigned users, you can add them here:
-    // $assignedUsers = ["auth0|user123", "auth0|user456"];
-
-    $response = [
-        "projectId" => (string)$projectId,
-        "project"   => $mockProject,
-        // "assignedUsers" => $assignedUsers // if you like
-    ];
-
-    // Return the JSON and stop
-    echo json_encode($response, JSON_PRETTY_PRINT);
-    return;
-}
-
-/*
- |-------------------------------------------------------------------
- | Production Mode (Original Logic)
- |-------------------------------------------------------------------
- | Below this line is your normal code that loads the project from
- | the database, fetches assigned users, and includes your project view.
-*/
-
-// Load your environment and helper files
 $title = "ROCU: View Project";
+
 require_once __DIR__ . '/INCLUDES/env_loader.php';
 require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
@@ -87,11 +25,13 @@ if (!is_logged_in()) {
     exit;
 }
 
-// Validate project ID in normal usage
+// Validate project ID
+$user = $_SESSION['user'];
 $projectId = $_GET['id'] ?? null;
+
 if (!$projectId || !is_numeric($projectId)) {
     echo "<p class='ERROR-MESSAGE'>Invalid project ID.</p>";
-    include __DIR__ . '/INCLUDES/inc_footer.php';
+    include 'INCLUDES/inc_footer.php';
     exit;
 }
 
@@ -102,14 +42,13 @@ $stmt->execute();
 $result = $stmt->get_result();
 $project = $result->fetch_assoc();
 
-// If no project => error
 if (!$project) {
     echo "<p class='ERROR-MESSAGE'>Project not found.</p>";
-    include __DIR__ . '/INCLUDES/inc_footer.php';
+    include 'INCLUDES/inc_footer.php';
     exit;
 }
 
-// Extract project fields
+// Extract project details
 $projectName = $project['project_name'];
 $status      = $project['status'];
 $priority    = $project['priority'];
@@ -123,7 +62,7 @@ foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
-// Get all assigned users (via tasks under this project)
+// Get all assigned users through tasks under this project
 $stmt = $conn->prepare("
     SELECT DISTINCT tau.user_id 
     FROM tasks t 
@@ -138,6 +77,8 @@ while ($row = $assignedResult->fetch_assoc()) {
     $assignedUsers[] = $row['user_id'];
 }
 
-include __DIR__ . '/INCLUDES/inc_projectview.php';
-include __DIR__ . '/INCLUDES/inc_footer.php';
-include __DIR__ . '/INCLUDES/inc_disconnect.php';
+// Render project view page
+include 'INCLUDES/inc_projectview.php';
+include 'INCLUDES/inc_footer.php';
+include 'INCLUDES/inc_disconnect.php';
+?>
