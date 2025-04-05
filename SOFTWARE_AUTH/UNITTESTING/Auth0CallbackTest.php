@@ -13,6 +13,7 @@ Description:
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/../INCLUDES/Auth0UserManager.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 
@@ -38,7 +39,7 @@ class FakeAuth0 {
 // - Tests the Auth0 callback functionality.
 // - Uses the Auth0SessionTrait to simulate session management.
 // -------------------------------------------------------------
-class Auth0CallbackTest extends TestCase
+class Auth0CallbackTest extends BaseTestCase
 {
     use Auth0SessionTrait;
 
@@ -52,14 +53,6 @@ class Auth0CallbackTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Start session if not already started.
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        // Clear the session.
-        $_SESSION = [];
 
         // Simulate callback parameters.
         $_GET['code'] = 'testcode';

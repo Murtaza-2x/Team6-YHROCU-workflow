@@ -10,19 +10,15 @@ Description:
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 require_once __DIR__ . '/traits/DatabaseTestTrait.php';
 
-class Auth0EditProjectPageTest extends TestCase
+class Auth0EditProjectPageTest extends BaseTestCase
 {
     use Auth0SessionTrait;
     use BufferedPageTestTrait;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
 
     public function testInvalidProjectId()
     {

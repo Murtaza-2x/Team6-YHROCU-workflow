@@ -1,6 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 
@@ -13,7 +14,7 @@ Description:
 -------------------------------------------------------------
 */
 
-class EditTaskPageTest extends TestCase
+class EditTaskPageTest extends BaseTestCase
 {
     use Auth0SessionTrait;
     use BufferedPageTestTrait;

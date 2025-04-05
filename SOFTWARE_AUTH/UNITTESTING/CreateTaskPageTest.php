@@ -9,11 +9,12 @@ Description:
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 require_once __DIR__ . '/traits/DatabaseTestTrait.php';
 
-class CreateTaskPageTest extends TestCase
+class CreateTaskPageTest extends BaseTestCase
 {
     use Auth0SessionTrait;
     use BufferedPageTestTrait;

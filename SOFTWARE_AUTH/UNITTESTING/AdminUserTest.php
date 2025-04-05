@@ -11,38 +11,15 @@ Description:
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/../INCLUDES/Auth0UserManager.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 
-class AdminUserTest extends TestCase
+class AdminUserTest extends BaseTestCase
 {
     use Auth0SessionTrait;
     use BufferedPageTestTrait;
-
-    /**
-     * setUp() is called before each test.
-     * Ensures the session is started and cleared.
-     */
-    protected function setUp(): void
-    {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-        $_SESSION = [];
-    }
-
-    /**
-     * tearDown() is called after each test.
-     * Clears global variables and superglobals to prevent cross-test interference.
-     */
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Auth0UserManager']);
-        $_POST = [];
-        $_GET = [];
-        $_SESSION = [];
-    }
 
     /**
      * Test: Access Denied for Guest

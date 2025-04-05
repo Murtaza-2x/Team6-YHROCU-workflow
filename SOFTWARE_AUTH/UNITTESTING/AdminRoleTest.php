@@ -1,14 +1,14 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-// Include the traits for simulating user sessions, buffering output, database connection, and role policies.
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 require_once __DIR__ . '/traits/DatabaseTestTrait.php';
 require_once __DIR__ . '/traits/RolePolicyTrait.php';
 require_once __DIR__ . '/traits/RoleTrait.php';
 
-class AdminRoleTest extends TestCase
+class AdminRoleTest extends BaseTestCase
 {
     // Use the provided traits to simulate sessions, capture output, manage DB connection, and check permissions.
     use Auth0SessionTrait;
@@ -16,26 +16,7 @@ class AdminRoleTest extends TestCase
     use DatabaseTestTrait;
     use RolePolicyTrait;
     use RoleTrait;
-
-    /**
-     * setUp() is called before each test.
-     * Here we establish a fresh database connection.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->setUpDatabase();  // Create a new DB connection.
-    }
-
-    /**
-     * tearDown() is called after each test.
-     * We close the database connection to prevent leaks.
-     */
-    protected function tearDown(): void
-    {
-        $this->tearDownDatabase();
-    }
-
+    
     /**
      * Test that an admin user has all the expected permissions.
      */

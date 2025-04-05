@@ -1,19 +1,12 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 
-class Auth0LogoutFlowTest extends TestCase
+class Auth0LogoutFlowTest extends BaseTestCase
 {
     use Auth0SessionTrait;
-
-    protected function setUp(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        $_SESSION = [];
-    }
 
     public function testLogoutClearsSession()
     {

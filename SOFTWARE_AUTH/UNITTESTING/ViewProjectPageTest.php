@@ -13,18 +13,14 @@ Description:
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 
-class ViewProjectPageTest extends TestCase
+class ViewProjectPageTest extends BaseTestCase
 {
     use Auth0SessionTrait;
     use BufferedPageTestTrait;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
 
     public function testInvalidProjectIdShowsError()
     {

@@ -1,25 +1,12 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 
-class Auth0SessionPersistenceTest extends TestCase
+class Auth0SessionPersistenceTest extends BaseTestCase
 {
     use Auth0SessionTrait;
-
-    /**
-     * setUp() is executed before each test method.
-     * Here, we ensure that a session is started and cleared.
-     */
-    protected function setUp(): void
-    {
-        // Start the session only if one is not already active.
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        // Clear the session to ensure a clean state for each test.
-        $_SESSION = [];
-    }
 
     /**
      * Test that after simulating a login, the session contains the expected keys and values.

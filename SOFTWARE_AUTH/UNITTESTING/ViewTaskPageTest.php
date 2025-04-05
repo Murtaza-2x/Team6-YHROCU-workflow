@@ -13,11 +13,12 @@ Description:
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 require_once __DIR__ . '/traits/DatabaseTestTrait.php';
 
-class ViewTaskPageTest extends TestCase
+class ViewTaskPageTest extends BaseTestCase
 {
     use Auth0SessionTrait;
     use BufferedPageTestTrait;
@@ -26,9 +27,7 @@ class ViewTaskPageTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Set up a fresh database connection.
         $this->setUpDatabase();
-        // Clear GET parameters and simulate a logged-in user.
         $_GET = [];
         $this->fakeAuth0User();
         

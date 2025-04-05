@@ -1,9 +1,10 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/DatabaseTestTrait.php';
 
-class DatabaseConnectionTest extends TestCase
+class DatabaseConnectionTest extends BaseTestCase
 {
     use DatabaseTestTrait;
 

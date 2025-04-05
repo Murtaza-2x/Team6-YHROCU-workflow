@@ -1,22 +1,11 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/../INCLUDES/Auth0Factory.php';
 
-class Auth0LoginSystemTest extends TestCase
+class Auth0LoginSystemTest extends BaseTestCase
 {
-    /**
-     * setUp() is called before each test method.
-     * Here, ensure the session is started and cleared.
-     */
-    protected function setUp(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        // Reset the session for each test to ensure a clean state.
-        $_SESSION = [];
-    }
 
     /**
      * Test that the Auth0Factory returns a valid Auth0 instance.
