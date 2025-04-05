@@ -70,14 +70,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
 
             // Assign users to the task
             if (!empty($assigned)) {
+                // Initialize the manager
+                $manager = new Auth0UserManager();
+                
                 $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
                 foreach ($assigned as $uid) {
                     $stmtAssign->bind_param("is", $taskId, $uid);
                     $stmtAssign->execute();
 
                     // Fetch user details for email
-                    $user = Auth0UserManager::getUser($uid);
-                    $userEmail = $user['email'];
+                    $userData = $manager->getUser($uid);
+                    $userEmail = $userData['email'] ?? null;
 
                     // Fetch project name using project_id
                     $stmtProj = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");

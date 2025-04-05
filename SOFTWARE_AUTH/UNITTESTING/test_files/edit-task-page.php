@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
                     $stmtAssign->execute();
 
                     // Now fetch user details using our manager
-                    $userData = $manager->getUser($uid); // Non-static call
+                    $userData = $manager->getUser($uid);
                     $userEmail = $userData['email'] ?? null;
 
                     // Grab the project name

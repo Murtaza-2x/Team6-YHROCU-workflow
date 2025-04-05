@@ -36,7 +36,8 @@ if (!$rawUser || !isset($rawUser['sub'])) {
 }
 
 // Fetch additional user details from Auth0
-$fullUser = Auth0UserManager::getUser($rawUser['sub']);
+$userManager = $GLOBALS['Auth0UserManager'] ?? new Auth0UserManager();
+$fullUser = $userManager->getUser($rawUser['sub']);
 
 // Assign role to user, defaulting to 'User' if not found
 $fullUser['role'] = ucfirst(strtolower($fullUser['app_metadata']['role'] ?? 'User'));
