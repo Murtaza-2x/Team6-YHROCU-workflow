@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { togglePasswordVisibility } from "../SHOW-HIDE-PASSWORD";
+const { togglePasswordVisibility } = require("../JS/SHOW-HIDE-PASSWORD");
 
 describe("togglePasswordVisibility", () => {
   let passwordField, toggleIcon;
