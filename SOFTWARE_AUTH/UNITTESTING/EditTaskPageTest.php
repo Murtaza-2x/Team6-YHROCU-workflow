@@ -39,7 +39,7 @@ class EditTaskPageTest extends BaseTestCase
         $_GET['id'] = '';  // => "Invalid task ID"
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/edit-task-page.php');
         $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
@@ -55,7 +55,7 @@ class EditTaskPageTest extends BaseTestCase
         $_GET['id'] = '99999'; // => "Task not found"
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/edit-task-page.php');
         $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
@@ -73,7 +73,7 @@ class EditTaskPageTest extends BaseTestCase
         $_GET['id'] = '1';
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/edit-task-page.php');
         $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
@@ -100,7 +100,7 @@ class EditTaskPageTest extends BaseTestCase
             'description' => '' // missing
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/edit-task-page.php');
         $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
@@ -128,7 +128,7 @@ class EditTaskPageTest extends BaseTestCase
             // no "assign"
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/edit-task-page.php');
         $json   = json_decode($output, true);
 
         $this->assertNotNull($json);
@@ -158,7 +158,7 @@ class EditTaskPageTest extends BaseTestCase
             'assign'     => ['auth0|abc123', 'auth0|xyz789']
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/edit-task-page.php');
         $json   = json_decode($output, true);
 
         $this->assertNotNull($json);

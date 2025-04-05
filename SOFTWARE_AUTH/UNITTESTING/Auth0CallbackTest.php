@@ -90,7 +90,7 @@ class Auth0CallbackTest extends BaseTestCase
         ob_start();
         try {
             // Include the callback file; it should set the session data.
-            include __DIR__ . '/../auth0_callback.php';
+            include __DIR__ . '/test_files/auth0_callback.php';
         } finally {
             // Clean (discard) the output buffer.
             ob_end_clean();

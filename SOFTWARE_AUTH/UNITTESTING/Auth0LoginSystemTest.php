@@ -91,7 +91,7 @@ class Auth0LoginSystemTest extends BaseTestCase
             // Pre-set the session with a fake user.
             $_SESSION['user'] = ['sub' => 'auth0|testuser'];
             // Include the logout script (which should clear the session).
-            include __DIR__ . '/../auth0_logout.php';
+            include __DIR__ . '/test_files/auth0_logout.php';
             // Echo a success message if the session is cleared.
             echo "testLogoutClearsSession => Session cleared\n";
             // Assert that the 'user' key no longer exists in the session.

@@ -31,7 +31,7 @@ class EditProjectPageTest extends BaseTestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         ob_start();
-        include __DIR__ . '/../edit-project-page.php';
+        include __DIR__ . '/test_files/edit-project-page.php';
         $output = ob_get_clean();
 
         $json = json_decode($output, true);
@@ -50,7 +50,7 @@ class EditProjectPageTest extends BaseTestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         ob_start();
-        include __DIR__ . '/../edit-project-page.php';
+        include __DIR__ . '/test_files/edit-project-page.php';
         $output = ob_get_clean();
 
         $json = json_decode($output, true);
@@ -70,7 +70,7 @@ class EditProjectPageTest extends BaseTestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         ob_start();
-        include __DIR__ . '/../edit-project-page.php';
+        include __DIR__ . '/test_files/edit-project-page.php';
         $output = ob_get_clean();
 
         $json = json_decode($output, true);
@@ -99,7 +99,7 @@ class EditProjectPageTest extends BaseTestCase
         ];
 
         ob_start();
-        include __DIR__ . '/../edit-project-page.php';
+        include __DIR__ . '/test_files/edit-project-page.php';
         $output = ob_get_clean();
 
         $json = json_decode($output, true);
@@ -127,7 +127,7 @@ class EditProjectPageTest extends BaseTestCase
             'due_date'       => '2025-08-01'
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-project-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/edit-project-page.php');
         $json = json_decode($output, true);
 
         $this->assertNotNull($json);
@@ -154,7 +154,7 @@ class EditProjectPageTest extends BaseTestCase
             'due_date'       => '2026-01-01'
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../edit-project-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/edit-project-page.php');
         $json = json_decode($output, true);
 
         $this->assertNotNull($json);

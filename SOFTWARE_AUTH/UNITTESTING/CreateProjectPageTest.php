@@ -55,7 +55,7 @@ class CreateProjectPageTest extends BaseTestCase
         // Clearing session simulates a guest (not logged in).
         $this->clearAuth0Session();
         // Capture the page output.
-        $output = $this->captureOutput(__DIR__ . '/../create-project-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/create-project-page.php');
         $json = json_decode($output, true);
 
         // expect a 'Not authorized' error in JSON.
@@ -75,7 +75,7 @@ class CreateProjectPageTest extends BaseTestCase
         $_POST = []; // Not submitting yet, just viewing form.      
         $_SERVER['REQUEST_METHOD'] = 'GET'; // Simulate a page load
 
-        $output = $this->captureOutput(__DIR__ . '/../create-project-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/create-project-page.php');
 
         // For an admin loading the page, we expect no JSON, so the output is empty or plain HTML.
         $this->assertEmpty($output, "Admin should be able to view the form without JSON output.");
@@ -101,7 +101,7 @@ class CreateProjectPageTest extends BaseTestCase
             'due_date' => '2025-06-30'
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../create-project-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/create-project-page.php');
         $json = json_decode($output, true);
 
         // We expect a JSON error message from test mode.
@@ -130,7 +130,7 @@ class CreateProjectPageTest extends BaseTestCase
             'due_date' => '2025-07-01'
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../create-project-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/create-project-page.php');
         $json = json_decode($output, true);
 
         // Expect success in JSON response.

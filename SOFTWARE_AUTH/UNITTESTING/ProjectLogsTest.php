@@ -40,7 +40,7 @@ class ProjectLogsTest extends BaseTestCase
     {
         $_SESSION['user']['role'] = 'user'; // Set role to non-staff
         $_GET['id'] = '1';
-        $output = $this->captureOutput(__DIR__ . '/../view-project-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-project-logs-page.php');
         $json = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertEquals("You are not authorized", $json['error']);
@@ -54,7 +54,7 @@ class ProjectLogsTest extends BaseTestCase
     {
         $_SESSION['user']['role'] = 'admin';
         $_GET['id'] = ''; // Empty project ID
-        $output = $this->captureOutput(__DIR__ . '/../view-project-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-project-logs-page.php');
         $json = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertEquals("Invalid project ID", $json['error']);
@@ -68,7 +68,7 @@ class ProjectLogsTest extends BaseTestCase
     {
         $_SESSION['user']['role'] = 'admin';
         $_GET['id'] = '99999'; // Simulate a nonexistent project
-        $output = $this->captureOutput(__DIR__ . '/../view-project-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-project-logs-page.php');
         $json = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertEquals("Project not found", $json['error']);
@@ -83,7 +83,7 @@ class ProjectLogsTest extends BaseTestCase
     {
         $_SESSION['user']['role'] = 'admin';
         $_GET['id'] = '1'; // Assume no logs exist for project ID 1
-        $output = $this->captureOutput(__DIR__ . '/../view-project-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-project-logs-page.php');
         $json = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertEquals("No logs found", $json['info']);
@@ -99,7 +99,7 @@ class ProjectLogsTest extends BaseTestCase
         $_SESSION['user']['role'] = 'admin';
         $_GET['id'] = '1';
         $_GET['mock_logs'] = '1'; // Trigger mock logs response
-        $output = $this->captureOutput(__DIR__ . '/../view-project-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-project-logs-page.php');
         $json = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
 
@@ -126,7 +126,7 @@ class ProjectLogsTest extends BaseTestCase
         $_GET['force_prod'] = '1';    // Force production mode (bypass JSON branch)
         $_GET['export'] = '1';        // Trigger CSV export
 
-        $output = $this->captureOutput(__DIR__ . '/../view-project-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-project-logs-page.php');
 
         // Check that the CSV output includes the BOM (Byte Order Mark) for Excel
         $this->assertStringContainsString("\xEF\xBB\xBF", $output, "Missing BOM in CSV output");

@@ -13,11 +13,8 @@ Description:
 
 use PHPUnit\Framework\TestCase;
 
-// Load our base test class that sets up the database connection and resets globals
 require_once __DIR__ . '/BaseTestCase.php';
-// Use the Auth0SessionTrait to simulate logged-in users
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
-// Use BufferedPageTestTrait to capture output from the page
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
 
 class ViewProjectPageTest extends BaseTestCase
@@ -36,7 +33,7 @@ class ViewProjectPageTest extends BaseTestCase
         
         // Start output buffering, include the page, then get the output
         ob_start();
-        include __DIR__ . '/../view-project-page.php';
+        include __DIR__ . '/test_files/view-project-page.php';
         $output = ob_get_clean();
 
         // Decode the JSON response from the test-mode branch
@@ -55,7 +52,7 @@ class ViewProjectPageTest extends BaseTestCase
         $_GET['id'] = '99999';
         
         ob_start();
-        include __DIR__ . '/../view-project-page.php';
+        include __DIR__ . '/test_files/view-project-page.php';
         $output = ob_get_clean();
 
         $json = json_decode($output, true);
@@ -73,7 +70,7 @@ class ViewProjectPageTest extends BaseTestCase
         $_GET['id'] = '1';
         
         // Capture the output using our buffered page trait (which handles output capturing)
-        $output = $this->captureOutput(__DIR__ . '/../view-project-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-project-page.php');
         $json = json_decode($output, true);
         
         $this->assertNotNull($json);

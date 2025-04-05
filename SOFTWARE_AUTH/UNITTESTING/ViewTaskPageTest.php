@@ -75,7 +75,7 @@ class ViewTaskPageTest extends BaseTestCase
 
         // Capture the output.
         ob_start();
-        include __DIR__ . '/../view-task-page.php';
+        include __DIR__ . '/test_files/view-task-page.php';
         $output = ob_get_clean();
 
         // Parse JSON output.
@@ -95,7 +95,7 @@ class ViewTaskPageTest extends BaseTestCase
 
         // Capture the output.
         ob_start();
-        include __DIR__ . '/../view-task-page.php';
+        include __DIR__ . '/test_files/view-task-page.php';
         $output = ob_get_clean();
 
         // Parse JSON output.
@@ -114,7 +114,7 @@ class ViewTaskPageTest extends BaseTestCase
         $_GET['id'] = "1";  // Valid task ID
 
         // Capture the output.
-        $output = $this->captureOutput(__DIR__ . '/../view-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-task-page.php');
         $outputData = json_decode($output, true);
         $this->assertEquals("1", $outputData['taskId']);
         $this->assertStringContainsString("Test Task Subject", $outputData['task']['subject']);

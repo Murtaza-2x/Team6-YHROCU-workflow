@@ -39,7 +39,7 @@ class TaskLogsTest extends BaseTestCase
     {
         $_SESSION['user']['role'] = 'user'; // Set role to non-staff
         $_GET['id'] = '1'; // Valid task ID assumed
-        $output = $this->captureOutput(__DIR__ . '/../view-task-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-task-logs-page.php');
         $json   = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertEquals("You are not authorized", $json['error']);
@@ -53,7 +53,7 @@ class TaskLogsTest extends BaseTestCase
     {
         $_SESSION['user']['role'] = 'admin';
         $_GET['id'] = ''; // Empty task ID is invalid
-        $output = $this->captureOutput(__DIR__ . '/../view-task-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-task-logs-page.php');
         $json   = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertEquals("Invalid task ID", $json['error']);
@@ -67,7 +67,7 @@ class TaskLogsTest extends BaseTestCase
     {
         $_SESSION['user']['role'] = 'admin';
         $_GET['id'] = '99999'; // Simulated nonexistent task
-        $output = $this->captureOutput(__DIR__ . '/../view-task-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-task-logs-page.php');
         $json   = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertEquals("Task not found", $json['error']);
@@ -82,7 +82,7 @@ class TaskLogsTest extends BaseTestCase
     {
         $_SESSION['user']['role'] = 'admin';
         $_GET['id'] = '1'; // Assume no logs exist for task ID 1
-        $output = $this->captureOutput(__DIR__ . '/../view-task-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-task-logs-page.php');
         $json   = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertEquals("No logs found", $json['info']);
@@ -98,7 +98,7 @@ class TaskLogsTest extends BaseTestCase
         $_SESSION['user']['role'] = 'admin';
         $_GET['id'] = '1';
         $_GET['mock_logs'] = '1'; // Trigger mock logs response
-        $output = $this->captureOutput(__DIR__ . '/../view-task-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-task-logs-page.php');
         $json   = json_decode($output, true);
         $this->assertNotNull($json, "Output should be valid JSON.");
         $this->assertArrayHasKey("logs", $json, "Logs key should exist in JSON.");
@@ -118,7 +118,7 @@ class TaskLogsTest extends BaseTestCase
         $_GET['force_prod'] = '1';    // Force production mode (bypass JSON branch)
         $_GET['export'] = '1';        // Trigger CSV export
 
-        $output = $this->captureOutput(__DIR__ . '/../view-task-logs-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/view-task-logs-page.php');
 
         // Check that the CSV output includes the Excel BOM
         $this->assertStringContainsString("\xEF\xBB\xBF", $output, "Missing BOM in CSV output");

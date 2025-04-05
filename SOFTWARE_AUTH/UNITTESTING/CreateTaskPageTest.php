@@ -58,7 +58,7 @@ class CreateTaskPageTest extends BaseTestCase
     public function testAccessDeniedForGuest()
     {
         $this->clearAuth0Session();
-        $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/create-task-page.php');
         $json = json_decode($output, true);
 
         // Expect 'Not authorized' if no user in session.
@@ -79,7 +79,7 @@ class CreateTaskPageTest extends BaseTestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         unset($_POST);
 
-        $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/create-task-page.php');
         $json = json_decode($output, true);
 
         $this->assertNull($json, "Expected non-JSON output for admin loading page.");
@@ -105,7 +105,7 @@ class CreateTaskPageTest extends BaseTestCase
             'priority' => 'High'
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/create-task-page.php');
         $json = json_decode($output, true);
 
         // Expect a JSON error message from test mode.
@@ -134,7 +134,7 @@ class CreateTaskPageTest extends BaseTestCase
             'priority' => 'High'
         ];
 
-        $output = $this->captureOutput(__DIR__ . '/../create-task-page.php');
+        $output = $this->captureOutput(__DIR__ . '/test_files/create-task-page.php');
         $json = json_decode($output, true);
 
         // Expect "Task created successfully."

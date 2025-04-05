@@ -25,7 +25,7 @@ class Auth0LogoutFlowTest extends BaseTestCase
             
             // Start output buffering to capture output.
             ob_start();
-            include __DIR__ . '/../auth0_logout.php';
+            include __DIR__ . '/test_files/auth0_logout.php';
             $output = ob_get_clean();
             
             // Debug: output captured content (for local debugging only)
