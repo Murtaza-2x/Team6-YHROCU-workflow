@@ -71,7 +71,8 @@ class CreateProjectPageTest extends TestCase
     {
         // Simulate an admin user.
         $this->fakeAuth0User(['role' => 'admin']);
-        $_POST = []; // Not submitting yet, just viewing form.
+        $_POST = []; // Not submitting yet, just viewing form.      
+        $_SERVER['REQUEST_METHOD'] = 'GET'; // Simulate a page load
 
         $output = $this->captureOutput(__DIR__ . '/../create-project-page.php');
 
@@ -93,10 +94,10 @@ class CreateProjectPageTest extends TestCase
         // Missing some required fields (project_name and description are empty).
         $_POST = [
             'project_name' => '',
-            'status'       => 'New',
-            'priority'     => 'High',
-            'description'  => '',
-            'due_date'     => '2025-06-30'
+            'status' => 'New',
+            'priority' => 'High',
+            'description' => '',
+            'due_date' => '2025-06-30'
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../create-project-page.php');
@@ -122,10 +123,10 @@ class CreateProjectPageTest extends TestCase
         // Valid input data for project creation.
         $_POST = [
             'project_name' => 'Test Project',
-            'status'       => 'New',
-            'priority'     => 'High',
-            'description'  => 'Testing project creation',
-            'due_date'     => '2025-07-01'
+            'status' => 'New',
+            'priority' => 'High',
+            'description' => 'Testing project creation',
+            'due_date' => '2025-07-01'
         ];
 
         $output = $this->captureOutput(__DIR__ . '/../create-project-page.php');
