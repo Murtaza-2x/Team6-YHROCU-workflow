@@ -9,20 +9,27 @@ Description:
 -------------------------------------------------------------
 */
 
+require_once __DIR__ . '/../../INCLUDES/role_helper.php';
+
 $isTesting = defined('PHPUNIT_RUNNING') && PHPUNIT_RUNNING === true;
 
-if ($isTesting) {
-    if (session_status() === PHP_SESSION_NONE) session_start();
-    if (!isset($_SESSION['user'])) {
-        header("Location: ../../index.php?error=1&msg=Please log in first");
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+if (!is_logged_in()) {
+    if ($isTesting) {
+        echo "Please log in first";
         return;
+    } else {
+        header('Location: ../../index.php?error=1&msg=Please log in first.');
+        exit;
     }
 }
+
+global $conn;
 
 $title = "ROCU: Dashboard";
 
 require_once __DIR__ . '/../../INCLUDES/env_loader.php';
-require_once __DIR__ . '/../../INCLUDES/role_helper.php';
 require_once __DIR__ . '/../../INCLUDES/inc_connect.php';
 require_once __DIR__ . '/../../INCLUDES/Auth0UserManager.php';
 require_once __DIR__ . '/../../INCLUDES/inc_header.php';
@@ -183,8 +190,8 @@ $result = $stmt->get_result();
 </div>
 <!-- TASK SECTION END -->
 
-<?php include '/../../INCLUDES/inc_footer.php'; ?>
-<?php include '/../../INCLUDES/inc_disconnect.php'; ?>
+<?php include __DIR__ . '/../../INCLUDES/inc_footer.php'; ?>
+<?php include __DIR__ . '/../../INCLUDES/inc_footer.php'; ?>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="../../JS/SEARCH-TABLE.js"></script>

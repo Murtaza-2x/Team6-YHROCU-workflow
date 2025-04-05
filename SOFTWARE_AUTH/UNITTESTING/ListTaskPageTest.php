@@ -12,6 +12,7 @@ Description:
 */
 
 use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ . '/BaseTestCase.php';
 require_once __DIR__ . '/traits/Auth0SessionTrait.php';
 require_once __DIR__ . '/traits/BufferedPageTestTrait.php';
@@ -32,6 +33,8 @@ class ListTaskPageTest extends BaseTestCase
         // Insert dummy project + task
         $this->conn->query("DELETE FROM projects WHERE id = 1");
         $this->conn->query("DELETE FROM tasks WHERE id = 1");
+
+        $GLOBALS['conn'] = $this->conn;
 
         $this->insertDummy(
             "INSERT INTO projects (id, project_name) VALUES (?, ?)",
@@ -79,7 +82,7 @@ class ListTaskPageTest extends BaseTestCase
         $_SESSION['user'] = [
             'user_id' => 'auth0|admin1',
             'role'    => 'Admin',
-            'nickname'=> 'AdminTester'
+            'nickname' => 'AdminTester'
         ];
 
         $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
@@ -96,12 +99,67 @@ class ListTaskPageTest extends BaseTestCase
         $_SESSION['user'] = [
             'user_id' => 'auth0|user1',
             'role'    => 'User',
-            'nickname'=> 'UserTester'
+            'nickname' => 'UserTester'
         ];
+        $GLOBALS['conn'] = $this->conn;
 
         $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
         $this->assertStringContainsString("Dashboard", $output);
         $this->assertStringContainsString("Dashboard Task", $output);
-        $this->assertStringNotContainsString("Create Task", $output); // Button hidden for users
+        $this->assertStringNotContainsString("Create Task", $output);
+    }
+
+    /**
+     * Test: Admin sees other users' tasks
+     */
+    public function testAdminSeesAllTasks()
+    {
+        $_SESSION['user'] = ['user_id' => 'auth0|admin1', 'role' => 'Admin'];
+
+        // Insert second task assigned to a different user
+        $this->insertDummy(
+            "INSERT INTO tasks (id, subject, project_id, status, priority, created_by) VALUES (?, ?, ?, ?, ?, ?)",
+            [2, "Unassigned Task", 1, "New", "Moderate", "auth0|admin2"],
+            "isisss"
+        );
+
+        $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
+
+        $this->assertStringContainsString("Dashboard Task", $output);
+        $this->assertStringContainsString("Unassigned Task", $output);
+    }
+
+    /**
+     * Test: User does not see unassigned tasks
+     */
+    public function testUserCannotSeeUnassignedTasks()
+    {
+        $_SESSION['user'] = ['user_id' => 'auth0|user1', 'role' => 'User'];
+
+        // Add a task not assigned to user1
+        $this->insertDummy(
+            "INSERT INTO tasks (id, subject, project_id, status, priority, created_by) VALUES (?, ?, ?, ?, ?, ?)",
+            [3, "Unrelated Task", 1, "New", "Moderate", "auth0|admin2"],
+            "isisss"
+        );
+
+        $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
+
+        $this->assertStringContainsString("Dashboard Task", $output); // Assigned task
+        $this->assertStringNotContainsString("Unrelated Task", $output); // Not visible
+    }
+
+    /**
+     * Test: Dashboard shows fallback message when no tasks
+     */
+    public function testNoTasksFallbackMessage()
+    {
+        $this->conn->query("DELETE FROM task_assigned_users");
+        $this->conn->query("DELETE FROM tasks");
+
+        $_SESSION['user'] = ['user_id' => 'auth0|admin1', 'role' => 'Admin'];
+
+        $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
+        $this->assertStringContainsString("No tasks found", $output);
     }
 }

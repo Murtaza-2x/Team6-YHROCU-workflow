@@ -162,6 +162,6 @@ if ($archiveRow = $resArchive->fetch_assoc()) {
     $lastEditTime = $archiveRow['archived_at'];
 }
 
-include '/../../INCLUDES/inc_taskview.php';
-include '/../../INCLUDES/inc_footer.php';
-include '/../../INCLUDES/inc_disconnect.php';
+include __DIR__ .  '/../../INCLUDES/inc_taskview.php';
+include __DIR__ .  '/../../INCLUDES/inc_footer.php';
+include __DIR__ .  '/../../INCLUDES/inc_disconnect.php';

@@ -80,8 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if (!$isTesting) {
-    require_once __DIR__ . '/../../INCLUDES/inc_header.php';
-    include '../../INCLUDES/inc_projectcreate.php';
-    include '/../../INCLUDES/inc_footer.php';
-    include '/../../INCLUDES/inc_disconnect.php';
+    require_once __DIR__ .'/../../INCLUDES/inc_header.php';
+    include __DIR__ . '../../INCLUDES/inc_projectcreate.php';
+    include __DIR__ . '/../../INCLUDES/inc_footer.php';
+    include __DIR__ . '/../../INCLUDES/inc_disconnect.php';
 }

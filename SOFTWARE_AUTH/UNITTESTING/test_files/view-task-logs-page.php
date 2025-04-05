@@ -155,6 +155,6 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
 }
 
 require_once __DIR__ . '/../../INCLUDES/inc_header.php';
-include '/../../INCLUDES/inc_tasklogsview.php';
-include '/../../INCLUDES/inc_footer.php';
-include '/../../INCLUDES/inc_disconnect.php';
+include __DIR__ . '/../../INCLUDES/inc_tasklogsview.php';
+include __DIR__ . '/../../INCLUDES/inc_footer.php';
+include __DIR__ .  '/../../INCLUDES/inc_disconnect.php';

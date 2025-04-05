@@ -116,7 +116,7 @@ if (!$isTesting) {
     }
 
     require_once __DIR__ . '/../../INCLUDES/inc_header.php';
-    include '/../../INCLUDES/inc_taskcreate.php';
-    include '/../../INCLUDES/inc_footer.php';
-    include '/../../INCLUDES/inc_disconnect.php';
+    include __DIR__ . '/../../INCLUDES/inc_taskcreate.php';
+    include __DIR__ . '/../../INCLUDES/inc_footer.php';
+    include __DIR__ . '/../../INCLUDES/inc_disconnect.php';
 }
