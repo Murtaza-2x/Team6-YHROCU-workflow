@@ -52,9 +52,9 @@ This application enables users (admin or normal roles) to:
 3. **Install dependencies**:
 
    Install/Use composer and change directory into the SOFTWARE_AUTH folder and run this command:
-   
-   composer install
 
+   ```composer install```
+  
 5. **Set up your database**:
 
    Create a new MySQL database (e.g., rocu).
@@ -63,23 +63,23 @@ This application enables users (admin or normal roles) to:
 
 6. **Set up your web server if not using XAMPP**:
 
-  Configure your Apache/nginx document root to point to the project folder (or a public subdirectory if you have one).
+   Configure your Apache/nginx document root to point to the project folder (or a public subdirectory if you have one).
 
-  Ensure any .htaccess or rewrite rules (if needed) are properly.
+   Ensure any .htaccess or rewrite rules (if needed) are properly.
 
-  If using XAMPP run Apache & MySQL.
+   If using XAMPP run Apache & MySQL.
 
 ---
 
 ## Configuration
 
-   Auth0
-   You’ll need valid Auth0 credentials:
+   **For Auth0 you’ll need valid Auth0 credentials**:
+   
     - Domain: your-tenant.auth0.com
     - Client ID
     - Client Secret
 
-   Set these in .env or your environment variables so the app can authenticate and fetch user details.
+  Set these in .env or your environment variables so the app can authenticate and fetch user details.
 
 ---
 
