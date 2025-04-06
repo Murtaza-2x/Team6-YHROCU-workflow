@@ -93,11 +93,11 @@
 
         <!-- BUTTONS -->
         <div class="TASK-BUTTONS">
-            <?php if (has_role('Admin')) : ?>
+            <?php if (is_staff()) : ?>
                 <button class="UPDATE-BUTTON" onclick="window.location.href='edit-task-page.php?id=<?php echo urlencode($taskId); ?>'">Update Task</button>
             <?php endif; ?>
             <button class="CANCEL-BUTTON" onclick="window.location.href='list-task-page.php'">Cancel</button>
-            <?php if (is_admin()) : ?>
+            <?php if (is_staff()) : ?>
                 <button class="VIEW-LOGS-BUTTON" onclick="window.location.href='view-task-logs-page.php?id=<?php echo urlencode($taskId); ?>'">
                     View Task Logs
                 </button>

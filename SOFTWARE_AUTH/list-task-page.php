@@ -167,7 +167,7 @@ $result = $stmt->get_result();
             <?php endif; ?>
         </div>
         <div class="TASK-LIST">
-            <?php if (is_admin()) : ?>
+            <?php if (is_staff()) : ?>
                 <button class='CREATE-TASK-BUTTON' onclick="location.href='create-task-page.php'">Create Task</button>
                 <button class='CREATE-PROJECT-BUTTON' onclick="location.href='create-project-page.php'">Create Project</button>
             <?php endif; ?>
