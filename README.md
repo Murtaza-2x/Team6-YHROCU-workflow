@@ -3,6 +3,12 @@
 A simple PHP web application that allows admins to create and manage tasks and projects, with user assignment using Auth0 for authentication and user management.
 
    **For now for demonstration purposes ALL Configuration is done. You do not need to do anything with 0Auth.**
+   
+   **Account Creditentials for Demo**:
+
+   ```joeuser@gmail.com - userPass1!```
+   ```jimmanager@gmail.com - managerPass1!```
+   ```johnadmin@gmail.com - adminPass1!```
 
 ## Table of Contents
 
@@ -44,15 +50,17 @@ This application enables users (admin or normal roles) to:
 
 1. **Clone Main Repository**:
 
-   Create YHROCU-CLONE for 0Auth to work.
+   Create YHROCU-CLONE folder in htdocs for 0Auth to work.
    Clone the repository into your htdocs/YHROCU-CLONE folder.
+   Your folder structure should look like this:
+   C:\xampp\htdocs\YHROCU-CLONE\Team6-YHROCU-workflow\SOFTWARE_AUTH
 
 3. **Install dependencies**:
 
    Install/Use composer and change directory into the SOFTWARE_AUTH folder and run this command:
-   
-   composer install
 
+   ```composer install```
+  
 5. **Set up your database**:
 
    Create a new MySQL database (e.g., rocu).
@@ -61,23 +69,23 @@ This application enables users (admin or normal roles) to:
 
 6. **Set up your web server if not using XAMPP**:
 
-  Configure your Apache/nginx document root to point to the project folder (or a public subdirectory if you have one).
+   Configure your Apache/nginx document root to point to the project folder (or a public subdirectory if you have one).
 
-  Ensure any .htaccess or rewrite rules (if needed) are properly.
+   Ensure any .htaccess or rewrite rules (if needed) are properly.
 
-  If using XAMPP run Apache & MySQL.
+   If using XAMPP run Apache & MySQL.
 
 ---
 
 ## Configuration
 
-   Auth0
-   You’ll need valid Auth0 credentials:
+   **For Auth0 you’ll need valid Auth0 credentials**:
+   
     - Domain: your-tenant.auth0.com
     - Client ID
     - Client Secret
 
-   Set these in .env or your environment variables so the app can authenticate and fetch user details.
+  Set these in .env or your environment variables so the app can authenticate and fetch user details.
 
 ---
 
