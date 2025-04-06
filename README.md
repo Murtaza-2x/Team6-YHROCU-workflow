@@ -4,7 +4,7 @@ A simple PHP web application that allows admins to create and manage tasks and p
 
    **For now for demonstration purposes ALL Configuration is done. You do not need to do anything with 0Auth.**
    
-   **Account Creditentials for Demo**
+   **Account Creditentials for Demo**:
 
    ```joeuser@gmail.com - userPass1!```
    ```jimmanager@gmail.com - managerPass1!```
