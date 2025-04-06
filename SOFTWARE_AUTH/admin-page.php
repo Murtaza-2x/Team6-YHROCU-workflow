@@ -49,9 +49,12 @@ if (isset($_POST['create_user'])) {
     } else {
         try {
             $userManager->createUser($email, $password, $role);
-            $successMsg = "User created successfully.";
+            
+        // Redirect with success message
+        header("Location: admin-page.php?success=" . urlencode("User created successfully."));
         } catch (Exception $ex) {
-            $errorMsg = "Error creating user: " . htmlspecialchars($ex->getMessage());
+            header("Location: admin-page.php?error=" . urlencode("Error creating user: " . $e->getMessage()));
+            exit;
         }
     }
 }
