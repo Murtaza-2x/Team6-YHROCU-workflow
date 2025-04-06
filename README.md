@@ -3,6 +3,12 @@
 A simple PHP web application that allows admins to create and manage tasks and projects, with user assignment using Auth0 for authentication and user management.
 
    **For now for demonstration purposes ALL Configuration is done. You do not need to do anything with 0Auth.**
+   
+   **Account Creditentials for Demo**
+
+   ```joeuser@gmail.com - userPass1!```
+   ```jimmanager@gmail.com - managerPass1!```
+   ```johnadmin@gmail.com - adminPass1!```
 
 ## Table of Contents
 
