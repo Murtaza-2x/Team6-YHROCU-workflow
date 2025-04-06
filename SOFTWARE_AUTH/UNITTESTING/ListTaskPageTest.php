@@ -81,7 +81,7 @@ class ListTaskPageTest extends BaseTestCase
     {
         $_SESSION['user'] = [
             'user_id' => 'auth0|admin1',
-            'role'    => 'Admin',
+            'role' => 'Admin',
             'nickname' => 'AdminTester'
         ];
 
@@ -98,7 +98,7 @@ class ListTaskPageTest extends BaseTestCase
     {
         $_SESSION['user'] = [
             'user_id' => 'auth0|user1',
-            'role'    => 'User',
+            'role' => 'User',
             'nickname' => 'UserTester'
         ];
         $GLOBALS['conn'] = $this->conn;
@@ -115,16 +115,16 @@ class ListTaskPageTest extends BaseTestCase
     public function testAdminSeesAllTasks()
     {
         $_SESSION['user'] = ['user_id' => 'auth0|admin1', 'role' => 'Admin'];
-    
+
         // Always delete before inserting to avoid duplicate key
         $this->conn->query("DELETE FROM tasks WHERE id = 2");
-    
+
         $this->insertDummy(
             "INSERT INTO tasks (id, subject, project_id, status, priority, created_by) VALUES (?, ?, ?, ?, ?, ?)",
             [2, "Unassigned Task", 1, "New", "Moderate", "auth0|admin2"],
             "isisss"
         );
-    
+
         try {
             $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
             $this->assertStringContainsString("Dashboard Task", $output);
@@ -132,7 +132,7 @@ class ListTaskPageTest extends BaseTestCase
         } finally {
             $this->conn->query("DELETE FROM tasks WHERE id = 2");
         }
-    }      
+    }
 
     /**
      * Test: User does not see unassigned tasks
@@ -140,16 +140,16 @@ class ListTaskPageTest extends BaseTestCase
     public function testUserCannotSeeUnassignedTasks()
     {
         $_SESSION['user'] = ['user_id' => 'auth0|user1', 'role' => 'User'];
-    
+
         // Delete before insert to prevent duplicate ID
         $this->conn->query("DELETE FROM tasks WHERE id = 3");
-    
+
         $this->insertDummy(
             "INSERT INTO tasks (id, subject, project_id, status, priority, created_by) VALUES (?, ?, ?, ?, ?, ?)",
             [3, "Unrelated Task", 1, "New", "Moderate", "auth0|admin2"],
             "isisss"
         );
-    
+
         try {
             $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
             $this->assertStringContainsString("Dashboard Task", $output); // visible
@@ -157,5 +157,20 @@ class ListTaskPageTest extends BaseTestCase
         } finally {
             $this->conn->query("DELETE FROM tasks WHERE id = 3");
         }
-    }     
+    }
+    public function testUserCanViewDashboard()
+    {
+        $_SESSION['user'] = [
+            'user_id' => 'auth0|user1',
+            'role' => 'User',
+            'nickname' => 'UserTester'
+        ];
+        $GLOBALS['conn'] = $this->conn;
+    
+        $output = $this->captureOutput(__DIR__ . '/test_files/list-task-page.php');
+    
+        $this->assertStringContainsString("Dashboard Task", $output);
+        $this->assertStringNotContainsString("Create Task", $output);
+    }
+    
 }
