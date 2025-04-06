@@ -44,8 +44,10 @@ This application enables users (admin or normal roles) to:
 
 1. **Clone Main Repository**:
 
-   Create YHROCU-CLONE for 0Auth to work.
+   Create YHROCU-CLONE folder in htdocs for 0Auth to work.
    Clone the repository into your htdocs/YHROCU-CLONE folder.
+   Your folder structure should look like this:
+   C:\xampp\htdocs\YHROCU-CLONE\Team6-YHROCU-workflow\SOFTWARE_AUTH
 
 3. **Install dependencies**:
 
