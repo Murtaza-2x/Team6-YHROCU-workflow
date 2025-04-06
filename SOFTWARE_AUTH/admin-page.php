@@ -35,8 +35,8 @@ if (!has_role('Admin')) {
 // Prepare allowed roles
 $allowed_roles = ['User', 'Manager', 'Admin'];
 
-$errorMsg = "";
-$successMsg = "";
+$errorMsg = $_GET['error'] ?? '';
+$successMsg = $_GET['success'] ?? '';
 
 // Create user functionality
 if (isset($_POST['create_user'])) {
@@ -56,17 +56,41 @@ if (isset($_POST['create_user'])) {
     }
 }
 
-// Change Role functionality
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_role'])) {
-    $userId = $_POST['change_role'];
-    $role = $_POST['role_change'][$userId] ?? 'User';
-    if (!in_array($role, $allowed_roles)) {
-        $errorMsg = "Invalid role selected.";
-    } else {
-        $userManager->updateUserRole($userId, $role);
-        $successMsg = "Role updated successfully.";
+// Role + Email Update logic
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
+    $userId   = $_POST['update_user'];
+    $newRole  = $_POST['role_change'][$userId] ?? 'User';
+    $newEmail = trim($_POST['email_change'][$userId] ?? '');
+
+    try {
+        if (!is_string($userId) || trim($userId) === '') {
+            throw new Exception("Missing or invalid user ID.");
+        }
+
+        if (!in_array($newRole, $allowed_roles)) {
+            throw new Exception("Invalid role selected.");
+        }
+
+        $existingUser = $userManager->getUser($userId);
+        $currentEmail = $existingUser['email'] ?? '';
+
+        // Update email only if changed
+        if ($newEmail !== $currentEmail) {
+            $userManager->updateUserEmail($userId, $newEmail);
+        }
+
+        // Update role
+        $userManager->updateUserRole($userId, $newRole);
+
+        // Redirect with success message
+        header("Location: admin-page.php?success=" . urlencode("User updated successfully."));
+        exit;
+    } catch (Exception $e) {
+        header("Location: admin-page.php?error=" . urlencode("Update failed: " . $e->getMessage()));
+        exit;
     }
 }
+
 
 // Generate Password Reset Link functionality
 if (isset($_POST['reset_password'])) {
@@ -79,7 +103,8 @@ if (isset($_POST['reset_password'])) {
             <button class='CREATE-BUTTON' type='button' onclick='copyResetLink()'>Copy Link</button>
             </div>";
     } catch (Exception $e) {
-        $errorMsg = "Error creating reset link: " . htmlspecialchars($e->getMessage());
+        header("Location: admin-page.php?error=" . urlencode("Error creating reset link: " . $e->getMessage()));
+        exit;
     }
 }
 
@@ -96,9 +121,13 @@ if (isset($_GET['disable_user'])) {
 
         // Update user status
         $userManager->updateUserRole($userId, $user['app_metadata']['role'], $newStatus);
-        $successMsg = "User status updated to " . ucfirst($newStatus) . " successfully.";
+
+        // Redirect with success message
+        header("Location: admin-page.php?success=" . urlencode("User status updated to " . ucfirst($newStatus) . " successfully."));
+        exit;
     } catch (Exception $e) {
-        $errorMsg = "Error updating user status: " . htmlspecialchars($e->getMessage());
+        header("Location: admin-page.php?error=" . urlencode("Error updating user status: " . $e->getMessage()));
+        exit;
     }
 }
 
@@ -107,9 +136,11 @@ if (isset($_GET['delete_user'])) {
     $userId = $_GET['delete_user'];
     try {
         $userManager->deleteUser($userId);
-        $successMsg = "User deleted successfully.";
+        // Redirect with success message
+        header("Location: admin-page.php?success=" . urlencode("User deleted successfully."));
+        exit;
     } catch (Exception $e) {
-        $errorMsg = "Error deleting user: " . htmlspecialchars($e->getMessage());
+        header("Location: admin-page.php?error=" . urlencode("Error deleting user: " . $e->getMessage()));
     }
 }
 
@@ -119,5 +150,3 @@ $auth0_users = $userManager->getUsers();
 require __DIR__ . '/INCLUDES/inc_adminpage.php';
 require __DIR__ . '/INCLUDES/inc_footer.php';
 require __DIR__ . '/INCLUDES/inc_disconnect.php';
-
-?>

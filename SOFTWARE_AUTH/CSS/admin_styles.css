@@ -145,9 +145,9 @@ body.dark-mode {
 }
 
 .INPUT-GROUP-3 {
-  width: 80%;
+  width: 100%;
   height: 20px;
-  padding: 0.1rem;
+  padding: 0.15rem 0;
   border: 1px solid var(--off-white);
   border-radius: 20px;
 }
@@ -173,6 +173,14 @@ body.dark-mode {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+}
+
+.TOP-BAR {
+  width: 100%;
+  height: 1px;
+  background-color: var(--dark-grey);
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .ADMIN-FILTER {

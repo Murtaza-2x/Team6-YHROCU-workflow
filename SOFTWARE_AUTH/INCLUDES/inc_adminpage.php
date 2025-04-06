@@ -14,7 +14,7 @@
         <!-- ADMIN HEADER -->
         <div class="ADMIN-HEAD">
             <h1>User Management</h1>
-            <p>Manage Users below</p>
+            <p>Create Users below, Edit Users in the Table</p>
         </div>
         <!-- ADMIN HEADER END -->
 
@@ -30,7 +30,7 @@
                 <div class="ADMIN-LABEL"><label for="new_email">Email:</label></div>
                 <div class="INPUT-WRAPPER">
                     <div class="INPUT-GROUP">
-                        <input type="email" id="new_email" name="new_email" placeholder="New Email" required>
+                        <input type="email" id="new_email" name="new_email" placeholder="New Account Email" required>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 <div class="ADMIN-LABEL"><label for="password">Password:</label></div>
                 <div class="INPUT-WRAPPER">
                     <div class="INPUT-GROUP">
-                        <input type="text" id="password" name="new_password" placeholder="Password" oninput="updateStrength()" required>
+                        <input type="text" id="password" name="new_password" placeholder="New Account Password" oninput="updateStrength()" required>
                     </div>
                     <div id="STRENGTH-BAR">
                         <div id="STRENGTH-FILL"></div>
@@ -66,6 +66,7 @@
             <div class="TASK-BUTTONS">
                 <button class="CREATE-BUTTON" type="submit" name="create_user">Create User</button>
             </div>
+            <div class="TOP-BAR"></div>
         </form>
         <!-- CREATE USER FORM END -->
 
@@ -98,14 +99,18 @@
                                     <form method="post">
                                         <tr class="<?= $status === 'inactive' ? 'disabled-row' : '' ?>">
                                             <td>
-                                                <div class="INPUT-GROUP-2"><input type="text" value="<?php echo htmlspecialchars($userId); ?>" readonly></div>
+                                                <div class="INPUT-GROUP-2">
+                                                    <input type="text" value="<?php echo htmlspecialchars($userId); ?>" readonly>
+                                                </div>
                                             </td>
                                             <td>
-                                                <div class="INPUT-GROUP-2"><input type="email" value="<?php echo htmlspecialchars($email); ?>" readonly></div>
+                                                <div class="INPUT-GROUP-3">
+                                                    <input type="email" name="email_change[<?php echo $userId; ?>]" value="<?php echo htmlspecialchars($email); ?>" required>
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="INPUT-GROUP-2">
-                                                    <select name="role_change[<?php echo $userId; ?>]" class="DROPDOWN-GROUP-3">
+                                                    <select name="role_change[<?php echo $userId; ?>]" class="DROPDOWN-GROUP-3" required>
                                                         <?php foreach ($allowed_roles as $roleOption): ?>
                                                             <option value="<?php echo $roleOption; ?>" <?php if ($role === $roleOption) echo 'selected'; ?>>
                                                                 <?php echo $roleOption; ?>
@@ -124,12 +129,12 @@
                                                         <button type="button" class="ACTION-DROPDOWN-TOGGLE">⋮</button>
                                                         <div class="ACTION-DROPDOWN-MENU">
                                                             <button class="ACTION-DROPDOWN-ITEM" disabled>Actions:</button>
-                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="change_role" value="<?php echo htmlspecialchars($userId); ?>">Update</button>
+                                                            <button class="ACTION-DROPDOWN-ITEM" type="submit" name="update_user" value="<?php echo htmlspecialchars($userId); ?>">Update</button>
                                                             <button class="ACTION-DROPDOWN-ITEM" type="submit" name="reset_password" value="<?php echo htmlspecialchars($userId); ?>">Reset Password</button>
-                                                            <button type="button" class="ACTION-DROPDOWN-ITEM" onclick="window.location.href='?disable_user=<?php echo $user['user_id']; ?>'">
+                                                            <button type="button" class="ACTION-DROPDOWN-ITEM" onclick="window.location.href='?disable_user=<?php echo $userId; ?>'">
                                                                 <?php echo ($status === 'inactive') ? 'Re-enable' : 'Disable'; ?>
                                                             </button>
-                                                            <button type="button" class="ACTION-DROPDOWN-ITEM" onclick="window.location.href='?delete_user=<?php echo $user['user_id']; ?>'">Delete</button>
+                                                            <button type="button" class="ACTION-DROPDOWN-ITEM" onclick="window.location.href='?delete_user=<?php echo $userId; ?>'">Delete</button>
                                                         </div>
                                                     </div>
                                                 </div>

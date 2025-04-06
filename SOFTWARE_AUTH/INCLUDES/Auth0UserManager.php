@@ -35,13 +35,13 @@ class Auth0UserManager
         $token = Auth0TokenManager::getToken();
         $config = new SdkConfiguration(
             [
-            'domain'          => $_ENV['AUTH0_DOMAIN'],
-            'clientId'        => $_ENV['AUTH0_MGMT_CLIENT_ID'],
-            'clientSecret'    => $_ENV['AUTH0_MGMT_CLIENT_SECRET'],
-            'cookieSecret'    => $_ENV['AUTH0_COOKIE_SECRET'],
-            'managementToken' => $token,
-            'usePkce'         => false,
-            'useState'        => false,
+                'domain'          => $_ENV['AUTH0_DOMAIN'],
+                'clientId'        => $_ENV['AUTH0_MGMT_CLIENT_ID'],
+                'clientSecret'    => $_ENV['AUTH0_MGMT_CLIENT_SECRET'],
+                'cookieSecret'    => $_ENV['AUTH0_COOKIE_SECRET'],
+                'managementToken' => $token,
+                'usePkce'         => false,
+                'useState'        => false,
             ]
         );
 
@@ -101,11 +101,12 @@ class Auth0UserManager
     public function updateUserRole(string $userId, string $role, string $status = 'active'): void
     {
         $resp = $this->mgmt->users()->update(
-            $userId, [
-            'app_metadata' => [
-                'role'   => $role,
-                'status' => $status
-            ]
+            $userId,
+            [
+                'app_metadata' => [
+                    'role'   => $role,
+                    'status' => $status
+                ]
             ]
         );
 
@@ -164,8 +165,8 @@ class Auth0UserManager
 
         $resTicket = $this->mgmt->tickets()->createPasswordChange(
             [
-            'user_id' => $userId,
-            'result_url' => 'http://localhost/YOUR_APP/password-reset-success.php'
+                'user_id' => $userId,
+                'result_url' => 'http://localhost/YOUR_APP/password-reset-success.php'
             ]
         );
 
@@ -188,8 +189,9 @@ class Auth0UserManager
     public function disableUser(string $userId): void
     {
         $resp = $this->mgmt->users()->update(
-            $userId, [
-            'app_metadata' => ['status' => 'inactive']
+            $userId,
+            [
+                'app_metadata' => ['status' => 'inactive']
             ]
         );
 
@@ -208,8 +210,9 @@ class Auth0UserManager
     public function reenableUser(string $userId): void
     {
         $resp = $this->mgmt->users()->update(
-            $userId, [
-            'app_metadata' => ['status' => 'active']
+            $userId,
+            [
+                'app_metadata' => ['status' => 'active']
             ]
         );
 
@@ -234,6 +237,31 @@ class Auth0UserManager
             }
         } catch (Exception $e) {
             throw new \Exception('Error deleting user: ' . $e->getMessage());
+        }
+    }
+
+    /*
+    -------------------------------------------------------------
+    Method: updateUserEmail
+    Description:
+    - Updates a user's email in Auth0 by user ID.
+    - In demo mode, skips verification.
+    - In production, set 'verify_email' => true to trigger verification.
+    -------------------------------------------------------------
+*/
+    public function updateUserEmail($userId, $newEmail): void
+    {
+        try {
+            $response = $this->mgmt->users()->update($userId, [
+                'email' => $newEmail,
+                'verify_email' => false // In production, set to true to trigger verification
+            ]);
+
+            if ($response->getStatusCode() !== 200) {
+                throw new \Exception('Failed to update user email: ' . (string) $response->getBody());
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('Error updating user email: ' . $e->getMessage());
         }
     }
 }
