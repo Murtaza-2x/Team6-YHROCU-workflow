@@ -11,10 +11,11 @@
         <h1>Create a New Project</h1>
         <p>Enter project details below</p>
 
-        <?php if (!empty($errorMsg)) : ?>
-            <div class="ERROR-MESSAGE">
-                <?php echo $errorMsg; ?>
-            </div>
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <?php if (!empty($errorMsg)): ?>
+            <div class="LOGIN-ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
+        <?php elseif (!empty($successMsg)): ?>
+            <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
         <?php endif; ?>
 
         <form id="CREATE-PROJECT-FORM" action="create-project-page.php" method="post">

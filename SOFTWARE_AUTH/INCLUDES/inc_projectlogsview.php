@@ -14,6 +14,13 @@
             <p>Below are the archived versions for this project and its related tasks:</p>
         </div>
 
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <?php if (!empty($errorMsg)): ?>
+            <div class="LOGIN-ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
+        <?php elseif (!empty($successMsg)): ?>
+            <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
+        <?php endif; ?>
+
         <div class="LOG-LIST">
 
             <!-- PROJECT LOGS -->
@@ -61,7 +68,7 @@
                                 'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
                                 default    => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
-    ?>
+                        ?>
                             <tr>
                                 <td><?php echo $creator; ?></td>
                                 <td><?php echo $logEditor; ?></td>
@@ -121,7 +128,7 @@
                                 'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
                                 default    => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
-    ?>
+                        ?>
                             <tr>
                                 <td><?php echo $logEditor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>

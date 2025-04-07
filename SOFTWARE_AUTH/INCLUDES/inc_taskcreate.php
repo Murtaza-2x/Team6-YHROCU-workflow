@@ -16,10 +16,11 @@
         <h1>Create a New Task</h1>
         <p>Enter task details below</p>
 
-        <?php if (!empty($errorMsg)) : ?>
-            <div class="ERROR-MESSAGE">
-                <?php echo $errorMsg; ?>
-            </div>
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <?php if (!empty($errorMsg)): ?>
+            <div class="LOGIN-ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
+        <?php elseif (!empty($successMsg)): ?>
+            <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
         <?php endif; ?>
 
         <form id="CREATE-TASK-FORM" action="create-task-page.php" method="post">

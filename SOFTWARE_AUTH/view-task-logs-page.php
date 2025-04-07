@@ -20,13 +20,6 @@ require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
-// Restrict access to staff members only
-if (!is_logged_in() || !is_staff()) {
-    echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
-    include 'INCLUDES/inc_footer.php';
-    exit;
-}
-
 // Validate task ID
 $taskId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -95,6 +88,14 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
 }
 
 require_once __DIR__ . '/INCLUDES/inc_header.php';
+
+// Check if the user is logged in and authorized to edit
+if (!is_logged_in() || !is_staff()) {
+    echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
+    include 'INCLUDES/inc_footer.php';
+    exit;
+}
+
 require __DIR__ . '/INCLUDES/inc_tasklogsview.php';
 require __DIR__ . '/INCLUDES/inc_footer.php';
 require __DIR__ . '/INCLUDES/inc_disconnect.php';

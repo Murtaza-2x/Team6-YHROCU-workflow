@@ -13,6 +13,13 @@
             <p>See Project Details below</p>
         </div>
 
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <?php if (!empty($errorMsg)): ?>
+            <div class="LOGIN-ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
+        <?php elseif (!empty($successMsg)): ?>
+            <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
+        <?php endif; ?>
+
         <!-- HEADER -->
         <div class="VIEW-ROW">
             <div class="VIEW-COLUMN">
@@ -71,7 +78,8 @@
                     $displayNames = array_map(
                         function ($uid) use ($user_map) {
                             return $user_map[$uid] ?? $uid;
-                        }, $assignedUsers
+                        },
+                        $assignedUsers
                     );
                     echo htmlspecialchars(implode(', ', $displayNames)) ?: 'None';
                     ?>

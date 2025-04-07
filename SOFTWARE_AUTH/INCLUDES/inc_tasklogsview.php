@@ -13,6 +13,13 @@
             <p>Below are the archived versions of this task:</p>
         </div>
 
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <?php if (!empty($errorMsg)): ?>
+            <div class="LOGIN-ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
+        <?php elseif (!empty($successMsg)): ?>
+            <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
+        <?php endif; ?>
+
         <div class="LOG-LIST">
             <?php if ($logCount > 0) : ?>
                 <table class="LOG-TABLE">
@@ -28,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($logsArray as $log): 
+                        <?php foreach ($logsArray as $log):
                             $editor = htmlspecialchars($user_map[$log['user_id']] ?? 'Unknown');
                             $archivedAt = htmlspecialchars($log['archived_at']);
                             $createdAt = htmlspecialchars($log['created_at']);
@@ -51,7 +58,7 @@
                                 'Low' => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
                                 default => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
-    ?>
+                        ?>
                             <tr>
                                 <td><?php echo $editor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>

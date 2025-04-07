@@ -22,8 +22,14 @@
         </div>
         <!-- HEADER END -->
 
-        <form method="post">
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <?php if (!empty($errorMsg)): ?>
+            <div class="LOGIN-ERROR-MESSAGE"><?php echo htmlspecialchars($errorMsg); ?></div>
+        <?php elseif (!empty($successMsg)): ?>
+            <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
+        <?php endif; ?>
 
+        <form method="post">
             <!-- PROJECT NAME -->
             <div class="VIEW-ROW">
                 <div class="VIEW-COLUMN">
