@@ -22,7 +22,7 @@ class DatabaseConnection
         try {
             $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 
-            // Check connection (redundant in PHP 8.1+, but good for logs)
+            // Check connection
             if ($this->conn->connect_error) {
                 throw new Exception("Connection failed: " . $this->conn->connect_error);
             }
