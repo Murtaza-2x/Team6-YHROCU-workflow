@@ -20,14 +20,14 @@ $role = $user['role'] ?? null;
 
     <link rel="shortcut icon" type="image/png" href="IMAGES/ROCU_FAVICON.png">
 
-    <link href="CSS/default_styles.css" rel="stylesheet">
-    <link href="CSS/root_colors.css" rel="stylesheet">
-    <link href="CSS/pill_styles.css" rel="stylesheet">
-    <link href="CSS/body_styles.css" rel="stylesheet">
-    <link href="CSS/dropdown_styles.css" rel="stylesheet">
-    <link href="CSS/error_styles.css" rel="stylesheet">
-    <link href="CSS/switch_styles.css" rel="stylesheet">
-    <link href="CSS/header_footer_styles.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/default_styles.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/root_colors.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/pill_styles.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/body_styles.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/dropdown_styles.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/error_styles.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/switch_styles.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/header_footer_styles.css" rel="stylesheet">
 
     <script src="JS/TOGGLE-THEME.js"></script>
 </head>
@@ -51,11 +51,11 @@ $role = $user['role'] ?? null;
     <?php if ($user) : ?>
         <!-- BUTTONS SECTION -->
         <div class="BUTTON-CONTAINER">
-            <button onclick="window.location.href='list-task-page.php'" class="HOME-BUTTON">Home</button>
+            <button onclick="window.location.href='/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/list-task-page.php'" class="HOME-BUTTON">Home</button>
             <?php if (has_role('Admin')) : ?>
-                <button onclick="window.location.href='admin-page.php'" class="ADMIN-BUTTON">Admin Panel</button>
+                <button onclick="window.location.href='/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/admin-page.php'" class="ADMIN-BUTTON">Admin Panel</button>
             <?php endif; ?>
-            <button onclick="window.location.href='auth0_logout.php'" class="LOGOUT-BUTTON">Logout</button>
+            <button onclick="window.location.href='/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/auth0_logout.php'" class="LOGOUT-BUTTON">Logout</button>
         </div>
         <!-- BUTTONS SECTION END -->
     <?php endif; ?>
