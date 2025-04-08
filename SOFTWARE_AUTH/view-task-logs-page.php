@@ -67,26 +67,33 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     $taskNameSafe = isset($taskNameRow['subject']) ? preg_replace("/[^A-Za-z0-9_-]/", "_", $taskNameRow['subject']) : "Task";
 
     header("Content-Disposition: attachment; filename=\"{$taskNameSafe}_logs.csv\"");
-    echo "\xEF\xBB\xBF";
+    echo "\xEF\xBB\xBF"; // Excel BOM
 
     $out = fopen("php://output", "w");
     fputcsv($out, ["Edited By", "Archived At", "Created At", "Subject", "Status", "Priority", "Description", "Comment Count", "Archived Comments"]);
 
     foreach ($logsArray as $log) {
-        $editor      = $user_map[$log['user_id']] ?? 'Unknown';
-        $archivedAt  = $log['archived_at'];
-        $createdAt   = $log['created_at'];
-        $subject     = $log['subject'];
-        $status      = $log['status'];
-        $priority    = $log['priority'];
+        $editor = $user_map[$log['user_id']] ?? 'Unknown';
+        $archivedAt = $log['archived_at'];
+        $createdAt = $log['created_at'];
+        $subject = $log['subject'];
+        $status = $log['status'];
+        $priority = $log['priority'];
         $description = str_replace(["\r\n", "\r", "\n"], " ", $log['description']);
         $archivedAtTime = strtotime($archivedAt);
 
-        // Filter comments for this archive snapshot
+        // Get comments up to archive time
         $archivedComments = array_filter($commentsArray, function ($c) use ($archivedAtTime) {
             return strtotime($c['created_at']) <= $archivedAtTime;
         });
-        $commentText = implode(" | ", array_map(fn($c) => str_replace(["\r", "\n"], ' ', $c['comment']), $archivedComments));
+
+        // Format comment details
+        $commentDetails = array_map(function ($c) use ($user_map) {
+            $author = $user_map[$c['user_id']] ?? $c['user_id'];
+            return "[{$author} @ {$c['created_at']}] " . str_replace(["\r", "\n"], ' ', $c['comment']);
+        }, $archivedComments);
+
+        $commentText = implode(" | ", $commentDetails);
 
         fputcsv($out, [
             $editor,
