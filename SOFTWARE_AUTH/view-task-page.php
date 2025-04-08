@@ -87,7 +87,32 @@ if (isset($_POST['submit_comment']) && !empty($_POST['comment'])) {
     if ($userId && $commentText) {
         $stmtC = $conn->prepare("INSERT INTO comments (task_id, user_id, comment) VALUES (?, ?, ?)");
         $stmtC->bind_param("sss", $taskId, $userId, $commentText);
+
         if ($stmtC->execute()) {
+            // Archive the task upon comment submission
+            $stmtArchive = $conn->prepare("
+                INSERT INTO task_archive (task_id, subject, status, priority, description, edited_by, created_at)
+                SELECT id, subject, status, priority, description, ?, created_at FROM tasks WHERE id = ?
+            ");
+            $stmtArchive->bind_param("si", $userId, $taskId);
+            $stmtArchive->execute();
+
+            // Optional: Archive all comments into task_comment_archive (if using a separate table)
+            // Example table: task_comment_archive (archive_id, task_id, user_id, comment, created_at)
+            $archiveId = $conn->insert_id;
+            $commentSet = $conn->prepare("SELECT user_id, comment FROM comments WHERE task_id = ?");
+            $commentSet->bind_param("i", $taskId);
+            $commentSet->execute();
+            $commentRes = $commentSet->get_result();
+
+            $stmtInsertComment = $conn->prepare("
+                INSERT INTO task_comment_archive (archive_id, task_id, user_id, comment) VALUES (?, ?, ?, ?)
+            ");
+            while ($row = $commentRes->fetch_assoc()) {
+                $stmtInsertComment->bind_param("iiss", $archiveId, $taskId, $row['user_id'], $row['comment']);
+                $stmtInsertComment->execute();
+            }
+
             echo "<p class='SUCCESS-MESSAGE'>Comment added. Reloading...</p>";
             echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($taskId) . "'; }, 1500);</script>";
             exit;

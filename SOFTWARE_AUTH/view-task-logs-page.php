@@ -20,9 +20,7 @@ require_once __DIR__ . '/INCLUDES/role_helper.php';
 require_once __DIR__ . '/INCLUDES/inc_connect.php';
 require_once __DIR__ . '/INCLUDES/Auth0UserFetcher.php';
 
-// Validate task ID
 $taskId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
 if ($taskId <= 0) {
     echo "<p class='ERROR-MESSAGE'>Invalid task ID.</p>";
     include 'INCLUDES/inc_footer.php';
@@ -34,7 +32,7 @@ $stmt = $conn->prepare("
     SELECT 
         a.*, 
         a.edited_by as user_id,
-        (SELECT COUNT(*) FROM comments WHERE task_id = a.task_id) AS comment_count
+        (SELECT COUNT(*) FROM comments WHERE task_id = a.task_id AND created_at <= a.archived_at) AS comment_count
     FROM task_archive a 
     WHERE a.task_id = ? 
     ORDER BY a.archived_at DESC
@@ -45,26 +43,21 @@ $res = $stmt->get_result();
 $logsArray = $res->fetch_all(MYSQLI_ASSOC);
 $logCount = count($logsArray);
 
-// Load all comments for this task
+// Load all comments (for per-log filtering)
 $commentStmt = $conn->prepare("SELECT * FROM comments WHERE task_id = ?");
 $commentStmt->bind_param("i", $taskId);
 $commentStmt->execute();
 $commentsRes = $commentStmt->get_result();
 $commentsArray = $commentsRes->fetch_all(MYSQLI_ASSOC);
 
-// Group comments by task_id (all comments for this task)
-$commentsText = implode(" | ", array_map(function ($c) {
-    return str_replace(["\r", "\n"], ' ', $c['comment']);
-}, $commentsArray));
-
-// Load Auth0 users for editor name resolution
+// Auth0 user mapping
 $auth0_users = Auth0UserFetcher::getUsers();
 $user_map = [];
 foreach ($auth0_users as $u) {
     $user_map[$u['user_id']] = $u['nickname'] ?? $u['email'];
 }
 
-// Handle CSV export
+// Export to CSV
 if (isset($_GET['export']) && $_GET['export'] == 1) {
     $stmtName = $conn->prepare("SELECT subject FROM tasks WHERE id = ?");
     $stmtName->bind_param("i", $taskId);
@@ -74,12 +67,10 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     $taskNameSafe = isset($taskNameRow['subject']) ? preg_replace("/[^A-Za-z0-9_-]/", "_", $taskNameRow['subject']) : "Task";
 
     header("Content-Disposition: attachment; filename=\"{$taskNameSafe}_logs.csv\"");
-    echo "\xEF\xBB\xBF"; // Excel BOM
+    echo "\xEF\xBB\xBF";
 
     $out = fopen("php://output", "w");
-
-    // CSV Header
-    fputcsv($out, ["Edited By", "Archived At", "Created At", "Subject", "Status", "Priority", "Description", "Comments"]);
+    fputcsv($out, ["Edited By", "Archived At", "Created At", "Subject", "Status", "Priority", "Description", "Comment Count", "Archived Comments"]);
 
     foreach ($logsArray as $log) {
         $editor      = $user_map[$log['user_id']] ?? 'Unknown';
@@ -89,6 +80,13 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
         $status      = $log['status'];
         $priority    = $log['priority'];
         $description = str_replace(["\r\n", "\r", "\n"], " ", $log['description']);
+        $archivedAtTime = strtotime($archivedAt);
+
+        // Filter comments for this archive snapshot
+        $archivedComments = array_filter($commentsArray, function ($c) use ($archivedAtTime) {
+            return strtotime($c['created_at']) <= $archivedAtTime;
+        });
+        $commentText = implode(" | ", array_map(fn($c) => str_replace(["\r", "\n"], ' ', $c['comment']), $archivedComments));
 
         fputcsv($out, [
             $editor,
@@ -98,7 +96,8 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
             $status,
             $priority,
             $description,
-            $commentsText
+            count($archivedComments),
+            $commentText
         ]);
     }
 
@@ -108,7 +107,6 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
 
 require_once __DIR__ . '/INCLUDES/inc_header.php';
 
-// Check if the user is logged in and authorized to edit
 if (!is_logged_in() || !is_staff()) {
     echo "<p class='ERROR-MESSAGE'>You are not authorized to view this page.</p>";
     include 'INCLUDES/inc_footer.php';
@@ -118,3 +116,4 @@ if (!is_logged_in() || !is_staff()) {
 require __DIR__ . '/INCLUDES/inc_tasklogsview.php';
 require __DIR__ . '/INCLUDES/inc_footer.php';
 require __DIR__ . '/INCLUDES/inc_disconnect.php';
+?>

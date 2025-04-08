@@ -101,10 +101,11 @@
                             <th>Status</th>
                             <th>Priority</th>
                             <th>Description</th>
+                            <th>Comments</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($taskLogs as $log):
+                    <?php foreach ($taskLogs as $log):
                             $logEditorId = $log['edited_by'] ?? 'unknown';
                             $logEditor   = htmlspecialchars($user_map[$logEditorId] ?? $logEditorId);
                             $archivedAt  = $log['archived_at'] ?? '-';
@@ -113,6 +114,7 @@
                             $status      = htmlspecialchars($log['status'] ?? '');
                             $priority    = htmlspecialchars($log['priority'] ?? '');
                             $description = nl2br(htmlspecialchars($log['description'] ?? ''));
+                            $archivedAtTime = strtotime($archivedAt);
 
                             // Pills
                             $statusPill = match ($status) {
@@ -128,7 +130,19 @@
                                 'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
                                 default    => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
+
+                            // Filter comments based on archive time
+                            $archivedComments = array_filter($commentsArray, function ($c) use ($archivedAtTime) {
+                                return strtotime($c['created_at']) <= $archivedAtTime;
+                            });
+
+                            $commentText = implode("<br>", array_map(function ($c) {
+                                return "<span class='COMMENT-TEXT'>" . htmlspecialchars($c['comment']) . "</span>";
+                            }, $archivedComments));
+
+                            $commentCount = count($archivedComments);
                         ?>
+
                             <tr>
                                 <td><?php echo $logEditor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>
@@ -137,6 +151,7 @@
                                 <td><?php echo $statusPill; ?></td>
                                 <td><?php echo $priorityPill; ?></td>
                                 <td class="LOG-DESC"><?php echo $description; ?></td>
+                                <td><?php echo $commentCount; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

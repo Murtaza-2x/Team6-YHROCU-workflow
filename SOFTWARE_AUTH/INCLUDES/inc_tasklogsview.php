@@ -32,43 +32,57 @@
                             <th>Status</th>
                             <th>Priority</th>
                             <th>Description</th>
-                            <th>Comments</th>
+                            <th>Comments Count</th> 
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($logsArray as $log):
-                            $editor = htmlspecialchars($user_map[$log['user_id']] ?? 'Unknown');
-                            $archivedAt = htmlspecialchars($log['archived_at']);
-                            $createdAt = htmlspecialchars($log['created_at']);
-                            $subject = htmlspecialchars($log['subject']);
-                            $status = htmlspecialchars($log['status']);
-                            $priority = htmlspecialchars($log['priority']);
-                            $desc = nl2br(htmlspecialchars($log['description']));
+                            $logEditorId = $log['edited_by'] ?? 'unknown';
+                            $logEditor   = htmlspecialchars($user_map[$logEditorId] ?? $logEditorId);
+                            $archivedAt  = $log['archived_at'] ?? '-';
+                            $createdAt   = $log['created_at'] ?? '-';
+                            $subject     = htmlspecialchars($log['subject'] ?? '');
+                            $status      = htmlspecialchars($log['status'] ?? '');
+                            $priority    = htmlspecialchars($log['priority'] ?? '');
+                            $description = nl2br(htmlspecialchars($log['description'] ?? ''));
+                            $archivedAtTime = strtotime($archivedAt);
 
                             // Pills
                             $statusPill = match ($status) {
-                                'New' => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
+                                'New'         => "<button class='PILL-NEW' id='PILL-ACTIVE'>New</button>",
                                 'In Progress' => "<button class='PILL-IN-PROGRESS' id='PILL-ACTIVE'>In Progress</button>",
-                                'Complete' => "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>",
-                                default => "<button class='PILL-INACTIVE'>$status</button>",
+                                'Complete'    => "<button class='PILL-COMPLETE' id='PILL-ACTIVE'>Complete</button>",
+                                default       => "<button class='PILL-INACTIVE'>$status</button>",
                             };
 
                             $priorityPill = match ($priority) {
-                                'Urgent' => "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>",
+                                'Urgent'   => "<button class='PILL-URGENT' id='PILL-ACTIVE'>Urgent</button>",
                                 'Moderate' => "<button class='PILL-MODERATE' id='PILL-ACTIVE'>Moderate</button>",
-                                'Low' => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
-                                default => "<button class='PILL-INACTIVE'>$priority</button>",
+                                'Low'      => "<button class='PILL-LOW' id='PILL-ACTIVE'>Low</button>",
+                                default    => "<button class='PILL-INACTIVE'>$priority</button>",
                             };
+
+                            // Filter comments based on archive time
+                            $archivedComments = array_filter($commentsArray, function ($c) use ($archivedAtTime) {
+                                return strtotime($c['created_at']) <= $archivedAtTime;
+                            });
+
+                            $commentText = implode("<br>", array_map(function ($c) {
+                                return "<span class='COMMENT-TEXT'>" . htmlspecialchars($c['comment']) . "</span>";
+                            }, $archivedComments));
+
+                            $commentCount = count($archivedComments);
                         ?>
+
                             <tr>
-                                <td><?php echo $editor; ?></td>
+                                <td><?php echo $logEditor; ?></td>
                                 <td><?php echo $archivedAt; ?></td>
                                 <td><?php echo $createdAt; ?></td>
                                 <td><?php echo $subject; ?></td>
                                 <td><?php echo $statusPill; ?></td>
                                 <td><?php echo $priorityPill; ?></td>
-                                <td class="LOG-DESC"><?php echo $desc; ?></td>
-                                <td><?php echo (int) $log['comment_count']; ?></td>
+                                <td class="LOG-DESC"><?php echo $description; ?></td>
+                                <td><?php echo $commentCount; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
