@@ -51,54 +51,92 @@ Dashboard page shown after login. Displays different content based on the user's
     $filterEnd = $_GET['end_date'] ?? '';
 
     if (has_role('User')) {
-      // Pie Chart: Task priorities
+      // --- PRIORITY CHART QUERY ---
       $sql = "SELECT priority, COUNT(*) AS total 
-                FROM tasks 
-                JOIN task_assigned_users tau ON tasks.id = tau.task_id
-                WHERE tau.user_id = ? AND status IN ('New', 'In Progress', 'Complete', 'Completed')
-                GROUP BY priority";
+              FROM tasks 
+              JOIN task_assigned_users tau ON tasks.id = tau.task_id
+              WHERE tau.user_id = ? 
+              AND status IN ('New', 'In Progress', 'Complete', 'Completed')";
+
+      $params = [$userId];
+      $types = "s";
+
+      if ($filterPriority !== 'All') {
+        $sql .= " AND priority = ?";
+        $params[] = $filterPriority;
+        $types .= "s";
+      }
+
+      if (!empty($filterStart) && !empty($filterEnd)) {
+        $sql .= " AND due_date BETWEEN ? AND ?";
+        $params[] = $filterStart;
+        $params[] = $filterEnd;
+        $types .= "ss";
+      }
+
+      $sql .= " GROUP BY priority";
+
       $stmt = $conn->prepare($sql);
-      $stmt->bind_param("s", $userId);
+      $stmt->bind_param($types, ...$params);
       $stmt->execute();
       $result = $stmt->get_result();
       while ($row = $result->fetch_assoc()) {
         $userPriorityBreakdown[] = $row;
       }
 
-      // Bar Chart + Summary Pills: Task statuses
+      // --- STATUS BREAKDOWN QUERY ---
       $sql2 = "SELECT 
-                    CASE 
-                        WHEN TRIM(LOWER(status)) = 'new' THEN 'New'
-                        WHEN TRIM(LOWER(status)) = 'in progress' THEN 'In Progress'
-                        WHEN TRIM(LOWER(status)) IN ('complete', 'completed') THEN 'Completed'
-                        ELSE 'Other'
-                    END AS status,
-                    COUNT(*) AS total
-                FROM tasks 
-                JOIN task_assigned_users tau ON tasks.id = tau.task_id
-                WHERE tau.user_id = ?
-                GROUP BY status";
+                  CASE 
+                      WHEN TRIM(LOWER(status)) = 'new' THEN 'New'
+                      WHEN TRIM(LOWER(status)) = 'in progress' THEN 'In Progress'
+                      WHEN TRIM(LOWER(status)) IN ('complete', 'completed') THEN 'Completed'
+                      ELSE 'Other'
+                  END AS status,
+                  COUNT(*) AS total
+              FROM tasks 
+              JOIN task_assigned_users tau ON tasks.id = tau.task_id
+              WHERE tau.user_id = ?";
+
+      $params2 = [$userId];
+      $types2 = "s";
+
+      if ($filterPriority !== 'All') {
+        $sql2 .= " AND priority = ?";
+        $params2[] = $filterPriority;
+        $types2 .= "s";
+      }
+
+      if (!empty($filterStart) && !empty($filterEnd)) {
+        $sql2 .= " AND due_date BETWEEN ? AND ?";
+        $params2[] = $filterStart;
+        $params2[] = $filterEnd;
+        $types2 .= "ss";
+      }
+
+      $sql2 .= " GROUP BY status";
+
       $stmt2 = $conn->prepare($sql2);
-      $stmt2->bind_param("s", $userId);
+      $stmt2->bind_param($types2, ...$params2);
       $stmt2->execute();
       $result2 = $stmt2->get_result();
       while ($row = $result2->fetch_assoc()) {
         $userStatusBreakdown[] = $row;
       }
-    } elseif (is_Staff()) {
+    } elseif (is_staff()) {
       // Manager/Admin dashboard logic
-      $sql = "SELECT status, COUNT(*) AS total FROM projects WHERE 1";
+      $sql = "SELECT priority, COUNT(*) AS total FROM projects WHERE 1";
       if ($filterPriority !== 'All') {
         $sql .= " AND priority = '" . $conn->real_escape_string($filterPriority) . "'";
       }
       if ($filterStart && $filterEnd) {
         $sql .= " AND due_date BETWEEN '" . $conn->real_escape_string($filterStart) . "' AND '" . $conn->real_escape_string($filterEnd) . "'";
       }
-      $sql .= " GROUP BY status";
+      $sql .= " GROUP BY priority";
       $result = $conn->query($sql);
       while ($row = $result->fetch_assoc()) {
         $projectSummary[] = $row;
       }
+
 
       $sqlActive = "SELECT 
                         CASE 
@@ -303,23 +341,23 @@ Dashboard page shown after login. Displays different content based on the user's
 
               <!-- PIE CHART -->
               <div class="DASH-PIE-CHART-BOX">
-                <canvas id="activeTaskChart"></canvas>
+                <canvas id="managerFilteredChart2"></canvas>
               </div>
             </div>
           </div>
 
           <script>
-            // Bar Chart
             const filteredData = <?php echo json_encode($projectSummary ?? []); ?>;
-            const barLabels = filteredData.map(row => row.status);
+            const barLabels = filteredData.map(row => row.priority);
             const barValues = filteredData.map(row => parseInt(row.total));
 
+            // Bar Chart
             new Chart(document.getElementById('managerFilteredChart'), {
               type: 'bar',
               data: {
                 labels: barLabels,
                 datasets: [{
-                  label: 'Projects',
+                  label: 'Projects by Priority',
                   data: barValues,
                   backgroundColor: '#169bcb'
                 }]
@@ -328,7 +366,7 @@ Dashboard page shown after login. Displays different content based on the user's
                 plugins: {
                   title: {
                     display: true,
-                    text: 'Project Status Summary'
+                    text: 'Project Priority Summary'
                   }
                 },
                 scales: {
@@ -340,25 +378,21 @@ Dashboard page shown after login. Displays different content based on the user's
             });
 
             // Pie Chart
-            const pieData = <?php echo json_encode($activeTaskStatusBreakdown ?? []); ?>;
-            const pieLabels = pieData.map(row => row.status);
-            const pieValues = pieData.map(row => parseInt(row.total));
-
-            new Chart(document.getElementById('activeTaskChart'), {
+            new Chart(document.getElementById('managerFilteredChart2'), {
               type: 'pie',
               data: {
-                labels: pieLabels,
+                labels: barLabels,
                 datasets: [{
-                  label: 'Task Status',
-                  data: pieValues,
-                  backgroundColor: ['#ff6384', '#ffcd56', '#2ecc71']
+                  label: 'Project Priority',
+                  data: barValues,
+                  backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71']
                 }]
               },
               options: {
                 plugins: {
                   title: {
                     display: true,
-                    text: 'Task Breakdown (All Projects)'
+                    text: 'Project Priority Breakdown'
                   },
                   legend: {
                     position: 'bottom'
