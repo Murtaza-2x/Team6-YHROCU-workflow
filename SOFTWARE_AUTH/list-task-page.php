@@ -107,7 +107,7 @@ $result = $stmt->get_result();
                         }
 
                         foreach (array_merge($activeTasks, $completedTasks) as $row):
-                            $isCompleted = !is_staff() && $row["status"] === 'Complete';
+                            $isCompleted = $row["status"] === 'Complete';
                             $rowStyle = $isCompleted ? 'style="opacity:0.5;"' : '';
 
                             // Status pill
