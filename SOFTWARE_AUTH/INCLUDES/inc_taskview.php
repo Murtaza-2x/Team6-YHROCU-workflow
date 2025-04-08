@@ -71,7 +71,8 @@
                     $displayNames = array_map(
                         function ($uid) use ($user_map) {
                             return $user_map[$uid] ?? $uid;
-                        }, $assignedUsers
+                        },
+                        $assignedUsers
                     );
                     echo htmlspecialchars(implode(', ', $displayNames)) ?: 'None';
                     ?>

@@ -10,7 +10,7 @@
     <div class="VIEW-LOG-BOX">
 
         <div class="VIEW-HEAD">
-            <h1>Project Logs</h1>
+            <h1>Logs</h1>
             <p>Below are the archived versions for this project and its related tasks:</p>
         </div>
 
@@ -21,12 +21,19 @@
             <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
         <?php endif; ?>
 
+        <!-- PROJECT FILTER -->
+        <div class="TASK-FILTER">
+            <input type="text" id="searchProject" placeholder="Search projects...">
+            <button type="button" id="btnSearchProject">Filter</button>
+        </div>
+        <!-- PROJECT FILTER END -->
+
         <div class="LOG-LIST">
 
             <!-- PROJECT LOGS -->
             <h2 class="VIEW-HEAD">Project Logs</h2>
             <?php if (count($projectLogs) > 0) : ?>
-                <table class="LOG-TABLE">
+                <table class="LOG-TABLE" id="PROJECT-TABLE">
                     <thead>
                         <tr class="LOG-HEAD">
                             <th>Created By</th>
@@ -88,10 +95,22 @@
             <?php endif; ?>
             <!-- PROJECT LOGS END -->
 
+        </div>
+
+        <br>
+        <!-- TASK FILTER -->
+        <div class="TASK-FILTER">
+            <input type="text" id="searchTask" placeholder="Search tasks...">
+            <button type="button" id="btnSearchTask">Filter</button>
+        </div>
+        <!-- TASK FILTER END -->
+
+        <div class="LOG-LIST">
+
             <!-- TASK LOGS -->
             <h2 class="LOG-SECTION-TITLE">Task Logs</h2>
             <?php if (count($taskLogs) > 0) : ?>
-                <table class="LOG-TABLE">
+                <table class="LOG-TABLE" id="TASK-TABLE">
                     <thead>
                         <tr class="LOG-HEAD">
                             <th>Edited By</th>
@@ -105,7 +124,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($taskLogs as $log):
+                        <?php foreach ($taskLogs as $log):
                             $logEditorId = $log['edited_by'] ?? 'unknown';
                             $logEditor   = htmlspecialchars($user_map[$logEditorId] ?? $logEditorId);
                             $archivedAt  = $log['archived_at'] ?? '-';
@@ -173,3 +192,5 @@
     </div>
 </div>
 <!-- LOG SECTION END -->
+
+<script src="JS/SEARCH-TABLE.js"></script>

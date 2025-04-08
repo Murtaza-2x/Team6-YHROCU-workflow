@@ -27,6 +27,7 @@ $role = $user['role'] ?? null;
     <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/dropdown_styles.css" rel="stylesheet">
     <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/error_styles.css" rel="stylesheet">
     <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/switch_styles.css" rel="stylesheet">
+    <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/filter_styles.css" rel="stylesheet">
     <link href="/YHROCU-CLONE/Team6-YHROCU-workflow/SOFTWARE_AUTH/CSS/header_footer_styles.css" rel="stylesheet">
 
     <script src="JS/TOGGLE-THEME.js"></script>

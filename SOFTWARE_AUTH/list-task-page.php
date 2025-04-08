@@ -75,8 +75,8 @@ $result = $stmt->get_result();
 
         <!-- TASK FILTER -->
         <div class="TASK-FILTER">
-            <input type="text" id="searchInput" placeholder="Search tasks...">
-            <button type="button" id="filterButton">Filter</button>
+            <input type="text" id="searchTask" placeholder="Search tasks...">
+            <button type="button" id="btnSearchTask">Filter</button>
         </div>
         <!-- TASK FILTER END -->
 

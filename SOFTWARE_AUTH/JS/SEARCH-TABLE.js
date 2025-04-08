@@ -1,25 +1,27 @@
-$(document).ready(function () {
-  const $searchInput = $("#searchInput");
-  const $filterButton = $("#filterButton");
-  const $taskRows = $("#TASK-TABLE tbody tr");
+document.addEventListener("DOMContentLoaded", function () {
+  function searchTable(inputId, tableId) {
+    const input = document.getElementById(inputId);
+    const filter = input.value.toLowerCase();
+    const rows = document.querySelectorAll(`#${tableId} tbody tr`);
 
-  /**
-   * runSearch:
-   * Reads the current search input, converts it to lowercase,
-   * and toggles the visibility of each row based on whether its text contains the search term.
-   */
-  function runSearch() {
-    const searchTerm = $searchInput.val().toLowerCase().trim();
-    $taskRows.each(function () {
-      const rowText = $(this).text().toLowerCase();
-      $(this).toggle(rowText.includes(searchTerm));
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(filter) ? "" : "none";
     });
   }
 
-  $searchInput.on("keyup", runSearch);
+  const projectSearch = document.getElementById("searchProject");
+  const taskSearch = document.getElementById("searchTask");
 
-  $filterButton.on("click", function (e) {
-    e.preventDefault();
-    runSearch();
-  });
+  if (projectSearch) {
+    projectSearch.addEventListener("input", function () {
+      searchTable("searchProject", "PROJECT-TABLE");
+    });
+  }
+
+  if (taskSearch) {
+    taskSearch.addEventListener("input", function () {
+      searchTable("searchTask", "TASK-TABLE");
+    });
+  }
 });

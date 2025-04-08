@@ -20,9 +20,16 @@
             <div class="LOGIN-SUCCESS-MESSAGE"><?php echo htmlspecialchars($successMsg); ?></div>
         <?php endif; ?>
 
+        <!-- TASK FILTER -->
+        <div class="TASK-FILTER">
+            <input type="text" id="searchTask" placeholder="Search tasks...">
+            <button type="button" id="btnSearchTask">Filter</button>
+        </div>
+        <!-- TASK FILTER END -->
+
         <div class="LOG-LIST">
             <?php if ($logCount > 0) : ?>
-                <table class="LOG-TABLE">
+                <table class="LOG-TABLE" id="TASK-TABLE">
                     <thead>
                         <tr class="LOG-HEAD">
                             <th>Edited By</th>
@@ -32,7 +39,7 @@
                             <th>Status</th>
                             <th>Priority</th>
                             <th>Description</th>
-                            <th>Comments Count</th> 
+                            <th>Comments Count</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,3 +106,5 @@
     </div>
 </div>
 <!-- LOG SECTION END -->
+
+<script src="JS/SEARCH-TABLE.js"></script>
