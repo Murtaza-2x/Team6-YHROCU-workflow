@@ -30,12 +30,32 @@ if ($taskId <= 0) {
 }
 
 // Load archived logs
-$stmt = $conn->prepare("SELECT a.*, a.edited_by as user_id FROM task_archive a WHERE a.task_id = ? ORDER BY a.archived_at DESC");
+$stmt = $conn->prepare("
+    SELECT 
+        a.*, 
+        a.edited_by as user_id,
+        (SELECT COUNT(*) FROM comments WHERE task_id = a.task_id) AS comment_count
+    FROM task_archive a 
+    WHERE a.task_id = ? 
+    ORDER BY a.archived_at DESC
+");
 $stmt->bind_param("i", $taskId);
 $stmt->execute();
 $res = $stmt->get_result();
 $logsArray = $res->fetch_all(MYSQLI_ASSOC);
 $logCount = count($logsArray);
+
+// Load all comments for this task
+$commentStmt = $conn->prepare("SELECT * FROM comments WHERE task_id = ?");
+$commentStmt->bind_param("i", $taskId);
+$commentStmt->execute();
+$commentsRes = $commentStmt->get_result();
+$commentsArray = $commentsRes->fetch_all(MYSQLI_ASSOC);
+
+// Group comments by task_id (all comments for this task)
+$commentsText = implode(" | ", array_map(function ($c) {
+    return str_replace(["\r", "\n"], ' ', $c['comment']);
+}, $commentsArray));
 
 // Load Auth0 users for editor name resolution
 $auth0_users = Auth0UserFetcher::getUsers();
@@ -59,9 +79,8 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     $out = fopen("php://output", "w");
 
     // CSV Header
-    fputcsv($out, ["Edited By", "Archived At", "Created At", "Subject", "Status", "Priority", "Due Date", "Description"]);
+    fputcsv($out, ["Edited By", "Archived At", "Created At", "Subject", "Status", "Priority", "Description", "Comments"]);
 
-    // CSV Rows
     foreach ($logsArray as $log) {
         $editor      = $user_map[$log['user_id']] ?? 'Unknown';
         $archivedAt  = $log['archived_at'];
@@ -71,18 +90,18 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
         $priority    = $log['priority'];
         $description = str_replace(["\r\n", "\r", "\n"], " ", $log['description']);
 
-        fputcsv(
-            $out, [
+        fputcsv($out, [
             $editor,
             $archivedAt,
             $createdAt,
             $subject,
             $status,
             $priority,
-            $description
-            ]
-        );
+            $description,
+            $commentsText
+        ]);
     }
+
     fclose($out);
     exit;
 }
@@ -99,4 +118,3 @@ if (!is_logged_in() || !is_staff()) {
 require __DIR__ . '/INCLUDES/inc_tasklogsview.php';
 require __DIR__ . '/INCLUDES/inc_footer.php';
 require __DIR__ . '/INCLUDES/inc_disconnect.php';
-?>

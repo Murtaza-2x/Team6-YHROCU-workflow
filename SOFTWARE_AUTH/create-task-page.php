@@ -52,7 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->execute()) {
             $newTaskId = $stmt->insert_id;
 
-            // Assign users to the new task
+            $emailErrors = [];
+            $emailSuccesses = [];
+
             if (!empty($assigned)) {
                 $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
                 foreach ($assigned as $uid) {
@@ -72,33 +74,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $projectData = $resProj->fetch_assoc();
                     $project_name = $projectData['project_name'] ?? 'Unknown Project';
 
-                    // Prepare email content
+                    // Email content
                     $emailSubject = "Task Created: {$subject}";
                     $messageBody = "The task '{$subject}' has been created. Here are the details:";
 
-                    // Send the task update email
+                    // Send email
                     $emailSent = sendTaskEmail(
-                        $userEmail, $emailSubject, $messageBody, [
-                        'subject' => $subject,
-                        'project_name' => $project_name,
-                        'status' => $status,
-                        'priority' => $priority,
-                        'description' => $description,
+                        $userEmail,
+                        $emailSubject,
+                        $messageBody,
+                        [
+                            'subject' => $subject,
+                            'project_name' => $project_name,
+                            'status' => $status,
+                            'priority' => $priority,
+                            'description' => $description,
                         ]
                     );
 
                     if ($emailSent) {
-                        // Optionally log or display confirmation
-                        echo "<p class='SUCCESS-MESSAGE'>Email sent to {$userEmail} successfully.</p>";
+                        $emailSuccesses[] = $userEmail;
                     } else {
-                        // Log failure or handle error
-                        echo "<p class='ERROR-MESSAGE'>Failed to send email to {$userEmail}.</p>";
+                        $emailErrors[] = $userEmail;
                     }
                 }
             }
 
-            echo "<p class='SUCCESS-MESSAGE'>Task created successfully. Redirecting...</p>";
-            echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($newTaskId) . "'; }, 1500);</script>";
+            echo "<p class='SUCCESS-MESSAGE'>Task created successfully.</p>";
+
+            // Email result summary
+            if (!empty($emailSuccesses)) {
+                echo "<p class='SUCCESS-MESSAGE'>Email sent to: " . implode(", ", $emailSuccesses) . "</p>";
+            }
+            if (!empty($emailErrors)) {
+                echo "<p class='ERROR-MESSAGE'>Failed to send email to: " . implode(", ", $emailErrors) . "</p>";
+            }
+
+            // Redirect only after showing all messages
+            echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($newTaskId) . "'; }, 3000);</script>";
             exit;
         } else {
             $errorMsg = "Failed to create task. Please try again.";

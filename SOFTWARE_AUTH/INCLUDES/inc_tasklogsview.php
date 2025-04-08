@@ -32,6 +32,7 @@
                             <th>Status</th>
                             <th>Priority</th>
                             <th>Description</th>
+                            <th>Comments</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,6 +68,7 @@
                                 <td><?php echo $statusPill; ?></td>
                                 <td><?php echo $priorityPill; ?></td>
                                 <td class="LOG-DESC"><?php echo $desc; ?></td>
+                                <td><?php echo (int) $log['comment_count']; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

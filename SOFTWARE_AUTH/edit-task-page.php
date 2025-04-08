@@ -56,72 +56,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_task'])) {
         // Archive task before updating
         $stmtArchive = $conn->prepare(
             "INSERT INTO task_archive (task_id, subject, status, priority, description, edited_by, created_at)
-        SELECT id, subject, status, priority, description, ?, created_at
-        FROM tasks
-        WHERE id = ?"
+             SELECT id, subject, status, priority, description, ?, created_at
+             FROM tasks
+             WHERE id = ?"
         );
         $stmtArchive->bind_param("si", $edited_by, $taskId);
         $stmtArchive->execute();
-
+    
         // Update task in the database
         $stmt = $conn->prepare("UPDATE tasks SET subject=?, project_id=?, status=?, priority=?, description=? WHERE id=?");
         $stmt->bind_param("sisssi", $subject, $project_id, $status, $priority, $description, $taskId);
+    
         if ($stmt->execute()) {
             // Delete previous task assignments
             $conn->query("DELETE FROM task_assigned_users WHERE task_id = $taskId");
-
+    
+            $emailSuccesses = [];
+            $emailErrors = [];
+    
             // Assign users to the task
             if (!empty($assigned)) {
-                // Initialize the manager
                 $manager = new Auth0UserManager();
-                
                 $stmtAssign = $conn->prepare("INSERT INTO task_assigned_users (task_id, user_id) VALUES (?, ?)");
+    
                 foreach ($assigned as $uid) {
                     $stmtAssign->bind_param("is", $taskId, $uid);
                     $stmtAssign->execute();
-
+    
                     // Fetch user details for email
                     $userData = $manager->getUser($uid);
                     $userEmail = $userData['email'] ?? null;
-
-                    // Fetch project name using project_id
+    
+                    // Fetch project name
                     $stmtProj = $conn->prepare("SELECT project_name FROM projects WHERE id = ?");
                     $stmtProj->bind_param("i", $project_id);
                     $stmtProj->execute();
                     $resProj = $stmtProj->get_result();
                     $projectData = $resProj->fetch_assoc();
                     $project_name = $projectData['project_name'] ?? 'Unknown Project';
-
-                    // Prepare email content
+    
+                    // Prepare email
                     $emailSubject = "Task Updated: {$subject}";
                     $messageBody = "The task '{$subject}' has been updated. Here are the details:";
-
-                    // Send the task update email
+    
                     $emailSent = sendTaskEmail(
-                        $userEmail, $emailSubject, $messageBody, [
-                        'subject' => $subject,
-                        'project_name' => $project_name,
-                        'status' => $status,
-                        'priority' => $priority,
-                        'description' => $description,
+                        $userEmail,
+                        $emailSubject,
+                        $messageBody,
+                        [
+                            'subject' => $subject,
+                            'project_name' => $project_name,
+                            'status' => $status,
+                            'priority' => $priority,
+                            'description' => $description,
                         ]
                     );
-
+    
                     if ($emailSent) {
-                        echo "<p class='SUCCESS-MESSAGE'>Email sent to {$userEmail} successfully.</p>";
+                        $emailSuccesses[] = $userEmail;
                     } else {
-                        echo "<p class='ERROR-MESSAGE'>Failed to send email to {$userEmail}.</p>";
+                        $emailErrors[] = $userEmail;
                     }
                 }
             }
-
-            echo "<p class='SUCCESS-MESSAGE'>Task updated successfully. Redirecting...</p>";
-            echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($taskId) . "'; }, 1500);</script>";
+    
+            echo "<p class='SUCCESS-MESSAGE'>Task updated successfully.</p>";
+    
+            if (!empty($emailSuccesses)) {
+                echo "<p class='SUCCESS-MESSAGE'>Email sent to: " . implode(", ", $emailSuccesses) . "</p>";
+            }
+            if (!empty($emailErrors)) {
+                echo "<p class='ERROR-MESSAGE'>Failed to send email to: " . implode(", ", $emailErrors) . "</p>";
+            }
+    
+            echo "<script>setTimeout(function(){ window.location.href='view-task-page.php?id=" . urlencode($taskId) . "'; }, 3000);</script>";
             exit;
         } else {
             echo "<p class='ERROR-MESSAGE'>Task update failed.</p>";
         }
-    }
+    }    
 }
 
 // Load task info from database
