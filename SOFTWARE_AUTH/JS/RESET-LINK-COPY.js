@@ -4,4 +4,3 @@ function copyResetLink() {
     document.execCommand("copy");
     alert("Link copied to clipboard!");
 }
-module.exports = { copyResetLink };
