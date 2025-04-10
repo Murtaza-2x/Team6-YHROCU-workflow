@@ -13,4 +13,3 @@ function togglePasswordVisibility() {
     toggleIcon.src = "ICONS/eye-crossed.png";
   }
 }
-module.exports = { togglePasswordVisibility };
