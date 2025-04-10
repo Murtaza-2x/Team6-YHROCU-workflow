@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_id  = trim($_POST['project_id'] ?? '');
     $status      = trim($_POST['status'] ?? '');
     $priority    = trim($_POST['priority'] ?? '');
-    $due_date    = trim($_POST['due_date'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $assigned    = $_POST['assign'] ?? [];
     $creator     = $_SESSION['user']['user_id'] ?? '';
