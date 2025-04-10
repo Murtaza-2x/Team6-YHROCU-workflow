@@ -22,3 +22,4 @@ window.onload = () => {
         document.getElementById('theme-toggle').checked = false;  // Set slider position
     }
 };
+module.exports = { toggleTheme };
